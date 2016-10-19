@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="me.xihuxiaolong.justdoit">
+
+    <application
+        android:name=".common.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/icon_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".module.planlist.PlanListActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".module.editplan.EditPlanActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name=".module.editalert.EditAlertActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity android:name=".module.planhistory.PlanHistoryActivity" />
+        <activity android:name=".module.adddayplan.AddDayPlanActivity" />
+        <activity android:name=".module.settings.SettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+    </application>
+
+</manifest>

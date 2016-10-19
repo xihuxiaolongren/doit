@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/backgroundIV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/example_1" />
+
+    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
+        android:id="@+id/day_night_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:animationDuration="0" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:fitsSystemWindows="true"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/action_settings"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false"
+        android:clipChildren="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            android:clipChildren="false">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false"
+                android:clipChildren="false">
+
+                <RelativeLayout
+                    android:id="@+id/button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true">
+
+                    <View
+                        android:id="@+id/buttonTriangle"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/triangle"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@id/button"
+                    android:gravity="center_vertical"
+                    android:text="主页布局"
+                    android:textColor="@color/titleTextColor"
+                    android:textSize="18sp" />
+
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/expandableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView"
+                    android:orientation="vertical"
+                    app:ael_duration="400"
+                    app:ael_expanded="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/showAvatarTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:text="显示头像"
+                            android:textColor="@color/titleTextColor" />
+
+                        <com.rey.material.widget.Switch
+                            android:id="@+id/showAvatarSwitch"
+                            style="@style/Material.Widget.Switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/showAvatarTV"
+                            android:checked="false"
+                            android:gravity="center"/>
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/avatarIV"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/avatar"
+                            app:civ_border_color="@color/titleTextColor"
+                            app:civ_border_width="3dp"/>
+                    </RelativeLayout>
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/mottoET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:hint="座右铭"
+                        android:text="此时,此地,此身"
+                        android:textCursorDrawable="@null"
+                        android:textSize="14sp"
+                        app:met_baseColor="@color/titleTextColor"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="@color/titleTextColor"
+                        app:met_textColor="@color/titleTextColor"
+                        app:met_textColorHint="@color/titleTextColor" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/mottoStartET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:hint="座右铭(休息时刻-任务开始前)"
+                        android:text="一日之计在于晨"
+                        android:textCursorDrawable="@null"
+                        android:textSize="14sp"
+                        app:met_baseColor="@color/titleTextColor"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="@color/titleTextColor"
+                        app:met_textColor="@color/titleTextColor"
+                        app:met_textColorHint="@color/titleTextColor" />
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/mottoEndET"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:hint="座右铭(任务完成后-休息时刻)"
+                        android:text="今日事毕"
+                        android:textCursorDrawable="@null"
+                        android:textSize="14sp"
+                        app:met_baseColor="@color/titleTextColor"
+                        app:met_floatingLabel="highlight"
+                        app:met_primaryColor="@color/titleTextColor"
+                        app:met_textColor="@color/titleTextColor"
+                        app:met_textColorHint="@color/titleTextColor" />
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+                
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:background="@color/titleTextColor"
+                    android:layout_marginRight="-16dp"
+                    android:layout_marginLeft="-16dp"
+                    android:layout_alignParentBottom="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <antistatic.spinnerwheel.WheelVerticalView
+        android:id="@+id/yearWV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:selectionDivider="@drawable/divider_dark_gradient_horizontal"
+        app:selectionDividerActiveAlpha="100"
+        app:selectionDividerDimmedAlpha="255"
+        app:selectionDividerHeight="1px"
+        app:visibleItems="5" />
+
+    <antistatic.spinnerwheel.WheelVerticalView
+        android:id="@+id/monthWV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:selectionDivider="@drawable/divider_dark_gradient_horizontal"
+        app:selectionDividerActiveAlpha="100"
+        app:selectionDividerDimmedAlpha="255"
+        app:selectionDividerHeight="1px"
+        app:visibleItems="5" />
+
+    <antistatic.spinnerwheel.WheelVerticalView
+        android:id="@+id/dayWV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:selectionDivider="@drawable/divider_dark_gradient_horizontal"
+        app:selectionDividerActiveAlpha="100"
+        app:selectionDividerDimmedAlpha="255"
+        app:selectionDividerHeight="1px"
+        app:visibleItems="5" />
+
+</LinearLayout>

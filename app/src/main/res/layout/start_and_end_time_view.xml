@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/start_time"
+            android:textSize="16sp"
+            android:textColor="@color/titleTextColor"/>
+        <TextView
+            android:id="@+id/startTimeTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="00 : 00"
+            android:textSize="24sp"
+            android:textColor="@color/titleTextColor"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scaleType="centerInside"
+        android:src="@drawable/time_left_to_right"
+        android:layout_gravity="center_vertical"
+        android:tint="@color/titleTextColor"/>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/end_time"
+            android:textSize="16sp"
+            android:textColor="@color/titleTextColor"/>
+        <TextView
+            android:id="@+id/endTimeTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="00 : 00"
+            android:textSize="24sp"
+            android:textColor="@color/titleTextColor"/>
+    </LinearLayout>
+</LinearLayout>

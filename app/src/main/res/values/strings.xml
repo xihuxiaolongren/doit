@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Do It</string>
+    <string name="action_settings">设置</string>
+    <string name="action_history">历史</string>
+    <string name="history">回顾</string>
+    <string name="action_add">添加</string>
+    <string name="sleep">休息</string>
+    <string name="plan">计划</string>
+    <string name="alert">提醒</string>
+    <string name="start_time">开始时间</string>
+    <string name="end_time">结束时间</string>
+    <string name="add_tag">添加标签</string>
+    <string name="add_alert">新建提醒</string>
+    <string name="add_clock">添加提醒</string>
+    <string name="action_confirm">确认</string>
+    <string name="action_cancel">取消</string>
+    <string name="add_plan">新建计划</string>
+    <string name="empty">尚未添加计划或提醒</string>
+    <string name="menu_delete">删除</string>
+    <string name="alert_time">提醒时刻</string>
+    <string name="modify_plan">更改计划</string>
+    <string name="modify_alert">更改提醒</string>
+    <string name="delete_alert">删除提醒</string>
+    <string name="delete_plan">删除计划</string>
+    <string name="use_today_template">使用今日模板</string>
+    <string name="empty_template">重新添加</string>
+    <string name="tomorrow_plan">明日计划</string>
+    <string name="action_add_tomorrow_plan">明日计划</string>
+    <string name="action_day">白天模式</string>
+    <string name="action_night">夜间模式</string>
+</resources>

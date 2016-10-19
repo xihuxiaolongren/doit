@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorControlActivated">#FF4081</color>
+    <color name="colorStatus">#11FFFFFF</color>
+    <color name="titleTextColor">#FFFFFF</color>
+    <color name="shadowColor">#333333</color>
+    <color name="sky">#1E7AC7</color>
+    <color name="dark_sky">#145185</color>
+    <color name="sunset_sky">#ec8100</color>
+    <color name="sea">#145185</color>
+    <color name="sun">#FCFCB7</color>
+</resources>
