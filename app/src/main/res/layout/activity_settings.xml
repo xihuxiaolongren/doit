@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/backgroundIV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/example_1" />
+    <!--<ImageView-->
+    <!--android:id="@+id/backgroundIV"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scaleType="fitXY"-->
+    <!--android:src="@drawable/example_1" />-->
 
     <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
         android:id="@+id/day_night_background_view"
@@ -27,59 +27,62 @@
         app:title="@string/action_settings"
         app:titleTextAppearance="@style/Toolbar.TitleText" />
 
-    <ScrollView
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:fitsSystemWindows="true"
+        android:clipChildren="false"
         android:clipToPadding="false"
-        android:clipChildren="false">
+        android:fitsSystemWindows="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            android:orientation="vertical"
+            android:clipChildren="false"
             android:clipToPadding="false"
-            android:clipChildren="false">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:clipChildren="false">
+                android:clipChildren="false"
+                android:clipToPadding="false">
 
                 <RelativeLayout
-                    android:id="@+id/button"
+                    android:id="@+id/hpButton"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_alignParentRight="true">
 
                     <View
-                        android:id="@+id/buttonTriangle"
+                        android:id="@+id/hpButtonTriangle"
                         android:layout_width="15dp"
                         android:layout_height="15dp"
-                        android:background="@drawable/triangle"
+                        android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"/>
+                        android:background="@drawable/triangle" />
                 </RelativeLayout>
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/hpTV"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_alignParentTop="true"
-                    android:layout_toLeftOf="@id/button"
+                    android:layout_toLeftOf="@id/hpButton"
                     android:gravity="center_vertical"
                     android:text="主页布局"
                     android:textColor="@color/titleTextColor"
                     android:textSize="18sp" />
 
                 <com.github.aakira.expandablelayout.ExpandableLinearLayout
-                    android:id="@+id/expandableLayout"
+                    android:id="@+id/hpExpandableLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/textView"
+                    android:layout_below="@id/hpTV"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:orientation="vertical"
                     app:ael_duration="400"
                     app:ael_expanded="true">
@@ -108,7 +111,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/showAvatarTV"
                             android:checked="false"
-                            android:gravity="center"/>
+                            android:gravity="center" />
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/avatarIV"
@@ -118,64 +121,208 @@
                             android:layout_centerVertical="true"
                             android:src="@drawable/avatar"
                             app:civ_border_color="@color/titleTextColor"
-                            app:civ_border_width="3dp"/>
+                            app:civ_border_width="3dp" />
                     </RelativeLayout>
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/mottoET"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
-                        android:hint="座右铭"
-                        android:text="此时,此地,此身"
-                        android:textCursorDrawable="@null"
-                        android:textSize="14sp"
-                        app:met_baseColor="@color/titleTextColor"
-                        app:met_floatingLabel="highlight"
-                        app:met_primaryColor="@color/titleTextColor"
-                        app:met_textColor="@color/titleTextColor"
-                        app:met_textColorHint="@color/titleTextColor" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/mottoStartET"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:hint="座右铭(休息时刻-任务开始前)"
-                        android:text="一日之计在于晨"
-                        android:textCursorDrawable="@null"
-                        android:textSize="14sp"
-                        app:met_baseColor="@color/titleTextColor"
-                        app:met_floatingLabel="highlight"
-                        app:met_primaryColor="@color/titleTextColor"
-                        app:met_textColor="@color/titleTextColor"
-                        app:met_textColorHint="@color/titleTextColor" />
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/mottoET"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="座右铭"
+                            android:imeOptions="actionDone"
+                            android:imeActionLabel="@string/action_done"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:text="此时,此地,此身"
+                            android:textCursorDrawable="@null"
+                            android:textSize="14sp"
+                            app:met_baseColor="@color/titleTextColor"
+                            app:met_floatingLabel="highlight"
+                            app:met_primaryColor="@color/titleTextColor"
+                            app:met_singleLineEllipsis="true"
+                            app:met_textColor="@color/titleTextColor"
+                            app:met_textColorHint="@color/titleTextColor" />
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/mottoEndET"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
-                        android:hint="座右铭(任务完成后-休息时刻)"
-                        android:text="今日事毕"
-                        android:textCursorDrawable="@null"
-                        android:textSize="14sp"
-                        app:met_baseColor="@color/titleTextColor"
-                        app:met_floatingLabel="highlight"
-                        app:met_primaryColor="@color/titleTextColor"
-                        app:met_textColor="@color/titleTextColor"
-                        app:met_textColorHint="@color/titleTextColor" />
+                        <ImageView
+                            android:id="@+id/mottoConfirmIV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="10dp"
+                            android:src="@drawable/menu_confirm"
+                            android:tint="@color/titleTextColor"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
                 </com.github.aakira.expandablelayout.ExpandableLinearLayout>
-                
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/line_height"
-                    android:background="@color/titleTextColor"
-                    android:layout_marginRight="-16dp"
+                    android:layout_alignParentBottom="true"
                     android:layout_marginLeft="-16dp"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_marginRight="-16dp"
+                    android:background="@color/titleTextColor" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <RelativeLayout
+                    android:id="@+id/themeButton"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentRight="true">
+
+                    <View
+                        android:id="@+id/themeButtonTriangle"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/triangle" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toLeftOf="@id/themeButton"
+                    android:gravity="center_vertical"
+                    android:text="主题"
+                    android:textColor="@color/titleTextColor"
+                    android:textSize="18sp" />
+
+                <com.github.aakira.expandablelayout.ExpandableLinearLayout
+                    android:id="@+id/themeExpandableLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/textView"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical"
+                    app:ael_duration="400"
+                    app:ael_expanded="true">
+
+                    <LinearLayout
+                        android:id="@+id/autoThemeLL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="10dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginRight="10dp"
+                            android:text="自动切换日夜主题"
+                            android:textColor="@color/titleTextColor" />
+
+                        <com.rey.material.widget.Switch
+                            android:id="@+id/themeModelSwitch"
+                            style="@style/Material.Widget.Switch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:id="@+id/autoThemeRL"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_below="@id/autoThemeLL"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/dayThemeStartTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="center"
+                                android:text="日间模式开启时间\n6:00"
+                                android:textColor="@color/titleTextColor" />
+
+                            <TextView
+                                android:id="@+id/nightThemeStartTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:gravity="center"
+                                android:text="夜间模式开启时间\n6:00"
+                                android:textColor="@color/titleTextColor" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/manualThemeRL"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_below="@id/autoThemeLL"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="center_vertical">
+
+                            <com.rey.material.widget.RadioButton
+                                android:id="@+id/dayRB"
+                                style="@style/Material.Drawable.RadioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:gravity="center_vertical"
+                                android:text="日间模式" />
+
+                            <com.rey.material.widget.RadioButton
+                                android:id="@+id/nightRB"
+                                style="@style/Material.Drawable.RadioButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:gravity="center_vertical"
+                                android:text="夜间模式" />
+
+                        </RelativeLayout>
+                    </FrameLayout>
+
+
+                </com.github.aakira.expandablelayout.ExpandableLinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/line_height"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="-16dp"
+                    android:layout_marginRight="-16dp"
+                    android:background="@color/titleTextColor" />
             </RelativeLayout>
         </LinearLayout>
 
-    </ScrollView>
+    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+    <FrameLayout
+        android:id="@+id/shadowFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

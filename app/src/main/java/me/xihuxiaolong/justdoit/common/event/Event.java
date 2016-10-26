@@ -1,6 +1,7 @@
 package me.xihuxiaolong.justdoit.common.event;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,6 +34,21 @@ public class Event {
 
         public UpdatePlan(PlanDO plan) {
             this.plan = plan;
+        }
+    }
+
+    public static class UpdateSettings {
+
+        public UserSettings userSettings;
+
+        public UpdateSettings(UserSettings userSettings) {
+            this.userSettings = userSettings;
+        }
+    }
+
+    public static class ChangeDayNightTheme {
+
+        public ChangeDayNightTheme() {
         }
     }
 }

@@ -18,6 +18,8 @@ import android.widget.FrameLayout;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.library.widget.WaveHelper;
+import me.xihuxiaolong.library.widget.WaveView;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,9 +31,11 @@ public class DayNightBackgroundView extends FrameLayout{
 
     private int animationDuration = 2000;
 
+    private View rootView;
     private View mSunView;
     private View mSkyView;
-    private ObjectAnimator mSunAnim, mSunXAnim;
+    private WaveView waveView;
+    private ObjectAnimator mSunAnim, mSunXAnim, mSunAlphaAnim;
     private ObjectAnimator mSkyAnim;
 
     private View mCloud1View;
@@ -44,11 +48,14 @@ public class DayNightBackgroundView extends FrameLayout{
     private ObjectAnimator mStarY1Anim, mStarY2Anim, mStarY3Anim, mStarY4Anim, mStarY5Anim;
     private ObjectAnimator mStarR1Anim, mStarR2Anim, mStarR3Anim, mStarR4Anim, mStarR5Anim;
 
-    private AnimatorSet mSunsetAnimSet;
     private AnimatorSet mSunriseAnimSet;
 
     private int mBlueSkyColor;
     private int mSunsetSkyColor;
+    private int mWaveBehindColor;
+    private int mWaveFrontColor;
+
+    private WaveHelper mWaveHelper;
 
     public DayNightBackgroundView(Context context) {
         super(context);
@@ -77,6 +84,10 @@ public class DayNightBackgroundView extends FrameLayout{
             animationDuration = a.getInt(R.styleable.DayNightBackgroundView_animationDuration, 2000);
             a.recycle();
         }
+        mBlueSkyColor = ContextCompat.getColor(context, R.color.sky);
+        mSunsetSkyColor = ContextCompat.getColor(context, R.color.sunset_sky);
+        mWaveBehindColor = ContextCompat.getColor(context, R.color.wave_behind);
+        mWaveFrontColor = ContextCompat.getColor(context, R.color.wave_front);
         if(DayNightModeUtils.isCurrentNight()){
             initNight(context);
         }else{
@@ -97,13 +108,13 @@ public class DayNightBackgroundView extends FrameLayout{
     private void initDay(final Context context) {
         LayoutInflater.from(context).inflate(R.layout.day_background_view, this);
 
+        rootView = findViewById(R.id.bgRootView);
         mSunView = findViewById(R.id.sun);
         mSkyView = findViewById(R.id.sky);
+        waveView = (WaveView) findViewById(R.id.wave);
         mCloud1View = findViewById(R.id.cloud_1);
         mCloud2View = findViewById(R.id.cloud_2);
-
-        mBlueSkyColor = ContextCompat.getColor(context, R.color.sky);
-        mSunsetSkyColor = ContextCompat.getColor(context, R.color.sunset_sky);
+        mWaveHelper = new WaveHelper(waveView);
 
         post(new Runnable() {
             @Override
@@ -116,16 +127,16 @@ public class DayNightBackgroundView extends FrameLayout{
     private void initNight(final Context context) {
         LayoutInflater.from(context).inflate(R.layout.night_background_view, this);
 
+        rootView = findViewById(R.id.bgRootView);
         mSunView = findViewById(R.id.sun);
         mSkyView = findViewById(R.id.sky);
+        waveView = (WaveView) findViewById(R.id.wave);
         mStar1View = findViewById(R.id.star1);
         mStar2View = findViewById(R.id.star2);
         mStar3View = findViewById(R.id.star3);
         mStar4View = findViewById(R.id.star4);
         mStar5View = findViewById(R.id.star5);
-
-        mBlueSkyColor = ContextCompat.getColor(context, R.color.sky);
-        mSunsetSkyColor = ContextCompat.getColor(context, R.color.sunset_sky);
+        mWaveHelper = new WaveHelper(waveView);
 
         post(new Runnable() {
             @Override
@@ -139,26 +150,17 @@ public class DayNightBackgroundView extends FrameLayout{
      * 太阳升起
      */
     private void sunrise() {
-        // 如果太阳正在落下
-        if (mSunsetAnimSet != null && mSunsetAnimSet.isRunning()) {
-            long playTime = animationDuration - mSunAnim.getCurrentPlayTime();
-
-            mSunAnim = getSunAnimator((float) mSunAnim.getAnimatedValue(), mSunView.getTop());
-            mSunAnim.setCurrentPlayTime(playTime);
-
-            mSkyAnim = getSkyAnimator((int) mSkyAnim.getAnimatedValue(), mBlueSkyColor);
-            mSkyAnim.setCurrentPlayTime(playTime);
-
-            // 停止太阳下落的动画
-            mSunsetAnimSet.end();
-        } else {
-            mSunAnim = getSunAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
-            mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
-            mCloud1Anim = getCloud1Animator(0, mCloud1View.getLeft());
-            mCloud2Anim = getCloud2Animator(0, mCloud2View.getRight());
-        }
+        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+        mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
+        mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
+        mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
+        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
+        mCloud1Anim = getCloud1Animator(0, mCloud1View.getLeft());
+        mCloud2Anim = getCloud2Animator(0, mCloud2View.getRight());
         mSunriseAnimSet = new AnimatorSet();
-        mSunriseAnimSet.play(mSunAnim).with(mSkyAnim).with(mCloud1Anim).with(mCloud2Anim);
+        mSunriseAnimSet.play(mSunAnim).with(mSunXAnim).with(mSunAlphaAnim)
+                .with(mSkyAnim)
+                .with(mCloud1Anim).with(mCloud2Anim);
         mSunriseAnimSet.start();
     }
 
@@ -166,8 +168,10 @@ public class DayNightBackgroundView extends FrameLayout{
      * 月亮升起
      */
     private void moonrise() {
-        mSunAnim = getSunAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
-        mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
+        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+        mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
+//        mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
+        mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
         mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mStarX1Anim = getStarXAnimator(mStar1View, 0.0f, 1.0f);
         mStarX2Anim = getStarXAnimator(mStar2View, 0.0f, 1.0f);
@@ -185,7 +189,7 @@ public class DayNightBackgroundView extends FrameLayout{
         mStarR4Anim = getStarRotationAnimator(mStar4View, 0.0f, 10f);
         mStarR5Anim = getStarRotationAnimator(mStar5View, 0.0f, 270f);
         mSunriseAnimSet = new AnimatorSet();
-        mSunriseAnimSet.play(mSunAnim).with(mSunXAnim)
+        mSunriseAnimSet.play(mSunAnim).with(mSunAlphaAnim)
                 .with(mSkyAnim)
                 .with(mStarX1Anim).with(mStarX2Anim).with(mStarX3Anim).with(mStarX4Anim).with(mStarX5Anim)
                 .with(mStarY1Anim).with(mStarY2Anim).with(mStarY3Anim).with(mStarY4Anim).with(mStarY5Anim)
@@ -193,36 +197,9 @@ public class DayNightBackgroundView extends FrameLayout{
         mSunriseAnimSet.start();
     }
 
-    /**
-     * 太阳落下
-     */
-    private void sunset() {
-        // 如果太阳正在升起
-        if (mSunriseAnimSet != null && mSunriseAnimSet.isRunning()) {
-            long playTime = animationDuration - mSunAnim.getCurrentPlayTime();
-
-            mSunAnim = getSunAnimator((float) mSunAnim.getAnimatedValue(), mSkyView.getHeight());
-            mSunAnim.setCurrentPlayTime(playTime);
-
-            mSkyAnim = getSkyAnimator((int) mSkyAnim.getAnimatedValue(), mSunsetSkyColor);
-            mSkyAnim.setCurrentPlayTime(playTime);
-
-            mSunriseAnimSet.end();
-        } else {
-            mSunAnim = getSunAnimator(mSunView.getTop(), mSkyView.getHeight());
-            mSkyAnim = getSkyAnimator(mBlueSkyColor, mSunsetSkyColor);
-        }
-
-        mSunsetAnimSet = new AnimatorSet();
-        mSunsetAnimSet.play(mSunAnim)
-                .with(mSkyAnim);
-
-        mSunsetAnimSet.start();
-    }
-
-    private ObjectAnimator getSunAnimator(float sunYStart, float sunYEnd) {
+    private ObjectAnimator getSunYAnimator(float sunYStart, float sunYEnd) {
         ObjectAnimator heightAnimator = ObjectAnimator
-                .ofFloat(mSunView, "y", sunYStart, sunYEnd)
+                .ofFloat(mSunView, "y", sunYStart+100, sunYEnd)
                 .setDuration(animationDuration);
         heightAnimator.setInterpolator(new AccelerateInterpolator());
         return heightAnimator;
@@ -236,9 +213,17 @@ public class DayNightBackgroundView extends FrameLayout{
         return heightAnimator;
     }
 
+    private ObjectAnimator getSunAlphaAnimator(float start, float end) {
+        ObjectAnimator skyAnimator = ObjectAnimator
+                .ofFloat(mSunView, "alpha", start, end)
+                .setDuration(animationDuration);
+        skyAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        return skyAnimator;
+    }
+
     private ObjectAnimator getSkyAnimator(int startColor, int endColor) {
         ObjectAnimator skyAnimator = ObjectAnimator
-                .ofInt(mSkyView, "backgroundColor", startColor, endColor)
+                .ofInt(rootView, "backgroundColor", startColor, endColor)
                 .setDuration(animationDuration);
         skyAnimator.setEvaluator(new ArgbEvaluator());
         return skyAnimator;
@@ -282,6 +267,16 @@ public class DayNightBackgroundView extends FrameLayout{
                 .setDuration(0);
         starAnimator.setInterpolator(new BounceInterpolator());
         return starAnimator;
+    }
+
+    public void cancel(){
+        if(mWaveHelper != null)
+            mWaveHelper.cancel();
+    }
+
+    public void start() {
+        if(mWaveHelper != null)
+            mWaveHelper.start();
     }
 
 }

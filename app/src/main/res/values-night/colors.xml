@@ -9,7 +9,9 @@
     <color name="shadowColor">#333333</color>
     <color name="sky">#1E7AC7</color>
     <color name="dark_sky">#145185</color>
-    <color name="sunset_sky">#ec8100</color>
+    <color name="sunset_sky">#dceff9</color>
+    <color name="wave_behind">#28145185</color>
+    <color name="wave_front">#3C145185</color>
     <color name="sea">#145185</color>
     <color name="sun">#FCFCB7</color>
 </resources>

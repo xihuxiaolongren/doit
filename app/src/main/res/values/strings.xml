@@ -4,6 +4,7 @@
     <string name="action_history">历史</string>
     <string name="history">回顾</string>
     <string name="action_add">添加</string>
+    <string name="action_done">完成</string>
     <string name="sleep">休息</string>
     <string name="plan">计划</string>
     <string name="alert">提醒</string>
@@ -12,6 +13,8 @@
     <string name="add_tag">添加标签</string>
     <string name="add_alert">新建提醒</string>
     <string name="add_clock">添加提醒</string>
+    <string name="plan_start_time">任务开始时间</string>
+    <string name="plan_end_time">任务结束时间</string>
     <string name="action_confirm">确认</string>
     <string name="action_cancel">取消</string>
     <string name="add_plan">新建计划</string>

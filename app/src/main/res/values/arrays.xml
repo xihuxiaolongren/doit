@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="repeat_arr" >
+        <item>@string/repeat_everyday</item>
+        <item>@string/repeat_one_to_five</item>
+        <item>@string/repeat_custom</item>
+    </string-array>
+
+    <string-array name="repeat_week_arr" >
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+        <item>@string/sunday</item>
+    </string-array>
+
+    <string name="repeat_everyday">每天</string>
+    <string name="repeat_one_to_five">周一到周五</string>
+    <string name="repeat_custom">自定义</string>
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期天</string>
+</resources>

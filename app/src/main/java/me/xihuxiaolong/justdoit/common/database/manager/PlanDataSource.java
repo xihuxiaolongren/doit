@@ -21,15 +21,6 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         planHistoryDataSource = new PlanHistoryDataSource();
     }
 
-    private void deletePlanDOById(Long id) {
-        SQLiteDatabase database = helper.getWritableDatabase();
-        DaoSession daoSession = new DaoMaster(database).newSession();
-        daoSession.getPlanDODao().deleteByKey(id);
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-    }
-
     @Override
     public void deletePlanById(Long id) {
         PlanDO planDO = getPlanDOById(id);
@@ -57,6 +48,13 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         }
     }
 
+    private void deletePlanDOById(Long id) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        daoSession.getPlanDODao().deleteByKey(id);
+        clear(daoSession, database);
+    }
+
     @Override
     public PlanDO getPlanDOById(Long id) {
         SQLiteDatabase database = helper.getWritableDatabase();
@@ -65,10 +63,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         PlanDO planDO = daoSession.getPlanDODao().queryBuilder()
                 .where(PlanDODao.Properties.Id.eq(id)).unique();
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planDO;
     }
 
@@ -85,10 +80,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         planDO.setModifiedTime(System.currentTimeMillis());
         long planId = daoSession.getPlanDODao().insertOrReplace(planDO);
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planId;
     }
 
@@ -103,10 +95,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
             planDOs = daoSession.getPlanDODao().queryBuilder()
                     .where(PlanDODao.Properties.Id.lt(id)).orderDesc(PlanDODao.Properties.Id).limit(count).list();
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planDOs;
     }
 
@@ -118,10 +107,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         List<PlanDO> planDOs = null;
         planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.DayTime.eq(dayTime)).orderAsc(PlanDODao.Properties.StartTime).list();
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planDOs;
     }
 

@@ -1,6 +1,6 @@
 package me.xihuxiaolong.justdoit.common.database.manager;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.UserSettingsDO;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 
 
 /**
@@ -10,8 +10,8 @@ import me.xihuxiaolong.justdoit.common.database.localentity.UserSettingsDO;
  */
 public interface IUserSettingsDataSource {
 
-    UserSettingsDO getUserSettingsDOById(Long id);
+    UserSettings getUserSettingsDOById(Long id);
 
-    long insertOrReplaceUserSettingsDO(UserSettingsDO planDO);
+    long insertOrReplaceUserSettingsDO(UserSettings planDO);
 
 }

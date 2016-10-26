@@ -5,10 +5,10 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.cache.CacheService;
+import me.xihuxiaolong.justdoit.common.cache.ICacheService;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -19,56 +19,24 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 
 public class SettingsPresenter extends MvpBasePresenter<SettingsContract.IView> implements SettingsContract.IPresenter {
 
-    @Inject @Named("alertId")
-    Long alertId;
-
-    @Inject @Named("dayTime")
-    long dayTime;
-
     @Inject
-    IPlanDataSource planDataSource;
+    ICacheService cacheService;
 
     @Inject
     public SettingsPresenter() {}
 
     @Override
-    public void loadAlert() {
-        if(alertId != -1L) {
-            PlanDO alert = planDataSource.getPlanDOById(alertId);
-            if (isViewAttached())
-                getView().showAlert(alert);
-        }
+    public void loadSettings() {
+        UserSettings userSettings = cacheService.getSettings();
+        if(userSettings != null && isViewAttached())
+            getView().showSettings(userSettings);
     }
 
     @Override
-    public void saveAlert(int hour, int minute, String content) {
-        PlanDO alert = new PlanDO();
-        alert.setType(PlanDO.TYPE_ALERT);
-        alert.setContent(content);
-        alert.setStartHour(hour);
-        alert.setStartMinute(minute);
-        alert.setStartTime(hour * 60 + minute);
-        if(alertId != -1L) {
-            alert.setId(alertId);
-            planDataSource.insertOrReplacePlanDO(alert);
-            EventBus.getDefault().post(new Event.UpdatePlan(alert));
-        }else {
-            alert.setDayTime(dayTime);
-            long alertId = planDataSource.insertOrReplacePlanDO(alert);
-            alert.setId(alertId);
-            EventBus.getDefault().post(new Event.AddPlan(alert));
-        }
+    public void saveSettings(UserSettings userSettings) {
+        cacheService.put(CacheService.Keys.settings, userSettings);
+        EventBus.getDefault().post(new Event.UpdateSettings(userSettings));
         if(isViewAttached())
             getView().saveSuccess();
     }
-
-    @Override
-    public void deleteAlert() {
-        PlanDO alert = planDataSource.getPlanDOById(alertId);
-        planDataSource.deleteAlertById(alertId);
-        if(isViewAttached())
-            getView().deleteSuccess();
-        EventBus.getDefault().post(new Event.DeletePlan(alert));
-    }
-
 }

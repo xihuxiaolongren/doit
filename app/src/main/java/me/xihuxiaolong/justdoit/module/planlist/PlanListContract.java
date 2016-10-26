@@ -28,7 +28,9 @@ public class PlanListContract {
 
         void showDayInfo(String avatarUrl, DateTime dateTime);
 
-        void showSignature(String signature);
+        void showSignature(String signature, String preSignature);
+
+        void changeDayNight();
 
     }
 

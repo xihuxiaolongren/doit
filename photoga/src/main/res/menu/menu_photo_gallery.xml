@@ -1,0 +1,19 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item android:id="@+id/menu_photo_delete"
+        android:title="删除"
+        android:orderInCategory="80"
+        android:icon="@drawable/menu_delete"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/menu_photo_count"
+        android:orderInCategory="90"
+        app:actionLayout="@layout/menu_photo_gallry_complte"
+        app:showAsAction="ifRoom" />
+
+
+
+
+</menu>

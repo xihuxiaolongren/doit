@@ -36,8 +36,9 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
     public void loadPlan() {
         if(planId != -1L) {
             PlanDO planDO = planDataSource.getPlanDOById(planId);
-            if (isViewAttached())
+            if (isViewAttached()) {
                 getView().showPlan(planDO);
+            }
         }
     }
 

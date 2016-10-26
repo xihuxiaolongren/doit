@@ -6,15 +6,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
+import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.UserSettingsDO;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IUserSettingsDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -32,7 +31,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     IPlanDataSource planDataSource;
 
     @Inject
-    IUserSettingsDataSource userSettingsDataSource;
+    ICacheService cacheService;
 
     @Inject
     public PlanListPresenter() {
@@ -64,17 +63,18 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void loadUserSettings() {
-        UserSettingsDO userSettingsDO = userSettingsDataSource.getUserSettingsDOById(-1L);
-        if(userSettingsDO != null && isViewAttached()){
+//        UserSettingsDO userSettingsDO = userSettingsDataSource.getUserSettingsDOById(-1L);
+        UserSettings userSettings = cacheService.getSettings();
+        if(userSettings != null && isViewAttached()){
             int hour = DateTime.now().getHourOfDay();
-            if(hour > 0 && hour < 10){
-                getView().showSignature(userSettingsDO.getMottoPlanStart());
+//            getView().showSignature(userSettingsDO.getMotto(), userSettingsDO.getMottoPlanStart());
+            if(hour > 6 && hour < 10){
+                getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanStart());
             }else if(hour > 18 && hour < 24){
-                getView().showSignature(userSettingsDO.getMottoPlanEnd());
+                getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanEnd());
             }else
-                getView().showSignature(userSettingsDO.getMotto());
-//            getView().showDayInfo(userSettingsDO.getShowAvatar() ? userSettingsDO.getAvatarUri() : null, new DateTime());
-            getView().showDayInfo("", new DateTime());
+                getView().showSignature(userSettings.getMotto(), null);
+            getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime());
         }
     }
 
@@ -94,6 +94,17 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     public void onEvent(Event.DeletePlan deletePlanEvent) {
         if(dayTime == deletePlanEvent.plan.getDayTime())
             loadPlans();
+    }
+
+    @Subscribe
+    public void onEvent(Event.UpdateSettings updateSettings) {
+        loadUserSettings();
+    }
+
+    @Subscribe
+    public void onEvent(Event.ChangeDayNightTheme changeDayNightTheme) {
+        if(isViewAttached())
+            getView().changeDayNight();
     }
 
 }

@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import me.xihuxiaolong.justdoit.common.cache.CacheService;
+import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.library.utils.ToastUtil;
 
 /**
@@ -25,6 +27,11 @@ public class AppModule {
     @Provides
     public Application provideApplication(){
         return application;
+    }
+
+    @Provides
+    public ICacheService provideCacheService(){
+        return new CacheService();
     }
 
     @Provides

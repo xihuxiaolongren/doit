@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "me.xihuxiaolong.justdoit"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
     }
@@ -99,5 +99,8 @@ dependencies {
     compile 'me.grantland:autofittextview:0.2.1'
     compile 'hanks.xyz:htextview-library:0.1.5'
     compile 'com.ms-square:expandableTextView:0.1.4'
+    compile 'com.google.android:flexbox:0.2.3'
+
     compile project(path: ':library')
+    compile project(path: ':photoga')
 }

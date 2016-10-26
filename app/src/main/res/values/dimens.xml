@@ -11,6 +11,7 @@
     <dimen name="calendar_week_size_big">19sp</dimen>
     <dimen name="calendar_month_year_size_big">12sp</dimen>
     <dimen name="signature_size">18sp</dimen>
+    <dimen name="signature_min_size">14sp</dimen>
     <dimen name="flexible_space_image_height">200dp</dimen>
     <dimen name="flexible_recycleview_header_height">220dp</dimen>
     <dimen name="flexible_space_calendar_bottom_offset">30dp</dimen>

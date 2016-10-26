@@ -6,7 +6,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -25,6 +29,7 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView;
 import me.xihuxiaolong.library.utils.DialogUtil;
 import me.xihuxiaolong.library.utils.ToastUtil;
@@ -38,11 +43,15 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     EditPlanComponent editPlanComponent;
 
-    private Menu menu;
-
     @Inject
     ToastUtil toastUtil;
 
+    Long planId;
+
+    long dayTime;
+
+    int selected = 0;
+    Integer[] selectedArr;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -52,10 +61,12 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     StartAndEndTimeView startAndEndTV;
     @BindView(R.id.contentET)
     MaterialEditText contentET;
-
-    Long planId;
-
-    long dayTime;
+    @BindView(R.id.repeatDetailTV)
+    TextView repeatDetailTV;
+    @BindView(R.id.repeatRL)
+    RelativeLayout repeatRL;
+    @BindView(R.id.labelLL)
+    LinearLayout labelLL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +79,89 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
         setToolbar(toolbar, true);
         startAndEndTV.setStartAndEndListener(this);
+        repeatRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRepeatDialog();
+            }
+        });
+        labelLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLabelDialog();
+            }
+        });
         presenter.loadPlan();
+    }
+
+    private void showRepeatDialog() {
+        new MaterialDialog.Builder(EditPlanActivity.this)
+                .title("重复")
+                .items(R.array.repeat_arr)
+                .itemsCallbackSingleChoice(selected, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        selected = which;
+                        switch (which) {
+                            case 0:
+                                repeatDetailTV.setTag(which);
+                                repeatDetailTV.setText("每天");
+                                break;
+                            case 1:
+                                repeatDetailTV.setTag(which);
+                                repeatDetailTV.setText("周一到周五");
+                                break;
+                            case 2:
+                                showCustomRepeatDialog();
+                                break;
+                        }
+                        return true;
+                    }
+                })
+                .show();
+    }
+
+    private void showCustomRepeatDialog() {
+        new MaterialDialog.Builder(EditPlanActivity.this)
+                .title("自定义重复日期")
+                .items(R.array.repeat_week_arr)
+                .itemsCallbackMultiChoice(selectedArr, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        return false;
+                    }
+                })
+                .positiveText(getResources().getString(R.string.action_confirm))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        selectedArr = dialog.getSelectedIndices();
+                        repeatDetailTV.setText("");
+                        for (int i : selectedArr) {
+                            CharSequence s = (getResources().getTextArray(R.array.repeat_week_arr))[i];
+                            String ss = repeatDetailTV.getText().toString() + s + ",";
+                            repeatDetailTV.setText(ss);
+                        }
+                        repeatDetailTV.setText(repeatDetailTV.getText().subSequence(0, repeatDetailTV.getText().length() - 1));
+                    }
+                })
+                .negativeText(getResources().getString(R.string.action_cancel))
+                .show();
+    }
+
+    private void showLabelDialog() {
+        new MaterialDialog.Builder(EditPlanActivity.this)
+                .title("标签")
+                .customView(R.layout.dialog_label, true)
+                .positiveText(getResources().getString(R.string.action_confirm))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+
+                    }
+                })
+                .negativeText(getResources().getString(R.string.action_cancel))
+                .show();
     }
 
     @Override
@@ -93,9 +186,9 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_activity_edit_plan, menu);
         menu.findItem(R.id.action_delete).setVisible(planId != -1L);
-        if(planId == -1L){
+        if (planId == -1L) {
             getSupportActionBar().setTitle(getResources().getString(R.string.add_plan));
-        }else {
+        } else {
             getSupportActionBar().setTitle(getResources().getString(R.string.modify_plan));
         }
         return super.onCreateOptionsMenu(menu);
@@ -116,7 +209,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 });
                 return true;
             case R.id.action_confirm:
-                if(TextUtils.isEmpty(contentET.getText()))
+                if (TextUtils.isEmpty(contentET.getText()))
                     toastUtil.showToast("不能保存一条空的计划", Toast.LENGTH_SHORT);
                 else
                     presenter.savePlan(startAndEndTV.getStartHour(), startAndEndTV.getStartMinute(), startAndEndTV.getEndHour(), startAndEndTV.getEndMinute(), contentET.getText().toString());
@@ -130,9 +223,13 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         DateTime now = DateTime.now();
         RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
                 .setOnTimeSetListener(this)
+                .setTitleText(getResources().getString(R.string.plan_start_time))
                 .setDoneText(getResources().getString(R.string.action_confirm))
-                .setCancelText(getResources().getString(R.string.action_cancel))
-                .setThemeDark();
+                .setCancelText(getResources().getString(R.string.action_cancel));
+        if (DayNightModeUtils.isCurrentNight())
+            rtpd.setThemeDark();
+        else
+            rtpd.setThemeLight();
         rtpd.setStartTime(startAndEndTV.getStartHour() != 0 ? startAndEndTV.getStartHour() : now.getHourOfDay(), startAndEndTV.getStartMinute() != 0 ? startAndEndTV.getStartMinute() : now.getMinuteOfHour());
         rtpd.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER_START);
     }
@@ -140,12 +237,15 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     @Override
     public void endClick() {
         DateTime now = DateTime.now();
-
         RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
                 .setOnTimeSetListener(this)
+                .setTitleText(getResources().getString(R.string.plan_end_time))
                 .setDoneText(getResources().getString(R.string.action_confirm))
-                .setCancelText(getResources().getString(R.string.action_cancel))
-                .setThemeDark();
+                .setCancelText(getResources().getString(R.string.action_cancel));
+        if (DayNightModeUtils.isCurrentNight())
+            rtpd.setThemeDark();
+        else
+            rtpd.setThemeLight();
         rtpd.setStartTime(startAndEndTV.getEndHour() != 0 ? startAndEndTV.getEndHour() : now.getHourOfDay(), startAndEndTV.getEndMinute() != 0 ? startAndEndTV.getEndMinute() : now.getMinuteOfHour());
         rtpd.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER_END);
     }
@@ -156,24 +256,27 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     @Override
     public void onTimeSet(RadialTimePickerDialogFragment dialog, int hourOfDay, int minute) {
-        switch (dialog.getTag()){
+        switch (dialog.getTag()) {
             case FRAG_TAG_TIME_PICKER_START:
                 startAndEndTV.setStartTime(hourOfDay, minute);
-                if(hourOfDay > startAndEndTV.getEndHour()){
+                if (hourOfDay > startAndEndTV.getEndHour()) {
                     startAndEndTV.setEndTime(hourOfDay + 1, minute);
                 }
                 break;
             case FRAG_TAG_TIME_PICKER_END:
                 startAndEndTV.setEndTime(hourOfDay, minute);
+                contentET.requestFocus();
                 break;
         }
     }
 
     @Override
     public void showPlan(PlanDO plan) {
-        startAndEndTV.setStartTime(plan.getStartHour(), plan.getStartMinute());
-        startAndEndTV.setEndTime(plan.getEndHour(), plan.getEndMinute());
-        contentET.setText(plan.getContent());
+        if (plan != null) {
+            startAndEndTV.setStartTime(plan.getStartHour(), plan.getStartMinute());
+            startAndEndTV.setEndTime(plan.getEndHour(), plan.getEndMinute());
+            contentET.setText(plan.getContent());
+        }
     }
 
     @Override

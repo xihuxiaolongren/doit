@@ -1,8 +1,11 @@
 package me.xihuxiaolong.justdoit.module.planlist;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +27,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.hanks.htextview.HTextView;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -36,11 +40,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.Icepick;
 import icepick.State;
+import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.adddayplan.AddDayPlanActivity;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
@@ -68,16 +74,17 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     boolean mFabIsShown = true;
 
-    MenuItem addMenuItem, dayMenuItem, nightMenuItem;
+    MenuItem addMenuItem;
 
     Toolbar toolbar;
+    DayNightBackgroundView dayNightBackgroundView;
     FloatingActionMenu fab;
     ImageView headerIV;
     ImageView avatarIV;
     View recyclerBackground;
     View calendarRL;
     TextView calendarDayTv, calendarWeekTv, calendarMonthYearTv;
-    TextView signatureTV;
+    AutofitTextView signatureTV;
     FrameLayout shadowFrame;
     Drawable shadow;
 
@@ -130,6 +137,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        dayNightBackgroundView = (DayNightBackgroundView) getActivity().findViewById(R.id.day_night_background_view);
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mStatusBarSize = getStatusBarHeight();
@@ -148,7 +156,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         calendarDayTv = (TextView) getActivity().findViewById(R.id.calendar_day_tv);
         calendarWeekTv = (TextView) getActivity().findViewById(R.id.calendar_week_tv);
         calendarMonthYearTv = (TextView) getActivity().findViewById(R.id.calendar_month_year_tv);
-        signatureTV = (TextView) getActivity().findViewById(R.id.signatureTV);
+        signatureTV = (AutofitTextView) getActivity().findViewById(R.id.signatureTV);
         shadowFrame = (FrameLayout) getActivity().findViewById(R.id.shadowFrame);
 //        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.example);
 //        Palette.Builder builder = new Palette.Builder(largeIcon);
@@ -195,13 +203,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 //                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(4, mActionBarSize + mStatusBarSize);
 //            }
 //        });
-        Icepick.restoreInstanceState(this, savedInstanceState);
+        dayNightBackgroundView.start();
+
+//        Icepick.restoreInstanceState(this, savedInstanceState);
         return view;
     }
 
     @Override public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
+//        Icepick.saveInstanceState(this, outState);
     }
 
 
@@ -210,26 +220,12 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         inflater.inflate(R.menu.menu_frament_planlist, menu);
         addMenuItem = menu.findItem(R.id.action_add);
         addMenuItem.setVisible(!mFabIsShown);
-        dayMenuItem = menu.findItem(R.id.action_day);
-        dayMenuItem.setVisible(DayNightModeUtils.isCurrentNight());
-        nightMenuItem = menu.findItem(R.id.action_night);
-        nightMenuItem.setVisible(!DayNightModeUtils.isCurrentNight());
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_day:
-                AppCompatDelegate.setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_NO);
-                getActivity().recreate();
-                return true;
-            case R.id.action_night:
-                AppCompatDelegate.setDefaultNightMode(
-                        AppCompatDelegate.MODE_NIGHT_YES);
-                getActivity().recreate();
-                return true;
             case R.id.action_history:
                 startActivity(new Intent(getActivity(), PlanHistoryActivity.class));
                 return true;
@@ -280,14 +276,42 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         } else {
             avatarIV.setVisibility(View.VISIBLE);
             calendarDayTv.setVisibility(View.GONE);
-            avatarIV.setImageResource(R.drawable.avatar_bitmap);
+            avatarIV.setImageURI(null);
+            avatarIV.setImageURI(Uri.parse(avatarUrl));
             calendarMonthYearTv.setText(dateTime.toString(DateTimeFormat.forPattern("MM月dd日 yyyy")));
         }
     }
 
     @Override
-    public void showSignature(String signature) {
-        signatureTV.setText(signature);
+    public void showSignature(final String signature, final String preSignature) {
+        if(preSignature == null)
+            signatureTV.setText(signature);
+        else {
+            signatureTV.setText(preSignature);
+            signatureTV.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    signatureTV.animate()
+                            .alpha(0.0f)
+                            .setDuration(600)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    signatureTV.setText(signature);
+                                    signatureTV.animate().alpha(1.0f).setDuration(600).setListener(null);
+                                }
+                            });
+                }
+            }, 8000);
+
+        }
+    }
+
+    boolean hasChangeDayNight = false;
+    @Override
+    public void changeDayNight() {
+        hasChangeDayNight = true;
     }
 
     @Override
@@ -414,5 +438,20 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+//        dayNightBackgroundView.cancel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(hasChangeDayNight) {
+            ((PlanListActivity) getActivity()).restart();
+            hasChangeDayNight = false;
+        }
+    }
 
 }

@@ -3,9 +3,12 @@ package me.xihuxiaolong.justdoit.common.database.manager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
+import org.greenrobot.greendao.database.Database;
+
 import me.xihuxiaolong.justdoit.BuildConfig;
 import me.xihuxiaolong.justdoit.common.MyApplication;
 import me.xihuxiaolong.justdoit.common.database.localentity.DaoMaster;
+import me.xihuxiaolong.justdoit.common.database.localentity.DaoSession;
 
 /**
  * Created by yangxiaolong on 15/11/2.
@@ -22,6 +25,12 @@ public abstract class BaseDataSource {
             helper = new OnlineOpenHelper(MyApplication.getInstance(), -1L + MAIN_DB_NAME_SUFFIX, null);
         else
             helper = new OnlineOpenHelper(MyApplication.getInstance(), -1L + MAIN_DB_NAME_SUFFIX, null);
+    }
+
+    public void clear(DaoSession daoSession, SQLiteDatabase database){
+        daoSession.clear();
+        if(database != null && database.isOpen())
+            database.close();
     }
 
     protected class OnlineOpenHelper  extends DaoMaster.OpenHelper {

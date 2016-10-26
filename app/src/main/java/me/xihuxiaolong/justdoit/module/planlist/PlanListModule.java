@@ -5,9 +5,7 @@ import org.joda.time.DateTime;
 import dagger.Module;
 import dagger.Provides;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IUserSettingsDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.UserSettingsDataSource;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,9 +27,9 @@ public class PlanListModule {
         return new PlanDataSource();
     }
 
-    @Provides
-    IUserSettingsDataSource provideUserSettingsDataSource() {
-        return new UserSettingsDataSource();
-    }
+//    @Provides
+//    IUserSettingsDataSource provideUserSettingsDataSource() {
+//        return new UserSettingsDataSource();
+//    }
 
 }

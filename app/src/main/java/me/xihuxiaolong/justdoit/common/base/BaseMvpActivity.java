@@ -1,6 +1,7 @@
 package me.xihuxiaolong.justdoit.common.base;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -92,5 +93,15 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
             }
         }
         return true;
+    }
+
+    public void restart(){
+        Intent intent = getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        overridePendingTransition(0, 0);
+
+        startActivity(intent);
+        overridePendingTransition(0, 0);
     }
 }

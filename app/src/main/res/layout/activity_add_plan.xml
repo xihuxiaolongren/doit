@@ -67,6 +67,7 @@
                 android:layout_margin="20dp">
 
                 <LinearLayout
+                    android:id="@+id/labelLL"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
@@ -76,7 +77,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/add_tag" />
+                        android:src="@drawable/add_tag"
+                        android:tint="@color/titleTextColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -96,7 +98,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
-                        android:src="@drawable/add_clock" />
+                        android:src="@drawable/add_clock"
+                        android:tint="@color/titleTextColor"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -104,6 +107,46 @@
                         android:text="@string/add_clock"
                         android:textColor="@color/titleTextColor" />
                 </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/repeatRL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:layout_margin="20dp">
+
+                <ImageView
+                    android:id="@+id/repeatIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/repeat_plan"
+                    android:tint="@color/titleTextColor"/>
+                <TextView
+                    android:id="@+id/repeatTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/repeatIV"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="设为每日任务"
+                    android:textColor="@color/titleTextColor" />
+
+                <TextView
+                    android:id="@+id/repeatDetailTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/repeatIV"
+                    android:layout_below="@id/repeatTV"
+                    android:layout_marginRight="10dp"
+                    android:text="从不"
+                    android:textSize="12sp"
+                    android:textColor="@color/titleTextColor" />
+
             </RelativeLayout>
 
         </LinearLayout>

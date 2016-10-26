@@ -127,14 +127,14 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
     public void timeClick() {
         RadialTimePickerDialogFragment rtpd = new RadialTimePickerDialogFragment()
                 .setOnTimeSetListener(this)
+                .setTitleText(getResources().getString(R.string.alert_time))
                 .setDoneText(getResources().getString(R.string.action_confirm))
-                .setCancelText(getResources().getString(R.string.action_cancel))
-                .setThemeDark();
-        rtpd.setStartTime(singleTimeView.getHour(), singleTimeView.getMinute());
+                .setCancelText(getResources().getString(R.string.action_cancel));
         if(DayNightModeUtils.isCurrentNight())
             rtpd.setThemeDark();
         else
             rtpd.setThemeLight();
+        rtpd.setStartTime(singleTimeView.getHour(), singleTimeView.getMinute());
         rtpd.show(getSupportFragmentManager(), FRAG_TAG_TIME_PICKER);
     }
 

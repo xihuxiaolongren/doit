@@ -3,7 +3,7 @@ package me.xihuxiaolong.justdoit.module.settings;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,23 +14,17 @@ public class SettingsContract {
 
     interface IView extends MvpView {
 
-        void showAlert(PlanDO alert);
+        void showSettings(UserSettings userSettings);
 
         void saveSuccess();
-
-        void deleteSuccess();
-
-        void shareAlert();
 
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
-        void loadAlert();
+        void loadSettings();
 
-        void saveAlert(int hour, int minute, String content);
-
-        void deleteAlert();
+        void saveSettings(UserSettings userSettings);
 
     }
 }

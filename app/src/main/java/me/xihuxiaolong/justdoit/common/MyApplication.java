@@ -3,19 +3,19 @@ package me.xihuxiaolong.justdoit.common;
 import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
-import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 
 import me.xihuxiaolong.justdoit.BuildConfig;
+import me.xihuxiaolong.justdoit.common.cache.CacheService;
+import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.dagger.component.AppComponent;
 import me.xihuxiaolong.justdoit.common.dagger.component.DaggerAppComponent;
 import me.xihuxiaolong.justdoit.common.dagger.module.AppModule;
-import me.xihuxiaolong.justdoit.common.database.localentity.UserSettingsDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IUserSettingsDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.UserSettingsDataSource;
+import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import timber.log.Timber;
 
 /**
@@ -36,7 +36,7 @@ public class MyApplication extends Application {
 
     AppComponent mAppComponent;
 
-    IUserSettingsDataSource userSettingsDataSource;
+//    IUserSettingsDataSource userSettingsDataSource;
 
     public static MyApplication getInstance() {
         return myApplication;
@@ -57,8 +57,6 @@ public class MyApplication extends Application {
         //acra初始化
 //        ACRA.init(this);
 
-        AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_NO);
         myApplication = this;
         mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
@@ -74,15 +72,31 @@ public class MyApplication extends Application {
             Timber.plant(new CrashReportingTree());
         }
 
-        userSettingsDataSource = new UserSettingsDataSource();
-        if(userSettingsDataSource.getUserSettingsDOById(-1L) == null){
-            UserSettingsDO userSettingsDO = new UserSettingsDO();
-            userSettingsDO.setUserId(-1L);
-            userSettingsDO.setMotto("此时，此地，此身");
-            userSettingsDO.setMottoPlanStart("一日之计在于晨");
-            userSettingsDO.setMottoPlanEnd("今日事毕");
-            userSettingsDataSource.insertOrReplaceUserSettingsDO(userSettingsDO);
+        ICacheService cacheService = mAppComponent.getCacheService();
+        UserSettings userSettings = cacheService.getSettings();
+        if(userSettings == null){
+            userSettings = new UserSettings();
+            userSettings.setMotto("此时，此地，此身");
+            userSettings.setMottoPlanStart("一日之计在于晨");
+            userSettings.setMottoPlanEnd("今日事毕");
+            userSettings.setDayNightTheme(2);
+            userSettings.setDayStartHour(7);
+            userSettings.setDayStartMinute(0);
+            userSettings.setNightStartHour(19);
+            userSettings.setNightStartMinute(0);
+            cacheService.put(CacheService.Keys.settings, userSettings);
         }
+        switch (userSettings.getDayNightTheme()){
+            case 0:
+            case 1:
+                DayNightModeUtils.setManualTheme(userSettings.getDayNightTheme());
+                break;
+            case 2:
+                DayNightModeUtils.setAutoTheme(userSettings.getDayStartHour(), userSettings.getDayStartMinute(),
+                        userSettings.getNightStartHour(), userSettings.getNightStartMinute());
+                break;
+        }
+
     }
 
     public AppComponent getAppComponent(){

@@ -52,10 +52,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
     }
 
     @Override
@@ -71,9 +68,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);
         }
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
+        clear(daoSession, database);
     }
 
     @Override
@@ -88,9 +83,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
+        clear(daoSession, database);
     }
 
     @Override
@@ -106,9 +99,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);
         }
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
+        clear(daoSession, database);
     }
 
     @Override
@@ -123,9 +114,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
+        clear(daoSession, database);
     }
 
     @Override
@@ -141,9 +130,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);
         }
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
+        clear(daoSession, database);
     }
 
     @Override
@@ -157,10 +144,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         DaoSession daoSession = new DaoMaster(database).newSession();
         PlanHistoryDO planHistoryDO = daoSession.getPlanHistoryDODao().queryBuilder().where(PlanHistoryDODao.Properties.DayTime.eq(dayTime)).unique();
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planHistoryDO;
     }
 
@@ -171,10 +155,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
         List<PlanHistoryDO> planHistoryDOs = daoSession.getPlanHistoryDODao().queryBuilder().where(PlanHistoryDODao.Properties.DayTime.lt(currentDayTime)).orderDesc(PlanDODao.Properties.DayTime).list();
 
-        daoSession.clear();
-        if(database != null && database.isOpen())
-            database.close();
-
+        clear(daoSession, database);
         return planHistoryDOs;
     }
 
