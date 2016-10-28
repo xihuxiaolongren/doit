@@ -1,14 +1,17 @@
 package me.xihuxiaolong.justdoit.module.editplan;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,9 +20,15 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.codetroopers.betterpickers.radialtimepicker.RadialTimePickerDialogFragment;
+import com.google.android.flexbox.FlexboxLayout;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.zhy.adapter.recyclerview.CommonAdapter;
+import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.joda.time.DateTime;
+
+import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,9 +39,12 @@ import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView;
+import me.xihuxiaolong.library.utils.CollectionUtil;
 import me.xihuxiaolong.library.utils.DialogUtil;
 import me.xihuxiaolong.library.utils.ToastUtil;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, EditPlanContract.IPresenter> implements EditPlanContract.IView, StartAndEndTimeView.StartAndEndListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
@@ -65,8 +77,14 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     TextView repeatDetailTV;
     @BindView(R.id.repeatRL)
     RelativeLayout repeatRL;
-    @BindView(R.id.labelLL)
-    LinearLayout labelLL;
+    @BindView(R.id.tagRL)
+    RelativeLayout tagRL;
+    @BindView(R.id.tagDetailTV)
+    TextView tagDetailTV;
+    @BindView(R.id.linkAppDetailTV)
+    TextView linkAppDetailTV;
+    @BindView(R.id.linkAppRL)
+    RelativeLayout linkAppRL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,10 +103,16 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 showRepeatDialog();
             }
         });
-        labelLL.setOnClickListener(new View.OnClickListener() {
+        tagRL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showLabelDialog();
+                presenter.loadTags();
+            }
+        });
+        linkAppRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showThirdAppDialog();
             }
         });
         presenter.loadPlan();
@@ -139,7 +163,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         repeatDetailTV.setText("");
                         for (int i : selectedArr) {
                             CharSequence s = (getResources().getTextArray(R.array.repeat_week_arr))[i];
-                            String ss = repeatDetailTV.getText().toString() + s + ",";
+                            String ss = repeatDetailTV.getText().toString() + s + "，";
                             repeatDetailTV.setText(ss);
                         }
                         repeatDetailTV.setText(repeatDetailTV.getText().subSequence(0, repeatDetailTV.getText().length() - 1));
@@ -149,19 +173,111 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 .show();
     }
 
-    private void showLabelDialog() {
-        new MaterialDialog.Builder(EditPlanActivity.this)
+    FlexboxLayout selectTagsFl;
+    FlexboxLayout allTagsFl;
+    MaterialEditText tagET;
+
+    LinkedHashSet<String> mSelectedTags, mAllTags;
+
+    @Override
+    public void showTagDialog(LinkedHashSet<String> selectedTags, LinkedHashSet<String> allTags) {
+        mSelectedTags = selectedTags;
+        mAllTags = allTags;
+        MaterialDialog dialog = new MaterialDialog.Builder(EditPlanActivity.this)
                 .title("标签")
-                .customView(R.layout.dialog_label, true)
+                .customView(R.layout.dialog_tag, true)
                 .positiveText(getResources().getString(R.string.action_confirm))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-
+                        saveTagSuccess();
                     }
                 })
                 .negativeText(getResources().getString(R.string.action_cancel))
                 .show();
+
+        selectTagsFl = (FlexboxLayout) dialog.findViewById(R.id.select_tags_fl);
+        allTagsFl = (FlexboxLayout) dialog.findViewById(R.id.all_tags_fl);
+        tagET = (MaterialEditText) dialog.findViewById(R.id.tagET);
+        tagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && v.getText().length() > 0) {
+                    addTagSuccess(v.getText().toString());
+                    v.setText(null);
+                    return true;
+                }
+                return false;
+            }
+        });
+        for (String tag : selectedTags) {
+            addTagToSelectView(tag);
+        }
+        for (String tag : allTags) {
+            addTagToUnselectView(tag);
+        }
+    }
+
+    private void addTagToSelectView(String tag) {
+        FancyButton fancyButton = (FancyButton) LayoutInflater.from(this).inflate(R.layout.item_selected_tag, selectTagsFl, false);
+        fancyButton.setText(tag);
+        fancyButton.setTag(tag);
+        fancyButton.setOnClickListener(selectedTagClickListener);
+        selectTagsFl.addView(fancyButton);
+    }
+
+    private void addTagToUnselectView(String tag) {
+        FancyButton fancyButton = (FancyButton) LayoutInflater.from(this).inflate(R.layout.item_unselected_tag, allTagsFl, false);
+        fancyButton.setText(tag);
+        fancyButton.setTag(tag);
+        fancyButton.setOnClickListener(unselectedTagClickListener);
+        allTagsFl.addView(fancyButton);
+    }
+
+    private View.OnClickListener selectedTagClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            deleteTagSuccess((String) v.getTag());
+        }
+    };
+
+    private View.OnClickListener unselectedTagClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            addTagSuccess((String) v.getTag());
+        }
+    };
+
+    MaterialDialog thirdAppDialog;
+
+    @Override
+    public void showThirdAppDialog() {
+        thirdAppDialog = new MaterialDialog.Builder(EditPlanActivity.this)
+                .title("关联第三方应用")
+                .adapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, ThirdAppUtils.getAllApps(this)), null)
+                .show();
+    }
+
+    class ThirdAppAdapter extends CommonAdapter<ThirdAppUtils.AppItem> {
+
+        public ThirdAppAdapter(Context context, int layoutId, List<ThirdAppUtils.AppItem> datas) {
+            super(context, layoutId, datas);
+        }
+
+        @Override
+        protected void convert(ViewHolder holder, ThirdAppUtils.AppItem appItem, final int position) {
+            holder.setImageDrawable(R.id.appIcon, appItem.getAppIcon());
+            holder.setText(R.id.appName, appItem.getAppName());
+            holder.setOnClickListener(R.id.rootView, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    thirdAppDialog.dismiss();
+                    linkAppDetailTV.setText(mDatas.get(position).getAppName());
+                    linkAppDetailTV.setTag(mDatas.get(position));
+//                    ThirdAppUtils.launchapp(mContext, mDatas.get(position).getAppPackageName());
+                }
+            });
+        }
     }
 
     @Override
@@ -211,8 +327,21 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
             case R.id.action_confirm:
                 if (TextUtils.isEmpty(contentET.getText()))
                     toastUtil.showToast("不能保存一条空的计划", Toast.LENGTH_SHORT);
-                else
-                    presenter.savePlan(startAndEndTV.getStartHour(), startAndEndTV.getStartMinute(), startAndEndTV.getEndHour(), startAndEndTV.getEndMinute(), contentET.getText().toString());
+                else {
+                    String tags = null;
+                    String linkAppName = null;
+                    String linkAppPackageName = null;
+                    if(!tagDetailTV.getText().toString().equals("无"))
+                        tags = tagDetailTV.getText().toString();
+                    if(linkAppDetailTV.getTag() != null){
+                        ThirdAppUtils.AppItem appItem = (ThirdAppUtils.AppItem) linkAppDetailTV.getTag();
+                        linkAppName = appItem.getAppName();
+                        linkAppPackageName = appItem.getAppPackageName();
+                    }
+                    presenter.savePlan(startAndEndTV.getStartHour(), startAndEndTV.getStartMinute(),
+                            startAndEndTV.getEndHour(), startAndEndTV.getEndMinute(),
+                            contentET.getText().toString(), tags, linkAppName, linkAppPackageName);
+                }
                 return true;
         }
         return false;
@@ -280,18 +409,45 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     }
 
     @Override
-    public void saveSuccess() {
+    public void savePlanSuccess() {
         finish();
     }
 
     @Override
-    public void deleteSuccess() {
+    public void deletePlanSuccess() {
         finish();
     }
 
     @Override
     public void sharePlan() {
 
+    }
+
+    public void deleteTagSuccess(String tag) {
+        mSelectedTags.remove(tag);
+        selectTagsFl.removeView(selectTagsFl.findViewWithTag(tag));
+        if (allTagsFl.findViewWithTag(tag) != null)
+            allTagsFl.findViewWithTag(tag).setVisibility(View.VISIBLE);
+    }
+
+    public void addTagSuccess(String tag) {
+        if(mSelectedTags.add(tag)) {
+            addTagToSelectView(tag);
+            if (allTagsFl.findViewWithTag(tag) != null)
+                allTagsFl.findViewWithTag(tag).setVisibility(View.GONE);
+        }
+    }
+
+    public void saveTagSuccess() {
+        if (!CollectionUtil.isEmpty(mSelectedTags)) {
+            tagDetailTV.setText("");
+            for (String tag : mSelectedTags) {
+                tagDetailTV.setText(tagDetailTV.getText().toString() + tag + "，");
+            }
+            tagDetailTV.setText(tagDetailTV.getText().subSequence(0, tagDetailTV.getText().length() - 1));
+        } else {
+            tagDetailTV.setText("无");
+        }
     }
 
 }

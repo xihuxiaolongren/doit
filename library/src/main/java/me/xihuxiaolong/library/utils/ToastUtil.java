@@ -25,4 +25,9 @@ public class ToastUtil {
         toast.setGravity(gravity, 0, 0);
         toast.show();
     }
+
+    public static void showToast1(Context context, String message, int duration){
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
+    }
 }

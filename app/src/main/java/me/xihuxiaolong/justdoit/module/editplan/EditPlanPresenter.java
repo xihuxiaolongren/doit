@@ -3,7 +3,8 @@ package me.xihuxiaolong.justdoit.module.editplan;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
-import org.joda.time.DateTime;
+
+import java.util.LinkedHashSet;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,7 +44,7 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
     }
 
     @Override
-    public void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content) {
+    public void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName) {
         PlanDO plan = new PlanDO();
         plan.setType(PlanDO.TYPE_PLAN);
         plan.setContent(content);
@@ -53,6 +54,9 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         plan.setEndHour(endHour);
         plan.setEndMinute(endMinute);
         plan.setEndTime(endHour * 60 + endMinute);
+        plan.setTags(tags);
+        plan.setLinkAppName(linkAppName);
+        plan.setLinkAppPackageName(linkAppPackageName);
         if(planId != -1L) {
             plan.setId(planId);
             planDataSource.insertOrReplacePlanDO(plan);
@@ -64,7 +68,7 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
             EventBus.getDefault().post(new Event.AddPlan(plan));
         }
         if(isViewAttached())
-            getView().saveSuccess();
+            getView().savePlanSuccess();
 
 
     }
@@ -74,8 +78,27 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         PlanDO planDO = planDataSource.getPlanDOById(planId);
         planDataSource.deletePlanById(planId);
         if(isViewAttached())
-            getView().deleteSuccess();
+            getView().deletePlanSuccess();
         EventBus.getDefault().post(new Event.DeletePlan(planDO));
+    }
+
+    LinkedHashSet<String> mSelectedTags, mAllTags;
+
+
+    @Override
+    public void loadTags() {
+        mSelectedTags = new LinkedHashSet<>();
+        mAllTags = new LinkedHashSet<>();
+//        selectTags.add("工作");
+//        selectTags.add("家庭");
+
+        mAllTags.add("工作");
+        mAllTags.add("家庭");
+        mAllTags.add("阅读");
+        mAllTags.add("开发者头条");
+        mAllTags.add("常看看");
+        if(isViewAttached())
+            getView().showTagDialog(mSelectedTags, mAllTags);
     }
 
 }

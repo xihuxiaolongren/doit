@@ -1,13 +1,18 @@
 package me.xihuxiaolong.justdoit.module.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.nineoldandroids.view.ViewHelper;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
@@ -27,7 +32,9 @@ import java.util.List;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryFragment;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,8 +77,11 @@ public class PlanListWrapper {
 
         PlanListOnClickListener planListOnClickListener;
 
+        float scale;
+
         public PlanListAdapter(Context context, List<PlanDO> datas, PlanListOnClickListener planListOnClickListener) {
             super(context, datas);
+            scale = context.getResources().getDisplayMetrics().density;
             addItemViewDelegate(new AlertItemDelegate());
             addItemViewDelegate(new PlanItemDelegate());
             this.planListOnClickListener = planListOnClickListener;
@@ -122,7 +132,7 @@ public class PlanListWrapper {
                 }else{
                     holder.setText(R.id.doTV, "ToDo");
                 }
-                ViewHelper.setAlpha(holder.getView(R.id.contentTV), 0.3f);
+//                ViewHelper.setAlpha(holder.getView(R.id.contentTV), 0.3f);
                 holder.setTag(R.id.rootView, planDO);
                 holder.setOnClickListener(R.id.rootView, alertListener);
             }
@@ -148,7 +158,6 @@ public class PlanListWrapper {
                 DateTime endTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
                 holder.setText(R.id.endTimeTV, endTime.toString(builder));
                 holder.setText(R.id.contentTV, planDO.getContent());
-
                 Interval interv = new Interval(startTime, endTime);
                 PeriodFormatter formatter = new PeriodFormatterBuilder()
                         .appendHours()
@@ -159,23 +168,59 @@ public class PlanListWrapper {
                 holder.setText(R.id.periodTV, interv.toPeriod().toString(formatter));
 
                 TextView contentTV = holder.getView(R.id.contentTV);
+                ImageView timelineIV = holder.getView(R.id.timelineIV);
                 if(endTime.isBeforeNow()){
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
                     holder.setText(R.id.doTV, "Done");
-                    ViewHelper.setAlpha(contentTV, 0.3f);
+                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
+//                    ViewHelper.setAlpha(contentTV, 0.3f);
                 }else if(startTime.isAfterNow()){
                     holder.setText(R.id.doTV, "ToDo");
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-                    ViewHelper.setAlpha(contentTV, 0.3f);
+                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
+//                    ViewHelper.setAlpha(contentTV, 0.3f);
                 }else{
                     holder.setText(R.id.doTV, "Doing");
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
-                    ViewHelper.setAlpha(contentTV, 1f);
+                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.accent));
+//                    ViewHelper.setAlpha(contentTV, 1f);
                 }
+                FancyButton linkAppFB = holder.getView(R.id.linkAppFB);
+                linkAppFB.setTag(planDO);
+                linkAppFB.setOnClickListener(linkAppClickListener);
+                if(planDO.getLinkAppName() != null) {
+                    linkAppFB.setIconResource(ThirdAppUtils.getIcon(mContext, planDO.getLinkAppPackageName()));
+                    linkAppFB.getIconImageObject().setLayoutParams(new LinearLayout.LayoutParams((int)(28 * scale + 0.5f), (int)(28 * scale + 0.5f)));
+                    linkAppFB.setText(planDO.getLinkAppName());
+                    linkAppFB.setVisibility(View.VISIBLE);
+                }else{
+                    linkAppFB.setVisibility(View.GONE);
+                }
+                FlexboxLayout flexboxLayout = holder.getView(R.id.tags_fl);
+                if(!TextUtils.isEmpty(planDO.getTags())){
+                    flexboxLayout.removeAllViews();
+                    flexboxLayout.setVisibility(View.VISIBLE);
+                    for(String tag : planDO.getTags().split("，")){
+                        TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
+                        textView.setText("# " + tag);
+                        flexboxLayout.addView(textView);
+                    }
+                }else{
+                    flexboxLayout.setVisibility(View.GONE);
+                }
+
                 holder.setTag(R.id.rootView, planDO);
                 holder.setOnClickListener(R.id.rootView, planListener);
             }
         }
+
+        private View.OnClickListener linkAppClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlanDO planDO = (PlanDO) v.getTag();
+                ThirdAppUtils.launchapp(mContext, planDO.getLinkAppPackageName());
+            }
+        };
     }
 
     public interface PlanListOnClickListener{

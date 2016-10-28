@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/notice"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/sky">
+
+    <ImageView
+        android:id="@+id/deleteIV"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="10dp"
+        android:src="@drawable/menu_add"
+        android:tint="@color/titleTextColor" />
+
+    <ImageView
+        android:id="@+id/dayThemeIV"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_toLeftOf="@+id/rightLL"
+        android:layout_toRightOf="@id/dayThemeIV"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/contentTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="2"
+            android:layout_marginBottom="14dp"
+            android:textColor="@color/titleTextColor"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#12000000"
+            android:padding="5dp">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/avatar"
+                android:scaleType="centerCrop"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="100dp"
+                android:text="网易考拉海购"/>
+        </LinearLayout>
+        <!--<mehdi.sakout.fancybuttons.FancyButton-->
+            <!--android:id="@+id/linkAppFB"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="15dp"-->
+            <!--android:paddingLeft="8dp"-->
+            <!--android:paddingRight="12dp"-->
+            <!--fancy:fb_defaultColor="#12000000"-->
+            <!--fancy:fb_iconPaddingRight="12dp"-->
+            <!--fancy:fb_iconPosition="left"-->
+            <!--fancy:fb_radius="9dp"-->
+            <!--fancy:fb_text="网易考拉海购"-->
+            <!--fancy:fb_textColor="@color/titleTextColor"-->
+            <!--fancy:fb_textSize="12sp" />-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightLL"
+        android:layout_width="60dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/widget_prev"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/fast_backward" />
+
+        <ImageView
+            android:id="@+id/widget_play"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/stop" />
+
+        <ImageView
+            android:id="@+id/widget_fav"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+
+</RelativeLayout>

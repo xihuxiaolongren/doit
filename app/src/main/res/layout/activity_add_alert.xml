@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:hint="输入内容"
-                android:textCursorDrawable="@null"
+                android:textCursorDrawable="@drawable/color_cursor"
                 android:textSize="14sp"
                 app:met_baseColor="@color/titleTextColor"
                 app:met_floatingLabel="highlight"

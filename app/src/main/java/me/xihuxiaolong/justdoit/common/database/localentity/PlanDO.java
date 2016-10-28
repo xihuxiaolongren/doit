@@ -26,7 +26,11 @@ public class PlanDO {
     private String title;
 
     private String content;
-    
+
+    private String tags;
+    private String linkAppName;
+    private String linkAppPackageName;
+
     private int startTime;
     private int startHour;
     private int startMinute;
@@ -37,16 +41,20 @@ public class PlanDO {
 
     private long dayTime;
 
-    @Generated(hash = 1449245456)
-    public PlanDO(Long id, long createdTime, long modifiedTime, int type,
-            String title, String content, int startTime, int startHour,
-            int startMinute, int endTime, int endHour, int endMinute, long dayTime) {
+    @Generated(hash = 789130426)
+    public PlanDO(Long id, long createdTime, long modifiedTime, int type, String title,
+            String content, String tags, String linkAppName, String linkAppPackageName,
+            int startTime, int startHour, int startMinute, int endTime, int endHour,
+            int endMinute, long dayTime) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
         this.type = type;
         this.title = title;
         this.content = content;
+        this.tags = tags;
+        this.linkAppName = linkAppName;
+        this.linkAppPackageName = linkAppPackageName;
         this.startTime = startTime;
         this.startHour = startHour;
         this.startMinute = startMinute;
@@ -162,6 +170,30 @@ public class PlanDO {
 
     public void setDayTime(long dayTime) {
         this.dayTime = dayTime;
+    }
+
+    public String getTags() {
+        return this.tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getLinkAppName() {
+        return this.linkAppName;
+    }
+
+    public void setLinkAppName(String linkAppName) {
+        this.linkAppName = linkAppName;
+    }
+
+    public String getLinkAppPackageName() {
+        return this.linkAppPackageName;
+    }
+
+    public void setLinkAppPackageName(String linkAppPackageName) {
+        this.linkAppPackageName = linkAppPackageName;
     }
 
 }

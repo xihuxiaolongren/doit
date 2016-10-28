@@ -111,4 +111,12 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         return planDOs;
     }
 
+    private void addTag(String tag){
+
+    }
+
+    private void deleteTag(String label){
+
+    }
+
 }

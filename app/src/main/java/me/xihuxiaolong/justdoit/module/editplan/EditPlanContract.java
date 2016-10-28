@@ -3,6 +3,9 @@ package me.xihuxiaolong.justdoit.module.editplan;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
+import java.util.LinkedHashSet;
+import java.util.List;
+
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 
 /**
@@ -16,11 +19,15 @@ public class EditPlanContract {
 
         void showPlan(PlanDO plan);
 
-        void saveSuccess();
+        void savePlanSuccess();
 
-        void deleteSuccess();
+        void deletePlanSuccess();
 
         void sharePlan();
+
+        void showTagDialog(LinkedHashSet<String> selectedTags, LinkedHashSet<String> allTags);
+
+        void showThirdAppDialog();
 
     }
 
@@ -28,9 +35,17 @@ public class EditPlanContract {
 
         void loadPlan();
 
-        void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content);
+        void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName);
 
         void deletePlan();
+
+        void loadTags();
+
+//        void deleteTag(String tag);
+//
+//        void addTag(String tag);
+//
+//        void saveTag();
 
     }
 }

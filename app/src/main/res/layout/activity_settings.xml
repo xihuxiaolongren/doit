@@ -142,7 +142,7 @@
                             android:inputType="text"
                             android:maxLines="1"
                             android:text="此时,此地,此身"
-                            android:textCursorDrawable="@null"
+                            android:textCursorDrawable="@drawable/color_cursor"
                             android:textSize="14sp"
                             app:met_baseColor="@color/titleTextColor"
                             app:met_floatingLabel="highlight"

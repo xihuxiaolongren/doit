@@ -1,65 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="80.5dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingTop="15dp"
-        android:paddingBottom="10dp">
+        android:paddingBottom="10dp"
+        android:paddingTop="15dp">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingLeft="15dp">
+
             <TextView
                 android:id="@+id/startTimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="7:30 am"
-                android:textColor="@color/titleTextColor"/>
+                android:textAppearance="@style/MyTextAppearance.Body1" />
+
             <TextView
                 android:id="@+id/periodTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1 小时 30 分"
-                android:textSize="10sp"
-                android:textColor="@color/titleTextColor"/>
+                android:textAppearance="@style/MyTextAppearance.Body1"
+                android:textSize="10sp" />
+
             <TextView
                 android:id="@+id/endTimeTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10:00 am"
-                android:textColor="@color/titleTextColor"/>
+                android:textAppearance="@style/MyTextAppearance.Body1" />
+
             <TextView
                 android:id="@+id/doTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Done"
-                android:textColor="@color/titleTextColor"/>
+                android:textAppearance="@style/MyTextAppearance.Body1" />
         </LinearLayout>
     </FrameLayout>
 
     <ImageView
+        android:id="@+id/timelineIV"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:src="@drawable/timeline_plan_little"
         android:scaleType="fitXY"
-        android:tint="@color/titleTextColor"/>
+        android:src="@drawable/timeline_plan_little"
+        android:tint="@color/titleTextColor" />
 
-    <TextView
-        android:id="@+id/contentTV"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
-        android:paddingTop="15dp"
-        android:paddingBottom="10dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingBottom="15dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:textColor="@color/titleTextColor"/>
+        android:paddingTop="15dp">
+
+        <TextView
+            android:id="@+id/contentTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:paddingRight="15dp"
+            android:textAppearance="@style/MyTextAppearance.Body1" />
+
+        <mehdi.sakout.fancybuttons.FancyButton
+            android:id="@+id/linkAppFB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="12dp"
+            fancy:fb_defaultColor="#12000000"
+            fancy:fb_iconPaddingRight="12dp"
+            fancy:fb_iconPosition="left"
+            fancy:fb_radius="9dp"
+            fancy:fb_text="网易考拉海购"
+            fancy:fb_textColor="@color/titleTextColor"
+            fancy:fb_textSize="12sp" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/tags_fl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            app:flexWrap="wrap">
+
+        </com.google.android.flexbox.FlexboxLayout>
+    </LinearLayout>
+
 </LinearLayout>
