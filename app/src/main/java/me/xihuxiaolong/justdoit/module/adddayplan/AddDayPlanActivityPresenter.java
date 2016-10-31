@@ -52,6 +52,18 @@ public class AddDayPlanActivityPresenter extends MvpBasePresenter<AddDayPlanActi
     }
 
     @Override
+    public void loadTemplateList() {
+        List<String> templates = new ArrayList<>();
+        templates.add("sss");
+        templates.add("sss");
+        templates.add("sss");
+        templates.add("sss");
+        if(isViewAttached()) {
+            getView().showTemplateList(templates);
+        }
+    }
+
+    @Override
     public void createDayPlan(boolean useYesterdayTemplate) {
         if(isViewAttached()) {
             getView().showContent(new ArrayList<PlanDO>());

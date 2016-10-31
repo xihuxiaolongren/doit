@@ -3,8 +3,6 @@ package me.xihuxiaolong.justdoit.module.adddayplan;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
@@ -14,29 +12,19 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
  * User: xiaolong
  * Date: 16/8/12.
  */
-public class AddDayPlanActivityContract {
+public class PlanTemplateContract {
 
     interface IView extends MvpView {
 
-        void showDayInfo(DateTime dateTime);
+        void showPlans(List<PlanDO> plans);
 
-        void showContent(List<PlanDO> planDOs);
-
-        void showTemplateList(List<String> planDOs);
-
-        void showEmptyView();
+        void showSignature(String signature);
 
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
-        void loadDayInfo();
-
-        void loadData();
-
-        void loadTemplateList();
-
-        void createDayPlan(boolean useYesterdayTemplate);
+        void loadPlans();
 
     }
 }

@@ -24,4 +24,5 @@
     <!-- 因为有阴影等问题，程序无法精确获取menu的高度，根据源代码计算. -->
     <dimen name="fab_menu_size_normal">66dp</dimen>
     <dimen name="line_height">0.5dp</dimen>
+    <dimen name="overlap_pager_margin">-60dp</dimen>
 </resources>

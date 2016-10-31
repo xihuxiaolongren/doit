@@ -25,7 +25,7 @@
         android:fitsSystemWindows="true"
         app:contentInsetStartWithNavigation="0dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:title="@string/history"
+        app:title="@string/select_template"
         app:titleTextAppearance="@style/Toolbar.TitleText">
 
         <RelativeLayout
@@ -77,55 +77,30 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="500dp"
         android:layout_below="@id/toolbar"
-        android:paddingTop="20dp"
+        android:clipToPadding="false"
+        android:paddingLeft="70dp"
+        android:paddingRight="70dp"
+        android:paddingTop="50dp"
         android:paddingBottom="50dp"
-        android:clipToPadding="false"/>
+        />
+    <!--<me.crosswall.lib.coverflow.core.PagerContainer-->
+        <!--android:id="@+id/pager_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@id/toolbar">-->
 
-    <LinearLayout
-        android:id="@+id/emptyView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:orientation="vertical">
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/viewpager"-->
+            <!--android:layout_width="300dp"-->
+            <!--android:layout_height="400dp"-->
+            <!--android:layout_gravity="center" />-->
 
-        <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/use_today_template"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="150dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            fancy:fb_borderColor="@color/titleTextColor"
-            fancy:fb_borderWidth="1dp"
-            fancy:fb_defaultColor="@android:color/transparent"
-            fancy:fb_radius="4dp"
-            fancy:fb_text="@string/use_today_template"
-            fancy:fb_textColor="@color/titleTextColor" />
-
-        <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/empty_template"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="30dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            fancy:fb_borderColor="@color/titleTextColor"
-            fancy:fb_borderWidth="1dp"
-            fancy:fb_defaultColor="@android:color/transparent"
-            fancy:fb_radius="4dp"
-            fancy:fb_text="@string/empty_template"
-            fancy:fb_textColor="@color/titleTextColor" />
-
-    </LinearLayout>
+    <!--</me.crosswall.lib.coverflow.core.PagerContainer>-->
 
 
 </RelativeLayout>

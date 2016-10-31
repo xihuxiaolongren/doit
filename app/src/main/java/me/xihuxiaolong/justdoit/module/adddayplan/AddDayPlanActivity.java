@@ -1,19 +1,19 @@
 package me.xihuxiaolong.justdoit.module.adddayplan;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -23,14 +23,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.crosswall.lib.coverflow.CoverFlow;
+import me.crosswall.lib.coverflow.core.PagerContainer;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
-import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryFragment;
 
 public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContract.IView, AddDayPlanActivityContract.IPresenter> implements AddDayPlanActivityContract.IView {
 
@@ -48,12 +49,10 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
     TextView calendarMonthYearTv;
     @BindView(R.id.backgroundIV)
     ImageView backgroundIV;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-    @BindView(R.id.emptyView)
-    LinearLayout emptyView;
-
-    PlanListWrapper planListWrapper;
+    //    @BindView(R.id.pager_container)
+//    PagerContainer pagerContainer;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +62,18 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
         setContentView(R.layout.activity_add_day_plan);
         ButterKnife.bind(this);
         setToolbar(toolbar, true);
-
-        planListWrapper = new PlanListWrapper(this, recyclerView);
-
-        presenter.loadDayInfo();
-        presenter.loadData();
+        viewPager.setPageMargin(20);
+        viewPager.setPageTransformer(false, new ViewPager.PageTransformer() {
+            @Override
+            public void transformPage(View page, float position) {
+                final float normalizedposition = Math.abs(Math.abs(position) - 1);
+//                page.setScaleX(normalizedposition / 1.1f);
+//                page.setScaleY(normalizedposition / 1.1f);
+            }
+        });
+//        viewPager.setClipToPadding(false);
+//        viewPager.setPadding(100,0,100,0);
+        presenter.loadTemplateList();
     }
 
     @NonNull
@@ -96,15 +102,24 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
 
     @Override
     public void showContent(List<PlanDO> planDOs) {
-        recyclerView.setVisibility(View.VISIBLE);
-        emptyView.setVisibility(View.GONE);
-        planListWrapper.setItems(planDOs);
+    }
+
+    @Override
+    public void showTemplateList(List<String> planDOs) {
+        viewPager.setOffscreenPageLimit(planDOs.size());
+        FragmentPagerItems.Creator creator = FragmentPagerItems.with(this);
+        for (int i = 0; i < planDOs.size(); ++i) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("dayTime", System.currentTimeMillis());
+            creator.add("", PlanTemplateFragment.class, bundle);
+        }
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), creator.create());
+        viewPager.setAdapter(adapter);
     }
 
     @Override
     public void showEmptyView() {
-        recyclerView.setVisibility(View.GONE);
-        emptyView.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -129,13 +144,4 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.use_today_template)
-    void useTodayTemplate(View v) {
-        presenter.createDayPlan(true);
-    }
-
-    @OnClick(R.id.empty_template)
-    void emptyTemplate(View v) {
-        presenter.createDayPlan(false);
-    }
 }

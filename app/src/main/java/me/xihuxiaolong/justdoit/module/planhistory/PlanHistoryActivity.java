@@ -54,14 +54,6 @@ public class PlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityCont
 
         setToolbar(toolbar, true);
 
-//        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.example);
-//        Palette.Builder builder = new Palette.Builder(largeIcon);
-//        Palette palette = builder.generate();
-//        vibrant = palette.getVibrantColor(0x000000);
-//        darkVibrant = palette.getDarkVibrantColor(0x000000);
-//
-//        toolbar.setBackgroundColor(darkVibrant);
-//        viewpager.setBackgroundColor(vibrant);
         viewpager.addOnPageChangeListener(this);
         presenter.loadHistorys();
     }

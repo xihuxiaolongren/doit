@@ -123,6 +123,11 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         return planDO;
     }
 
+    @Override
+    public List<PlanDO> listPlanDOsByDefault() {
+        return null;
+    }
+
     private void addTag(String tag){
 
     }

@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.0'
     compile 'com.android.support:palette-v7:24.2.0'
     compile 'com.android.support:percent:24.2.0'
+    compile 'com.android.support:cardview-v7:24.2.0'
     //json解析库
     compile 'com.google.code.gson:gson:2.6.2'
     //友盟统计
@@ -100,6 +101,12 @@ dependencies {
     compile 'hanks.xyz:htextview-library:0.1.5'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'com.google.android:flexbox:0.2.3'
+    compile 'com.github.crosswall:Android-Coverflow:release-v1.0.4'
+    //Core
+//    compile 'com.github.gabrielemariotti.cards:cardslib-core:2.1.0'
+
+    //Optional for built-in cards
+//    compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
 
     compile project(path: ':library')
     compile project(path: ':photoga')
