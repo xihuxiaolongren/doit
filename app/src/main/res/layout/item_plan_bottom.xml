@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:paddingLeft="15dp"
-        android:text="24:00"
         android:textColor="@color/titleTextColor" />
 
     <ImageView
@@ -28,6 +27,5 @@
         android:layout_weight="1"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:text="@string/sleep"
         android:textColor="@color/titleTextColor" />
 </LinearLayout>

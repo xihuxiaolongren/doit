@@ -3,26 +3,28 @@
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notice"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:background="@color/sky">
-
-    <ImageView
-        android:id="@+id/deleteIV"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:padding="10dp"
-        android:src="@drawable/menu_add"
-        android:tint="@color/titleTextColor" />
+    android:layout_height="120dp"
+    android:background="@color/notificationNightSky">
 
     <ImageView
         android:id="@+id/dayThemeIV"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop" />
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:background="#12000000"
+        android:scaleType="centerInside"
+        android:src="@drawable/notify_night_theme_bg"/>
+
+    <ImageView
+        android:id="@+id/deleteIV"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:padding="10dp"
+        android:src="@drawable/icon_delete"
+        android:tint="@color/notificationNightTitleTextColor" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:layout_toLeftOf="@+id/rightLL"
         android:layout_toRightOf="@id/dayThemeIV"
         android:orientation="vertical"
@@ -32,52 +34,56 @@
             android:id="@+id/contentTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:ellipsize="end"
-            android:lines="2"
-            android:layout_marginBottom="14dp"
-            android:textColor="@color/titleTextColor"
+            android:lines="3"
+            android:textColor="@color/notificationNightTitleTextColor"
             android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:background="#12000000"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="5dp">
+
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginRight="10dp"
-                android:src="@drawable/avatar"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxWidth="100dp"
-                android:text="网易考拉海购"/>
+                android:text="网易考拉海购"
+                android:textColor="@color/notificationNightTitleTextColor" />
         </LinearLayout>
         <!--<mehdi.sakout.fancybuttons.FancyButton-->
-            <!--android:id="@+id/linkAppFB"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginRight="15dp"-->
-            <!--android:paddingLeft="8dp"-->
-            <!--android:paddingRight="12dp"-->
-            <!--fancy:fb_defaultColor="#12000000"-->
-            <!--fancy:fb_iconPaddingRight="12dp"-->
-            <!--fancy:fb_iconPosition="left"-->
-            <!--fancy:fb_radius="9dp"-->
-            <!--fancy:fb_text="网易考拉海购"-->
-            <!--fancy:fb_textColor="@color/titleTextColor"-->
-            <!--fancy:fb_textSize="12sp" />-->
+        <!--android:id="@+id/linkAppFB"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginRight="15dp"-->
+        <!--android:paddingLeft="8dp"-->
+        <!--android:paddingRight="12dp"-->
+        <!--fancy:fb_defaultColor="#12000000"-->
+        <!--fancy:fb_iconPaddingRight="12dp"-->
+        <!--fancy:fb_iconPosition="left"-->
+        <!--fancy:fb_radius="9dp"-->
+        <!--fancy:fb_text="网易考拉海购"-->
+        <!--fancy:fb_textColor="@color/notificationNightTitleTextColor"-->
+        <!--fancy:fb_textSize="12sp" />-->
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/rightLL"
-        android:layout_width="60dp"
-        android:layout_height="100dp"
+        android:layout_width="50dp"
+        android:layout_height="120dp"
         android:layout_alignParentRight="true"
+        android:background="#12000000"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
@@ -87,7 +93,8 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            android:src="@drawable/fast_backward" />
+            android:src="@drawable/menu_confirm"
+            android:tint="@color/notificationNightTitleTextColor" />
 
         <ImageView
             android:id="@+id/widget_play"
@@ -95,14 +102,17 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scaleType="centerInside"
-            android:src="@drawable/stop" />
+            android:src="@drawable/right_arrow"
+            android:tint="@color/notificationNightTitleTextColor" />
 
         <ImageView
             android:id="@+id/widget_fav"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:scaleType="centerInside" />
+            android:scaleType="centerInside"
+            android:src="@drawable/left_arrow"
+            android:tint="@color/notificationNightTitleTextColor" />
     </LinearLayout>
 
 </RelativeLayout>

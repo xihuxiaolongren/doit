@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/notice"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@color/notificationNightSky">
+
+    <ImageView
+        android:id="@+id/dayThemeIV"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="#12000000"
+        android:scaleType="centerInside"
+        android:src="@drawable/notify_night_theme_bg"
+        android:padding="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/rightLL"
+        android:layout_toRightOf="@id/dayThemeIV"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:id="@+id/contentTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/notificationNightTitleTextColor"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="#12000000"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginRight="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="100dp"
+                android:text="网易考拉海购"
+                android:textColor="@color/notificationNightTitleTextColor" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rightLL"
+        android:layout_width="110dp"
+        android:layout_height="64dp"
+        android:layout_alignParentRight="true"
+        android:background="#12000000"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/widget_prev"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/menu_confirm"
+            android:tint="@color/notificationNightTitleTextColor" />
+
+        <ImageView
+            android:id="@+id/widget_play"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/right_arrow"
+            android:tint="@color/notificationNightTitleTextColor" />
+
+        <ImageView
+            android:id="@+id/deleteIV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:scaleType="centerInside"
+            android:src="@drawable/icon_delete"
+            android:tint="@color/notificationNightTitleTextColor" />
+    </LinearLayout>
+
+</RelativeLayout>

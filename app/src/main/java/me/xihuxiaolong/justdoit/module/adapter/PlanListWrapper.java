@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
-import com.nineoldandroids.view.ViewHelper;
 import com.zhy.adapter.recyclerview.MultiItemTypeAdapter;
 import com.zhy.adapter.recyclerview.base.ItemViewDelegate;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -33,7 +32,6 @@ import java.util.List;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
-import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryFragment;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
@@ -57,7 +55,7 @@ public class PlanListWrapper {
         mEmptyWrapper = new EmptyWrapper(adapter);
         mEmptyWrapper.setEmptyView(LayoutInflater.from(context).inflate(R.layout.recycler_empty, recyclerView, false));
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mEmptyWrapper);
-        final View footView = LayoutInflater.from(context).inflate(R.layout.recycler_bottom, recyclerView, false);
+        final View footView = LayoutInflater.from(context).inflate(R.layout.item_plan_bottom, recyclerView, false);
         mHeaderAndFooterWrapper.addFootView(footView);
         recyclerView.setAdapter(mHeaderAndFooterWrapper);
     }
@@ -124,13 +122,15 @@ public class PlanListWrapper {
             @Override
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
                 DateTime dateTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
-                DateTimeFormatter builder = DateTimeFormat.forPattern("HH:mm");
+                DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
                 holder.setText(R.id.startTimeTV, dateTime.toString(builder));
                 holder.setText(R.id.contentTV, planDO.getContent());
                 if(dateTime.isBeforeNow()){
-                    holder.setText(R.id.doTV, "Done");
+                    holder.setText(R.id.doTV, "已完成");
+                    holder.setVisible(R.id.doTV, true);
                 }else{
-                    holder.setText(R.id.doTV, "ToDo");
+                    holder.setText(R.id.doTV, "未开始");
+                    holder.setVisible(R.id.doTV, true);
                 }
 //                ViewHelper.setAlpha(holder.getView(R.id.contentTV), 0.3f);
                 holder.setTag(R.id.rootView, planDO);
@@ -152,7 +152,7 @@ public class PlanListWrapper {
 
             @Override
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
-                DateTimeFormatter builder = DateTimeFormat.forPattern("HH:mm");
+                DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
                 DateTime startTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
                 holder.setText(R.id.startTimeTV, startTime.toString(builder));
                 DateTime endTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
@@ -165,24 +165,29 @@ public class PlanListWrapper {
                         .appendMinutes()
                         .appendSuffix(" 分 ")
                         .toFormatter();
-                holder.setText(R.id.periodTV, interv.toPeriod().toString(formatter));
+//                holder.setText(R.id.periodTV, interv.toPeriod().toString(formatter));
 
                 TextView contentTV = holder.getView(R.id.contentTV);
                 ImageView timelineIV = holder.getView(R.id.timelineIV);
                 if(endTime.isBeforeNow()){
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-                    holder.setText(R.id.doTV, "Done");
+                    holder.setText(R.id.doTV, "已完成");
+                    holder.setVisible(R.id.doTV, true);
                     timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
 //                    ViewHelper.setAlpha(contentTV, 0.3f);
                 }else if(startTime.isAfterNow()){
-                    holder.setText(R.id.doTV, "ToDo");
+                    holder.setText(R.id.doTV, "未开始");
+                    holder.setVisible(R.id.doTV, true);
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
+//                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
+                    timelineIV.setImageResource(R.drawable.timeline_plan_other);
 //                    ViewHelper.setAlpha(contentTV, 0.3f);
                 }else{
-                    holder.setText(R.id.doTV, "Doing");
+                    holder.setText(R.id.doTV, "进行中");
+                    holder.setVisible(R.id.doTV, true);
                     contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
-                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.accent));
+//                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.accent));
+                    timelineIV.setImageResource(R.drawable.timeline_plan_doing);
 //                    ViewHelper.setAlpha(contentTV, 1f);
                 }
                 FancyButton linkAppFB = holder.getView(R.id.linkAppFB);

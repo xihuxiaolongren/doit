@@ -8,29 +8,38 @@
     <FrameLayout
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingBottom="30dp"
-        android:paddingTop="30dp">
+        android:paddingBottom="50dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="15dp">
-
-            <TextView
-                android:id="@+id/startTimeTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="7:30 am"
-                android:textColor="@color/titleTextColor" />
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/doTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="5dp"
+                android:background="#12000000"
+                android:gravity="right"
+                android:paddingBottom="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
                 android:text="Done"
+                android:textColor="@color/titleTextColor"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/startTimeTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="7:30 am"
                 android:textColor="@color/titleTextColor" />
+
         </LinearLayout>
     </FrameLayout>
 
@@ -38,19 +47,17 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/timeline_alert"
-        android:tint="@color/titleTextColor"/>
+        android:src="@drawable/timeline_todo"
+        android:tint="@color/titleTextColor" />
 
     <TextView
         android:id="@+id/contentTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:paddingBottom="30dp"
+        android:paddingBottom="50dp"
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
-        android:paddingTop="30dp"
-        android:textColor="@color/titleTextColor" />
+        android:textColor="@color/titleTextColor"
+        android:textSize="16sp" />
 </LinearLayout>

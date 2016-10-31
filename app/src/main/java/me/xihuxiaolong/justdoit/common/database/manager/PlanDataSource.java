@@ -111,6 +111,18 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         return planDOs;
     }
 
+    @Override
+    public PlanDO getPlanByLastEndTime() {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+
+        PlanDO planDO = daoSession.getPlanDODao().queryBuilder()
+                .orderDesc(PlanDODao.Properties.EndTime).unique();
+
+        clear(daoSession, database);
+        return planDO;
+    }
+
     private void addTag(String tag){
 
     }

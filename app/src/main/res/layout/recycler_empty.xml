@@ -5,14 +5,14 @@
     android:orientation="horizontal">
 
     <Space
-        android:layout_width="80.5dp"
+        android:layout_width="85.5dp"
         android:layout_height="wrap_content"/>
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="450dp"
+        android:layout_height="400dp"
         android:scaleType="fitXY"
-        android:src="@drawable/timeline_plan_little"
+        android:src="@drawable/line"
         android:tint="@color/titleTextColor"/>
 
     <TextView

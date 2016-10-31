@@ -36,6 +36,18 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
     public void loadAlert() {
         if(alertId != -1L) {
             PlanDO alert = planDataSource.getPlanDOById(alertId);
+            if(alert == null){
+                alert = new PlanDO();
+                PlanDO lastPlanDO = planDataSource.getPlanByLastEndTime();
+                if(lastPlanDO != null) {
+                    alert.setStartTime(lastPlanDO.getEndTime() + 30);
+                    alert.setStartHour(alert.getStartTime() / 60);
+                    alert.setStartTime(alert.getStartTime() % 60);
+                    alert.setEndTime(alert.getEndTime() % 60);
+                    alert.setStartTime(alert.getEndTime() % 60);
+                    alert.setStartTime(alert.getEndTime() % 60);
+                }
+            }
             if (isViewAttached())
                 getView().showAlert(alert);
         }
@@ -49,6 +61,10 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
         alert.setStartHour(hour);
         alert.setStartMinute(minute);
         alert.setStartTime(hour * 60 + minute);
+        alert.setEndHour(hour);
+        alert.setEndMinute(minute);
+        alert.setEndTime(hour * 60 + minute);
+
         if(alertId != -1L) {
             alert.setId(alertId);
             planDataSource.insertOrReplacePlanDO(alert);

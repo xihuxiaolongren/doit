@@ -26,4 +26,5 @@ public interface IPlanDataSource {
 
     List<PlanDO> listPlanDOsByOneDay(Long dayTime);
 
+    PlanDO getPlanByLastEndTime();
 }

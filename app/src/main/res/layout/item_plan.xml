@@ -10,44 +10,55 @@
     <FrameLayout
         android:layout_width="80.5dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingBottom="10dp"
-        android:paddingTop="15dp">
+        android:paddingBottom="30dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="15dp">
-
-            <TextView
-                android:id="@+id/startTimeTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="7:30 am"
-                android:textAppearance="@style/MyTextAppearance.Body1" />
-
-            <TextView
-                android:id="@+id/periodTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 小时 30 分"
-                android:textAppearance="@style/MyTextAppearance.Body1"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/endTimeTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10:00 am"
-                android:textAppearance="@style/MyTextAppearance.Body1" />
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/doTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginBottom="5dp"
+                android:background="#12000000"
+                android:gravity="right"
+                android:paddingBottom="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="2dp"
                 android:text="Done"
+                android:textAppearance="@style/MyTextAppearance.Body1"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/startTimeTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="7 : 30"
                 android:textAppearance="@style/MyTextAppearance.Body1" />
+
+            <TextView
+                android:id="@+id/periodTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="|        "
+                android:textAppearance="@style/MyTextAppearance.Body1"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/endTimeTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="10 : 00"
+                android:textAppearance="@style/MyTextAppearance.Body1" />
+
         </LinearLayout>
     </FrameLayout>
 
@@ -56,18 +67,16 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/timeline_plan_little"
+        android:src="@drawable/timeline_plan_other"
         android:tint="@color/titleTextColor" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingBottom="15dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp">
+        android:paddingBottom="30dp"
+        android:paddingLeft="15dp">
 
         <TextView
             android:id="@+id/contentTV"
@@ -75,7 +84,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:paddingRight="15dp"
             android:textAppearance="@style/MyTextAppearance.Body1" />

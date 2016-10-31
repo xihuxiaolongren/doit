@@ -39,9 +39,6 @@
             android:theme="@style/CropTheme"/>
 
         <service android:name=".module.service.PlanService">
-            <intent-filter>
-                <action android:name="com.example.communication.MSG_ACTION" />
-            </intent-filter>
         </service>
 
     </application>

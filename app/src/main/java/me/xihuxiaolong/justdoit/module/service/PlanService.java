@@ -8,19 +8,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import java.util.Random;
-
 import me.xihuxiaolong.justdoit.R;
+import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListActivity;
 
 public class PlanService extends Service {
 
     public static final String ALARM_ALERT_ACTION = "me.xihuxiaolong.justdoit.ALARM_ALERT";
+    public static final int CLOSE_NOTIFY = 1;
 
     public class LocalBinder extends Binder {
         public String stringToSend = "I'm the test String";
@@ -70,27 +70,39 @@ public class PlanService extends Service {
     }
 
     public void sendNotification(){
-        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notice);
-        remoteViews.setTextViewText(R.id.contentTV, "测试用,测试用,测试用,测试用,测试用");
-//        remoteViews.setTextViewText(R.id.time_tv, getTime());
-        remoteViews.setImageViewResource(R.id.dayThemeIV, R.drawable.icon_launcher);
+        //当前版本remoteView 无法自动识别到夜间模式的资源目录
+        RemoteViews remoteViewBig;
+        RemoteViews remoteViewNormal;
+        if(DayNightModeUtils.isCurrentNight()) {
+            remoteViewBig = new RemoteViews(getPackageName(), R.layout.notice_night_big_plan);
+            remoteViewNormal = new RemoteViews(getPackageName(), R.layout.notice_night_normal_plan);
+        }else {
+            remoteViewBig = new RemoteViews(getPackageName(), R.layout.notice_day_big_plan);
+            remoteViewNormal = new RemoteViews(getPackageName(), R.layout.notice_day_normal_plan);
+        }
+        remoteViewNormal.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
+
+        remoteViewBig.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
         Intent intent = new Intent(this, PlanListActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        int requestCode = (int) SystemClock.uptimeMillis();
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.dayThemeIV, pendingIntent);
-        int requestCode1 = (int) SystemClock.uptimeMillis();
-//        Intent intent1 = new Intent(ACTION_CLOSE_NOTICE);
-//        PendingIntent pendingIntent1 = PendingIntent.getBroadcast(this, requestCode1, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-//        remoteViews.setOnClickPendingIntent(R.id.widget_title, pendingIntent1);
+//        int requestCode = (int) SystemClock.uptimeMillis();
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViewBig.setOnClickPendingIntent(R.id.contentTV, pendingIntent);
+
+        Intent closeIntent = new Intent(getApplicationContext(), PlanService.class);
+        closeIntent.putExtra("1", CLOSE_NOTIFY);
+        PendingIntent pendingCloseIntent = PendingIntent.getService(this, 1, closeIntent, 0);
+        remoteViewBig.setOnClickPendingIntent(R.id.deleteIV, pendingCloseIntent);
         Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("some string")
-                .setContentText("Slide down on note to expand")
-                .setCustomBigContentView(remoteViews)
-                .setSmallIcon(R.drawable.icon_launcher).build();
+                .setCustomBigContentView(remoteViewBig)
+                .setContent(remoteViewNormal)
+//                .setLargeIcon(ContextCompat.getDrawable(this, R.drawable.icon_launcher))
+                .setSmallIcon(R.drawable.icon_small_notify).build();
         NotificationManager notifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        int notificationId = new Random().nextInt();
-// Builds the notification and issues it.
+        //第一个状态保证在top位置,第二个状态保证常驻
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        //        int notificationId = new Random().nextInt();
+        int notificationId = 0; //id相同的notification只会保留一个,并且会更新该通知栏
         notifyMgr.notify(notificationId, notification);
     }
 }
