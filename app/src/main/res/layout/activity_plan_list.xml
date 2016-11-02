@@ -16,7 +16,8 @@
     <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
         android:id="@+id/day_night_background_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:animationDuration="0"/>
 
     <View
         android:id="@+id/recycler_background"
@@ -26,7 +27,9 @@
     <FrameLayout
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"/>
 
     <me.grantland.widget.AutofitTextView
         android:id="@+id/signatureTV"

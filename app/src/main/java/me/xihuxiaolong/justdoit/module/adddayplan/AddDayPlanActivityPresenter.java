@@ -58,6 +58,8 @@ public class AddDayPlanActivityPresenter extends MvpBasePresenter<AddDayPlanActi
         templates.add("sss");
         templates.add("sss");
         templates.add("sss");
+        templates.add("sss");
+        templates.add("sss");
         if(isViewAttached()) {
             getView().showTemplateList(templates);
         }

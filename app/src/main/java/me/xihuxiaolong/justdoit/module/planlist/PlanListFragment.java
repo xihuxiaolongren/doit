@@ -2,6 +2,7 @@ package me.xihuxiaolong.justdoit.module.planlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -57,6 +58,7 @@ import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
+    private static final int SELECT_TEMPLATE_REQUEST = 1;
 
     PlanListComponent planListComponent;
 
@@ -123,6 +125,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         View view = inflater.inflate(R.layout.fragment_plan_list, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
+
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
@@ -197,8 +200,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 //                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(4, mActionBarSize + mStatusBarSize);
 //            }
 //        });
-        dayNightBackgroundView.start();
-
 //        Icepick.restoreInstanceState(this, savedInstanceState);
         return view;
     }
@@ -208,10 +209,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 //        Icepick.saveInstanceState(this, outState);
     }
 
+    boolean isTodayDay = true;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_frament_planlist, menu);
+        if(isTodayDay) {
+            inflater.inflate(R.menu.menu_frament_planlist, menu);
+        }else{
+            inflater.inflate(R.menu.menu_frament_planlist_other_day, menu);
+        }
         addMenuItem = menu.findItem(R.id.action_add);
         addMenuItem.setVisible(!mFabIsShown);
         super.onCreateOptionsMenu(menu, inflater);
@@ -303,9 +309,32 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     boolean hasChangeDayNight = false;
+
     @Override
     public void changeDayNight() {
         hasChangeDayNight = true;
+    }
+
+    @Override
+    public void gotoTemplates() {
+        startActivityForResult(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().getMillis()), 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == SELECT_TEMPLATE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+
+            }
+        }
+    }
+
+    @Override
+    public void showOtherDayUI() {
+        isTodayDay = false;
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override

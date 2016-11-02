@@ -16,6 +16,7 @@
 package me.xihuxiaolong.library.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -26,6 +27,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
+import me.xihuxiaolong.library.R;
 
 public class WaveView extends View {
     /**
@@ -85,23 +87,29 @@ public class WaveView extends View {
 
     public WaveView(Context context) {
         super(context);
-        init();
+        init(null);
     }
 
     public WaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        TypedArray attrsArray 	= context.obtainStyledAttributes(attrs, R.styleable.WaveView, 0, 0);
+        init(attrsArray);
     }
 
     public WaveView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        TypedArray attrsArray 	= context.obtainStyledAttributes(attrs, R.styleable.WaveView, 0, 0);
+        init(attrsArray);
     }
 
-    private void init() {
+    private void init(TypedArray attrsArray) {
         mShaderMatrix = new Matrix();
         mViewPaint = new Paint();
         mViewPaint.setAntiAlias(true);
+        if(attrsArray != null) {
+            mBehindWaveColor = attrsArray.getColor(R.styleable.WaveView_behindWaveColor, DEFAULT_BEHIND_WAVE_COLOR);
+            mFrontWaveColor = attrsArray.getColor(R.styleable.WaveView_frontWaveColor, DEFAULT_BEHIND_WAVE_COLOR);
+        }
     }
 
     public float getWaveShiftRatio() {

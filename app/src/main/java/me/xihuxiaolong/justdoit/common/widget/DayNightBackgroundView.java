@@ -52,8 +52,8 @@ public class DayNightBackgroundView extends FrameLayout{
 
     private int mBlueSkyColor;
     private int mSunsetSkyColor;
-    private int mWaveBehindColor;
-    private int mWaveFrontColor;
+//    private int mWaveBehindColor;
+//    private int mWaveFrontColor;
 
     private WaveHelper mWaveHelper;
 
@@ -86,8 +86,8 @@ public class DayNightBackgroundView extends FrameLayout{
         }
         mBlueSkyColor = ContextCompat.getColor(context, R.color.sky);
         mSunsetSkyColor = ContextCompat.getColor(context, R.color.sunset_sky);
-        mWaveBehindColor = ContextCompat.getColor(context, R.color.wave_behind);
-        mWaveFrontColor = ContextCompat.getColor(context, R.color.wave_front);
+//        mWaveBehindColor = ContextCompat.getColor(context, R.color.wave_behind);
+//        mWaveFrontColor = ContextCompat.getColor(context, R.color.wave_front);
         if(DayNightModeUtils.isCurrentNight()){
             initNight(context);
         }else{
@@ -114,7 +114,7 @@ public class DayNightBackgroundView extends FrameLayout{
         waveView = (WaveView) findViewById(R.id.wave);
         mCloud1View = findViewById(R.id.cloud_1);
         mCloud2View = findViewById(R.id.cloud_2);
-        mWaveHelper = new WaveHelper(waveView);
+        mWaveHelper = new WaveHelper(waveView, animationDuration);
 
         post(new Runnable() {
             @Override
@@ -136,7 +136,7 @@ public class DayNightBackgroundView extends FrameLayout{
         mStar3View = findViewById(R.id.star3);
         mStar4View = findViewById(R.id.star4);
         mStar5View = findViewById(R.id.star5);
-        mWaveHelper = new WaveHelper(waveView);
+        mWaveHelper = new WaveHelper(waveView, animationDuration);
 
         post(new Runnable() {
             @Override
@@ -150,7 +150,8 @@ public class DayNightBackgroundView extends FrameLayout{
      * 太阳升起
      */
     private void sunrise() {
-        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+//        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+        mWaveHelper.start();
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
@@ -168,9 +169,10 @@ public class DayNightBackgroundView extends FrameLayout{
      * 月亮升起
      */
     private void moonrise() {
-        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+//        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
+        mWaveHelper.start();
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
-//        mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
+        mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
         mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mStarX1Anim = getStarXAnimator(mStar1View, 0.0f, 1.0f);
@@ -189,7 +191,7 @@ public class DayNightBackgroundView extends FrameLayout{
         mStarR4Anim = getStarRotationAnimator(mStar4View, 0.0f, 10f);
         mStarR5Anim = getStarRotationAnimator(mStar5View, 0.0f, 270f);
         mSunriseAnimSet = new AnimatorSet();
-        mSunriseAnimSet.play(mSunAnim).with(mSunAlphaAnim)
+        mSunriseAnimSet.play(mSunAnim).with(mSunXAnim).with(mSunAlphaAnim)
                 .with(mSkyAnim)
                 .with(mStarX1Anim).with(mStarX2Anim).with(mStarX3Anim).with(mStarX4Anim).with(mStarX5Anim)
                 .with(mStarY1Anim).with(mStarY2Anim).with(mStarY3Anim).with(mStarY4Anim).with(mStarY5Anim)
@@ -267,16 +269,6 @@ public class DayNightBackgroundView extends FrameLayout{
                 .setDuration(0);
         starAnimator.setInterpolator(new BounceInterpolator());
         return starAnimator;
-    }
-
-    public void cancel(){
-        if(mWaveHelper != null)
-            mWaveHelper.cancel();
-    }
-
-    public void start() {
-        if(mWaveHelper != null)
-            mWaveHelper.start();
     }
 
 }

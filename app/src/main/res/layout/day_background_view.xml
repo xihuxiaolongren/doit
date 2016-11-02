@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bgRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,6 +47,8 @@
         android:id="@+id/wave"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2" />
+        android:layout_weight="0.2"
+        app:behindWaveColor="@color/wave_behind"
+        app:frontWaveColor="@color/wave_front"/>
 
 </LinearLayout>

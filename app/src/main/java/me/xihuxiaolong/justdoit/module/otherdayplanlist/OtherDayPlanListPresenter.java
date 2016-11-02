@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.planlist;
+package me.xihuxiaolong.justdoit.module.otherdayplanlist;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
@@ -11,11 +11,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.cache.ICacheService;
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
-import me.xihuxiaolong.library.utils.CollectionUtil;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,7 +22,7 @@ import me.xihuxiaolong.library.utils.CollectionUtil;
  * Date: 16/9/27.
  */
 
-public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> implements PlanListContract.IPresenter{
+public class OtherDayPlanListPresenter extends MvpBasePresenter<OtherDayPlanListContract.IView> implements OtherDayPlanListContract.IPresenter{
 
     @Inject
     long dayTime;
@@ -35,7 +34,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     ICacheService cacheService;
 
     @Inject
-    public PlanListPresenter() {
+    public OtherDayPlanListPresenter() {
         EventBus.getDefault().register(this);
     }
 
@@ -44,8 +43,6 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(DateTime.now().withTimeAtStartOfDay().getMillis());
         if (isViewAttached()) {
             getView().showPlans(planDOs);
-            if(CollectionUtil.isEmpty(planDOs))
-                getView().gotoTemplates();
         }
     }
 
@@ -65,7 +62,6 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
                 getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanEnd());
             }else
                 getView().showSignature(userSettings.getMotto(), null);
-            getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime());
         }
     }
 
@@ -94,8 +90,6 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Subscribe
     public void onEvent(Event.ChangeDayNightTheme changeDayNightTheme) {
-        if(isViewAttached())
-            getView().changeDayNight();
     }
 
 }

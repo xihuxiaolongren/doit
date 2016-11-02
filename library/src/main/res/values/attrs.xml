@@ -22,7 +22,8 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="TintableImageView">
-        <attr name="tint" format="reference|color" />
+    <declare-styleable name="WaveView">
+        <attr name="behindWaveColor" format="reference|color" />
+        <attr name="frontWaveColor" format="reference|color" />
     </declare-styleable>
 </resources>

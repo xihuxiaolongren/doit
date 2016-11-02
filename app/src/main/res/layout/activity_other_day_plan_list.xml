@@ -25,7 +25,7 @@
         android:fitsSystemWindows="true"
         app:contentInsetStartWithNavigation="0dp"
         app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:title="@string/select_template"
+        app:title="@string/tomorrow_plan"
         app:titleTextAppearance="@style/Toolbar.TitleText">
 
         <RelativeLayout
@@ -77,23 +77,11 @@
         </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPager"
+    <FrameLayout
+        android:id="@+id/contentFrame"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:clipToPadding="false"
         android:clipChildren="false"
-        android:paddingBottom="50dp"
-        android:paddingLeft="70dp"
-        android:paddingRight="70dp"
-        android:paddingTop="50dp" />
-
-    <me.relex.circleindicator.CircleIndicator
-        android:id="@+id/indicator"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_below="@id/toolbar"/>
-
-
+        android:clipToPadding="false"/>
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.planlist;
+package me.xihuxiaolong.justdoit.module.otherdayplanlist;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
@@ -14,7 +14,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
  * User: xiaolong
  * Date: 16/8/12.
  */
-public class PlanListContract {
+public class OtherDayPlanListContract {
 
     interface IView extends MvpView {
 
@@ -26,15 +26,7 @@ public class PlanListContract {
 
         void showPlans(List<PlanDO> plans);
 
-        void showDayInfo(String avatarUrl, DateTime dateTime);
-
-        void showSignature(String signature, String preSignature);
-
-        void changeDayNight();
-
-        void gotoTemplates();
-
-        void showOtherDayUI();
+        void showSignature(String signature, String sig);
 
     }
 

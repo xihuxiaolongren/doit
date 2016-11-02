@@ -2,18 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:clipChildren="false"
     android:orientation="horizontal"
     android:paddingTop="20dp">
 
     <Space
         android:layout_width="77dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="-2dp"
         android:scaleType="fitXY"
         android:src="@drawable/timeline_start"
-        android:tint="@color/titleTextColor"/>
+        android:tint="@color/titleTextColor" />
 
 </LinearLayout>

@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.module.adddayplan;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -22,16 +21,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import me.crosswall.lib.coverflow.CoverFlow;
-import me.crosswall.lib.coverflow.core.PagerContainer;
+import me.relex.circleindicator.CircleIndicator;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryFragment;
 
 public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContract.IView, AddDayPlanActivityContract.IPresenter> implements AddDayPlanActivityContract.IView {
 
@@ -51,8 +47,10 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
     ImageView backgroundIV;
     //    @BindView(R.id.pager_container)
 //    PagerContainer pagerContainer;
-    @BindView(R.id.viewpager)
+    @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.indicator)
+    CircleIndicator indicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +114,7 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), creator.create());
         viewPager.setAdapter(adapter);
+        indicator.setViewPager(viewPager);
     }
 
     @Override
