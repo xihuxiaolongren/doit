@@ -18,16 +18,20 @@ public class RedoPlanDO {
     private long createdTime;
     private long modifiedTime;
 
-    private int planType;
-
     /**
-     * 以星期为重复周期,0-6位表示周- - 周日是否重复
+     * 以星期为重复周期,0-6位表示周- 到 周日是否重复
      */
     private int repeatMode;
+
+    private int planType;
 
     private String title;
 
     private String content;
+
+    private String tags;
+    private String linkAppName;
+    private String linkAppPackageName;
 
     private int startTime;
     private int startHour;
@@ -37,23 +41,30 @@ public class RedoPlanDO {
     private int endHour;
     private int endMinute;
 
-    @Generated(hash = 645018138)
-    public RedoPlanDO(Long id, long createdTime, long modifiedTime, int planType,
-            int repeatMode, String title, String content, int startTime,
-            int startHour, int startMinute, int endTime, int endHour, int endMinute) {
+    private long dayTime;
+
+    @Generated(hash = 1934573533)
+    public RedoPlanDO(Long id, long createdTime, long modifiedTime, int repeatMode,
+            int planType, String title, String content, String tags, String linkAppName,
+            String linkAppPackageName, int startTime, int startHour, int startMinute,
+            int endTime, int endHour, int endMinute, long dayTime) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
-        this.planType = planType;
         this.repeatMode = repeatMode;
+        this.planType = planType;
         this.title = title;
         this.content = content;
+        this.tags = tags;
+        this.linkAppName = linkAppName;
+        this.linkAppPackageName = linkAppPackageName;
         this.startTime = startTime;
         this.startHour = startHour;
         this.startMinute = startMinute;
         this.endTime = endTime;
         this.endHour = endHour;
         this.endMinute = endMinute;
+        this.dayTime = dayTime;
     }
     @Generated(hash = 585329377)
     public RedoPlanDO() {
@@ -135,6 +146,30 @@ public class RedoPlanDO {
     }
     public void setEndMinute(int endMinute) {
         this.endMinute = endMinute;
+    }
+    public String getTags() {
+        return this.tags;
+    }
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+    public String getLinkAppName() {
+        return this.linkAppName;
+    }
+    public void setLinkAppName(String linkAppName) {
+        this.linkAppName = linkAppName;
+    }
+    public String getLinkAppPackageName() {
+        return this.linkAppPackageName;
+    }
+    public void setLinkAppPackageName(String linkAppPackageName) {
+        this.linkAppPackageName = linkAppPackageName;
+    }
+    public long getDayTime() {
+        return this.dayTime;
+    }
+    public void setDayTime(long dayTime) {
+        this.dayTime = dayTime;
     }
 
 }

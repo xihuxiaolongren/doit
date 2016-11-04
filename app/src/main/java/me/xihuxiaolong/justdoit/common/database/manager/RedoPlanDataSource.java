@@ -53,7 +53,7 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     }
 
     @Override
-    public List<RedoPlanDO> listRedoPlanDOs(Long id) {
+    public List<RedoPlanDO> listRedoPlanDOs() {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
         List<RedoPlanDO> redoPlanDOs = daoSession.getRedoPlanDODao().queryBuilder().orderDesc(RedoPlanDODao.Properties.Id).list();

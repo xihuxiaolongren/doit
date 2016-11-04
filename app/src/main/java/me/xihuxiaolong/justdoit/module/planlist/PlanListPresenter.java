@@ -15,7 +15,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
-import me.xihuxiaolong.library.utils.CollectionUtil;
+import me.xihuxiaolong.library.utils.CollectionUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,16 +42,20 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     @Override
     public void loadPlans() {
         List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(DateTime.now().withTimeAtStartOfDay().getMillis());
+        if(CollectionUtils.isEmpty(planDOs)){
+            planDataSource.createOneDayPlanDOs(dayTime);
+        }
         if (isViewAttached()) {
             getView().showPlans(planDOs);
-            if(CollectionUtil.isEmpty(planDOs))
+            if(CollectionUtils.isEmpty(planDOs))
                 getView().gotoTemplates();
         }
     }
 
     @Override
     public void loadDayInfo() {
-
+        if(!DateTime.now().withTimeAtStartOfDay().equals(new DateTime(dayTime).withTimeAtStartOfDay()) && isViewAttached())
+            getView().showOtherDayUI();
     }
 
     @Override
@@ -65,7 +69,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
                 getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanEnd());
             }else
                 getView().showSignature(userSettings.getMotto(), null);
-            getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime());
+            getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime(dayTime));
         }
     }
 

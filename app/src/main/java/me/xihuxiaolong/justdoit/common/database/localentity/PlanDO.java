@@ -3,6 +3,7 @@ package me.xihuxiaolong.justdoit.common.database.localentity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,11 +42,14 @@ public class PlanDO {
 
     private long dayTime;
 
+    @Transient
+    private int tempRepeatmode;
+
     @Generated(hash = 789130426)
-    public PlanDO(Long id, long createdTime, long modifiedTime, int type, String title,
-            String content, String tags, String linkAppName, String linkAppPackageName,
-            int startTime, int startHour, int startMinute, int endTime, int endHour,
-            int endMinute, long dayTime) {
+    public PlanDO(Long id, long createdTime, long modifiedTime, int type,
+            String title, String content, String tags, String linkAppName,
+            String linkAppPackageName, int startTime, int startHour,
+            int startMinute, int endTime, int endHour, int endMinute, long dayTime) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -66,6 +70,14 @@ public class PlanDO {
 
     @Generated(hash = 1345978329)
     public PlanDO() {
+    }
+
+    public int getTempRepeatmode() {
+        return tempRepeatmode;
+    }
+
+    public void setTempRepeatmode(int tempRepeatmode) {
+        this.tempRepeatmode = tempRepeatmode;
     }
 
     public Long getId() {
@@ -114,6 +126,30 @@ public class PlanDO {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTags() {
+        return this.tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getLinkAppName() {
+        return this.linkAppName;
+    }
+
+    public void setLinkAppName(String linkAppName) {
+        this.linkAppName = linkAppName;
+    }
+
+    public String getLinkAppPackageName() {
+        return this.linkAppPackageName;
+    }
+
+    public void setLinkAppPackageName(String linkAppPackageName) {
+        this.linkAppPackageName = linkAppPackageName;
     }
 
     public int getStartTime() {
@@ -170,30 +206,6 @@ public class PlanDO {
 
     public void setDayTime(long dayTime) {
         this.dayTime = dayTime;
-    }
-
-    public String getTags() {
-        return this.tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public String getLinkAppName() {
-        return this.linkAppName;
-    }
-
-    public void setLinkAppName(String linkAppName) {
-        this.linkAppName = linkAppName;
-    }
-
-    public String getLinkAppPackageName() {
-        return this.linkAppPackageName;
-    }
-
-    public void setLinkAppPackageName(String linkAppPackageName) {
-        this.linkAppPackageName = linkAppPackageName;
     }
 
 }

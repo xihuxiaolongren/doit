@@ -2,10 +2,14 @@ package me.xihuxiaolong.justdoit.common.base;
 
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.ViewGroup;
 
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
@@ -41,5 +45,15 @@ public abstract class BaseFragment extends Fragment {
                 }
             }
         }
+    }
+
+    public void setToolbar(Toolbar toolbar, boolean showHomeAsUp){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+            layoutParams.height = layoutParams.height + getStatusBarHeight();
+            toolbar.setLayoutParams(layoutParams);
+        }
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
     }
 }

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,9 +39,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
+import me.xihuxiaolong.justdoit.common.base.BaseActivity;
+import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.adddayplan.AddDayPlanActivity;
@@ -48,6 +51,7 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 
 
 /**
@@ -64,7 +68,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @BindView(R.id.recyclerView)
     ObservableRecyclerView recyclerView;
-    private int mFlexibleSpaceImageHeight, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset,
+    private int mFlexibleSpaceImageHeight, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
             mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
     private int mActionBarSize, mStatusBarSize;
 
@@ -90,6 +94,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     PlanListWrapper planListWrapper;
 
+    long dayTime;
+
     public static PlanListFragment newInstance() {
         PlanListFragment fragment = new PlanListFragment();
         return fragment;
@@ -103,17 +109,16 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     protected void injectDependencies() {
         planListComponent = DaggerPlanListComponent.builder()
-                .appComponent(ActivityUtils.getAppComponent(getActivity()))
-                .planListModule(new PlanListModule())
+                .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
+                .planListModule(new PlanListModule(dayTime))
                 .build();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        presenter.loadPlans();
         presenter.loadDayInfo();
+        presenter.loadPlans();
         presenter.loadUserSettings();
     }
 
@@ -121,6 +126,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        dayTime = getActivity().getIntent().getLongExtra("dayTime", -1L);
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_plan_list, container, false);
         ButterKnife.bind(this, view);
@@ -129,6 +135,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
+        mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
         mFlexibleSpaceSignatureBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_signature_bottom_offset);
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
@@ -226,6 +233,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().finish();
+                return true;
             case R.id.action_history:
                 startActivity(new Intent(getActivity(), PlanHistoryActivity.class));
                 return true;
@@ -236,7 +246,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                 return true;
             case R.id.action_add_tomorrow_plan:
-                startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
+                startActivity(new Intent(getActivity(), PlanListActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -317,7 +327,12 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void gotoTemplates() {
-        startActivityForResult(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().getMillis()), 1);
+//        ActivityUtils.delay(0, new ActivityUtils.DelayCallback() {
+//            @Override
+//            public void afterDelay() {
+//                startActivityForResult(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().getMillis()), 1);
+//            }
+//        });
     }
 
     @Override
@@ -334,6 +349,10 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void showOtherDayUI() {
         isTodayDay = false;
+        mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset_other);
+//        setToolbar(toolbar, true);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("明日计划");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().invalidateOptionsMenu();
     }
 
@@ -361,7 +380,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setTranslationY(headerIV, -scrollY / 2);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
 
-        // Scale title text
+        // Scale calendarRL
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
 //        ViewHelper.setPivotX(calendarRL, 0);
 //        ViewHelper.setPivotY(calendarRL, 0);
@@ -373,13 +392,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             ViewHelper.setScaleY(avatarIV, scaleAvatar);
         }
 
-        // Translate title text
+        // Translate calendarRL
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRL.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
         int titleTranslationY = maxTitleTranslationY - scrollY;
         ViewHelper.setTranslationY(calendarRL, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRL.getHeight()) / 2 + mStatusBarSize,
                 maxTitleTranslationY));
         ViewHelper.setTranslationX(calendarRL, ScrollUtils.getFloat(scrollY, 0,
-                mActionBarSize));
+                mFlexibleSpaceCalendarLeftOffset));
 
         // Translate signature text
         int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;

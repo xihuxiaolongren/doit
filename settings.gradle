@@ -1,1 +1,1 @@
-include ':app', ':library', ':spinnerwheel', ':photoga', ':rubberIndicator'
+include ':app', ':library', ':spinnerwheel', ':photoga'

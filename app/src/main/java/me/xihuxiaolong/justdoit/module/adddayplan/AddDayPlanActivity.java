@@ -25,7 +25,7 @@ import me.relex.circleindicator.CircleIndicator;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 
@@ -82,7 +82,7 @@ public class AddDayPlanActivity extends BaseMvpActivity<AddDayPlanActivityContra
 
     @Override
     protected void injectDependencies() {
-        addDayPlanActivityComponent = DaggerAddDayPlanActivityComponent.builder().appComponent(ActivityUtils.getAppComponent(this))
+        addDayPlanActivityComponent = DaggerAddDayPlanActivityComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
                 .addDayPlanActivityModule(new AddDayPlanActivityModule(dayTime)).build();
     }
 

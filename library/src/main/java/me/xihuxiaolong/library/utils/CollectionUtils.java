@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Created by yangxiaolong on 15/10/30.
  */
-public class CollectionUtil {
+public class CollectionUtils {
 
     public static boolean isEmpty(Collection coll) {
         return (coll == null || coll.isEmpty());

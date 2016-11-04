@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -53,5 +54,15 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
                 }
             }
         }
+    }
+
+    public void setToolbar(Toolbar toolbar, boolean showHomeAsUp){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+            layoutParams.height = layoutParams.height + getStatusBarHeight();
+            toolbar.setLayoutParams(layoutParams);
+        }
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
     }
 }

@@ -17,7 +17,7 @@
         android:id="@+id/day_night_background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:animationDuration="0"/>
+        app:animationDuration="2000" />
 
     <View
         android:id="@+id/recycler_background"
@@ -29,16 +29,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false" />
 
     <me.grantland.widget.AutofitTextView
         android:id="@+id/signatureTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="150dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
         android:gravity="right"
+        android:maxLines="2"
+        android:maxWidth="150dp"
         android:shadowColor="@color/shadowColor"
         android:shadowDx="1"
         android:shadowDy="1"
@@ -46,15 +47,16 @@
         android:text="一日之计在于晨"
         android:textColor="@color/titleTextColor"
         android:textSize="@dimen/signature_size"
-        autofit:minTextSize="@dimen/signature_min_size"
-        android:maxLines="2"/>
+        autofit:minTextSize="@dimen/signature_min_size" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:fitsSystemWindows="true"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
 
     <FrameLayout
         android:id="@+id/shadowFrame"

@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.widget.SingleTimeView;
-import me.xihuxiaolong.library.utils.DialogUtil;
+import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolong.library.utils.ToastUtil;
 
 public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, EditAlertContract.IPresenter> implements EditAlertContract.IView, SingleTimeView.TimeListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
@@ -76,7 +76,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
     }
 
     protected void injectDependencies() {
-        editAlertComponent = DaggerEditAlertComponent.builder().appComponent(ActivityUtils.getAppComponent(this))
+        editAlertComponent = DaggerEditAlertComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
                 .editAlertModule(new EditAlertModule(alertId,dayTime)).build();
     }
 
@@ -106,7 +106,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
                 finish();
                 break;
             case R.id.action_delete:
-                DialogUtil.showDialog(this, getResources().getString(R.string.delete_alert), "确定要删除本条提醒吗？", new MaterialDialog.SingleButtonCallback() {
+                DialogUtils.showDialog(this, getResources().getString(R.string.delete_alert), "确定要删除本条提醒吗？", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         presenter.deleteAlert();

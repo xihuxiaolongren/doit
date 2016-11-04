@@ -16,15 +16,21 @@
 
 package me.xihuxiaolong.library.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 /**
  * This provides methods to help Activities load their UI.
  */
-public class ActivityUtil {
+public class ActivityUtils {
 
     /**
      * The {@code fragment} is added to the container view with id {@code frameId}. The operation is
@@ -36,6 +42,35 @@ public class ActivityUtil {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment);
         transaction.commit();
+    }
+
+    public interface DelayCallback{
+        void afterDelay();
+    }
+
+    public static void delay(int secs, final DelayCallback delayCallback){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                delayCallback.afterDelay();
+            }
+        }, secs * 1000); // afterDelay will be executed after (secs*1000) milliseconds.
+    }
+
+    public static void openSoftKeyboard(Activity activity, EditText editText){
+        editText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInputFromWindow(
+                editText.getApplicationWindowToken(),
+                InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public static void hideSoftKeyboard(EditText editText, ViewGroup focusOtherView){
+        InputMethodManager imm = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        focusOtherView.requestFocus();
+        editText.clearFocus();
     }
 
 }

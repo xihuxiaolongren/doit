@@ -18,6 +18,6 @@ public interface IRedoPlanDataSource {
 
     long insertOrReplaceRedoPlanDO(RedoPlanDO redoPlanDO);
 
-    List<RedoPlanDO> listRedoPlanDOs(Long id);
+    List<RedoPlanDO> listRedoPlanDOs();
 
 }

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.module.service.PlanService;
-import me.xihuxiaolong.library.utils.ActivityUtil;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 
 public class PlanListActivity extends BaseActivity {
 
@@ -51,7 +51,7 @@ public class PlanListActivity extends BaseActivity {
                 (PlanListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if(planListFragment == null) {
             planListFragment = PlanListFragment.newInstance();
-            ActivityUtil.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     planListFragment, R.id.contentFrame);
         }
 

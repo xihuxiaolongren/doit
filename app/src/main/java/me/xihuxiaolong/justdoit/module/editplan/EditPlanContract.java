@@ -35,7 +35,7 @@ public class EditPlanContract {
 
         void loadPlan();
 
-        void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName);
+        void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName, int repeatMode);
 
         void deletePlan();
 

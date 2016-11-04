@@ -15,11 +15,18 @@ import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
 @Module
 public class PlanListModule {
 
-    public PlanListModule(){}
+    long dayTime;
+
+    public PlanListModule(long dayTime){
+        this.dayTime = dayTime;
+    }
 
     @Provides
     long provideDayTime() {
-        return DateTime.now().withTimeAtStartOfDay().getMillis();
+        if(dayTime == -1L)
+            return DateTime.now().withTimeAtStartOfDay().getMillis();
+        else
+            return dayTime;
     }
 
     @Provides

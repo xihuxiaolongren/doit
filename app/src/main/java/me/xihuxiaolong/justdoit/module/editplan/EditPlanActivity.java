@@ -37,12 +37,12 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView;
-import me.xihuxiaolong.library.utils.CollectionUtil;
-import me.xihuxiaolong.library.utils.DialogUtil;
+import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolong.library.utils.ToastUtil;
 import mehdi.sakout.fancybuttons.FancyButton;
 
@@ -126,6 +126,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         selected = which;
+                        int repeatMode = 0;
                         switch (which) {
                             case 0:
                                 repeatDetailTV.setTag(which);
@@ -287,7 +288,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     }
 
     protected void injectDependencies() {
-        editPlanComponent = DaggerEditPlanComponent.builder().appComponent(ActivityUtils.getAppComponent(this))
+        editPlanComponent = DaggerEditPlanComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
                 .editPlanModule(new EditPlanModule(planId, dayTime)).build();
     }
 
@@ -317,7 +318,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 finish();
                 break;
             case R.id.action_delete:
-                DialogUtil.showDialog(this, getResources().getString(R.string.delete_plan), "确定要删除本条计划吗？", new MaterialDialog.SingleButtonCallback() {
+                DialogUtils.showDialog(this, getResources().getString(R.string.delete_plan), "确定要删除本条计划吗？", new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         presenter.deletePlan();
@@ -338,9 +339,26 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         linkAppName = appItem.getAppName();
                         linkAppPackageName = appItem.getAppPackageName();
                     }
+                    int repeatMode = 0;
+                    switch (selected){
+                        case 0 :
+                            for(int i = 0; i < 7; ++i)
+                                repeatMode |= 1 << i;
+                            break;
+                        case 1 :
+                            for(int i = 0; i < 5; ++i)
+                                repeatMode |= 1 << i;
+                            break;
+                        case 2 :
+                            for (int i : selectedArr) {
+                                repeatMode |= 1 << i;
+                            }
+                            break;
+                    }
+
                     presenter.savePlan(startAndEndTV.getStartHour(), startAndEndTV.getStartMinute(),
                             startAndEndTV.getEndHour(), startAndEndTV.getEndMinute(),
-                            contentET.getText().toString(), tags, linkAppName, linkAppPackageName);
+                            contentET.getText().toString(), tags, linkAppName, linkAppPackageName, repeatMode);
                 }
                 return true;
         }
@@ -439,7 +457,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     }
 
     public void saveTagSuccess() {
-        if (!CollectionUtil.isEmpty(mSelectedTags)) {
+        if (!CollectionUtils.isEmpty(mSelectedTags)) {
             tagDetailTV.setText("");
             for (String tag : mSelectedTags) {
                 tagDetailTV.setText(tagDetailTV.getText().toString() + tag + "，");

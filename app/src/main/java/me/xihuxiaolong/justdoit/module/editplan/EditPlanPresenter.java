@@ -44,7 +44,7 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
     }
 
     @Override
-    public void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName) {
+    public void savePlan(int startHour, int startMinute, int endHour, int endMinute, String content, String tags, String linkAppName, String linkAppPackageName, int repeatMode) {
         PlanDO plan = new PlanDO();
         plan.setType(PlanDO.TYPE_PLAN);
         plan.setContent(content);
@@ -57,6 +57,7 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         plan.setTags(tags);
         plan.setLinkAppName(linkAppName);
         plan.setLinkAppPackageName(linkAppPackageName);
+        plan.setTempRepeatmode(repeatMode);
         if(planId != -1L) {
             plan.setId(planId);
             planDataSource.insertOrReplacePlanDO(plan);

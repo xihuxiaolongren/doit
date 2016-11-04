@@ -45,10 +45,10 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.event.Event;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.library.utils.CollectionUtil;
+import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.ToastUtil;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
@@ -260,7 +260,7 @@ public class SettingsActivity extends BaseMvpActivity<SettingsContract.IView, Se
     }
 
     protected void injectDependencies() {
-        settingsComponent = DaggerSettingsComponent.builder().appComponent(ActivityUtils.getAppComponent(this))
+        settingsComponent = DaggerSettingsComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
                 .settingsModule(new SettingsModule()).build();
     }
 
@@ -321,7 +321,7 @@ public class SettingsActivity extends BaseMvpActivity<SettingsContract.IView, Se
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent result) {
         if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
-            if (result != null && !CollectionUtil.isEmpty(result.getStringArrayListExtra("data"))) {
+            if (result != null && !CollectionUtils.isEmpty(result.getStringArrayListExtra("data"))) {
                 ArrayList<String> uris = result.getStringArrayListExtra("data");
                 avatarIV.setImageURI(null);
                 avatarIV.setImageURI(Uri.parse(uris.get(0)));

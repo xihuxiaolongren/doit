@@ -9,7 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
-import me.xihuxiaolong.library.utils.ActivityUtil;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 
 public class OtherDayPlanListActivity extends BaseActivity {
 
@@ -31,7 +31,7 @@ public class OtherDayPlanListActivity extends BaseActivity {
                 (OtherDayPlanListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if(otherDayPlanListFragment == null) {
             otherDayPlanListFragment = OtherDayPlanListFragment.newInstance(-1L);
-            ActivityUtil.addFragmentToActivity(getSupportFragmentManager(),
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     otherDayPlanListFragment, R.id.contentFrame);
         }
 

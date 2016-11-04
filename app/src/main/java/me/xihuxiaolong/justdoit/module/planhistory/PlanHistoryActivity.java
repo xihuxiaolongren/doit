@@ -1,13 +1,10 @@
 package me.xihuxiaolong.justdoit.module.planhistory;
 
 import android.annotation.TargetApi;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -25,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 
 public class PlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityContract.IView, PlanHistoryActivityContract.IPresenter> implements PlanHistoryActivityContract.IView, ViewPager.OnPageChangeListener {
 
@@ -66,7 +63,7 @@ public class PlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityCont
 
     protected void injectDependencies() {
         planHistoryComponent = DaggerPlanHistoryActivityComponent.builder()
-                .appComponent(ActivityUtils.getAppComponent(this))
+                .appComponent(ProjectActivityUtils.getAppComponent(this))
                 .build();
     }
 

@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
@@ -61,7 +61,7 @@ public class PlanHistoryFragment extends BaseMvpFragment<PlanHistoryContract.IVi
     @Override
     protected void injectDependencies() {
         planHistoryComponent = DaggerPlanHistoryComponent.builder()
-                .appComponent(ActivityUtils.getAppComponent(getActivity()))
+                .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
                 .planHistoryModule(new PlanHistoryModule(dayTime))
                 .build();
     }

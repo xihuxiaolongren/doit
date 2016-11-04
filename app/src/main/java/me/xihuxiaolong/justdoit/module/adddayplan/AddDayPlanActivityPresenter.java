@@ -14,8 +14,7 @@ import javax.inject.Inject;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
-import me.xihuxiaolong.justdoit.module.editalert.EditAlertContract;
-import me.xihuxiaolong.library.utils.CollectionUtil;
+import me.xihuxiaolong.library.utils.CollectionUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +43,7 @@ public class AddDayPlanActivityPresenter extends MvpBasePresenter<AddDayPlanActi
     public void loadData() {
         List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
         if(isViewAttached()) {
-            if (CollectionUtil.isEmpty(planDOs))
+            if (CollectionUtils.isEmpty(planDOs))
                 getView().showEmptyView();
             else
                 getView().showContent(planDOs);

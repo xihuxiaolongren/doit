@@ -12,7 +12,7 @@ import me.xihuxiaolong.library.R;
  * User: xiaolong
  * Date: 16/7/6.
  */
-public class DialogUtil {
+public class DialogUtils {
 
     public static MaterialDialog showDialog(Context context, CharSequence title, CharSequence content){
         return showDialog(context, title, content, null);
