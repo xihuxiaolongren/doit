@@ -16,8 +16,6 @@ import me.xihuxiaolong.library.utils.ToastUtil;
 @Component(modules={AppModule.class})
 public interface AppComponent {
 
-    ToastUtil getToastUtil();
-
     ICacheService getCacheService();
 
 }

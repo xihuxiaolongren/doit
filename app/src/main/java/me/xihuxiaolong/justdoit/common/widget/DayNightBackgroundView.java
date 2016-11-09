@@ -97,12 +97,9 @@ public class DayNightBackgroundView extends FrameLayout{
 
     }
 
-    public int getAnimationDuration() {
-        return animationDuration;
-    }
-
     public void setAnimationDuration(int animationDuration) {
         this.animationDuration = animationDuration;
+        mWaveHelper = new WaveHelper(waveView, animationDuration);
     }
 
     private void initDay(final Context context) {

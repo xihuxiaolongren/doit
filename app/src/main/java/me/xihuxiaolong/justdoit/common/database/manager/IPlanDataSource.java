@@ -3,6 +3,7 @@ package me.xihuxiaolong.justdoit.common.database.manager;
 import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
 
 
 /**
@@ -26,10 +27,12 @@ public interface IPlanDataSource {
 
     List<PlanDO> listPlanDOsByOneDay(Long dayTime);
 
-    List<PlanDO> createOneDayPlanDOs(Long dayTime);
+    int createOneDayPlanDOs(Long dayTime);
 
     PlanDO getPlanByLastEndTime();
 
     List<PlanDO> listPlanDOsByDefault();
+
+    List<TagDO> listAllTag();
 
 }

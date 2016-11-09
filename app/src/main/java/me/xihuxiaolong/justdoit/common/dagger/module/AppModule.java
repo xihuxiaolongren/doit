@@ -34,10 +34,4 @@ public class AppModule {
         return new CacheService();
     }
 
-    @Provides
-    @Singleton
-    public ToastUtil provideToastUtil(){
-        return new ToastUtil(application);
-    }
-
 }

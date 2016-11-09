@@ -47,7 +47,7 @@ public class ThirdAppUtils {
             ApplicationInfo app = context.getPackageManager().getApplicationInfo(appPackageName, 0);
             return context.getPackageManager().getApplicationIcon(app);
         } catch (PackageManager.NameNotFoundException e) {
-            ToastUtil.showToast1(context, "应用已删除", Toast.LENGTH_SHORT);
+            ToastUtil.showToast(context, "应用已删除", Toast.LENGTH_SHORT);
         }
         return null;
     }
@@ -59,7 +59,7 @@ public class ThirdAppUtils {
             return true;
         } else {
             //            goToMarket(context, appPackageName);
-            ToastUtil.showToast1(context, "应用已删除", Toast.LENGTH_SHORT);
+            ToastUtil.showToast(context, "应用已删除", Toast.LENGTH_SHORT);
             return false;
         }
     }

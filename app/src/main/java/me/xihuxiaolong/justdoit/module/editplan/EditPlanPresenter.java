@@ -5,11 +5,13 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
@@ -30,15 +32,17 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
     @Inject
     IPlanDataSource planDataSource;
 
+    PlanDO editPlanDO;
+
     @Inject
     public EditPlanPresenter() {}
 
     @Override
     public void loadPlan() {
         if(planId != -1L) {
-            PlanDO planDO = planDataSource.getPlanDOById(planId);
+            editPlanDO = planDataSource.getPlanDOById(planId);
             if (isViewAttached()) {
-                getView().showPlan(planDO);
+                getView().showPlan(editPlanDO);
             }
         }
     }
@@ -58,8 +62,9 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         plan.setLinkAppName(linkAppName);
         plan.setLinkAppPackageName(linkAppPackageName);
         plan.setTempRepeatmode(repeatMode);
-        if(planId != -1L) {
+        if(planId != -1L && editPlanDO != null) {
             plan.setId(planId);
+            plan.setDayTime(editPlanDO.getDayTime());
             planDataSource.insertOrReplacePlanDO(plan);
             EventBus.getDefault().post(new Event.UpdatePlan(plan));
         }else {
@@ -90,14 +95,9 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
     public void loadTags() {
         mSelectedTags = new LinkedHashSet<>();
         mAllTags = new LinkedHashSet<>();
-//        selectTags.add("工作");
-//        selectTags.add("家庭");
-
-        mAllTags.add("工作");
-        mAllTags.add("家庭");
-        mAllTags.add("阅读");
-        mAllTags.add("开发者头条");
-        mAllTags.add("常看看");
+        for(TagDO tagDO : planDataSource.listAllTag()){
+            mAllTags.add(tagDO.getName());
+        }
         if(isViewAttached())
             getView().showTagDialog(mSelectedTags, mAllTags);
     }

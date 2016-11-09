@@ -41,9 +41,11 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void loadPlans() {
-        List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(DateTime.now().withTimeAtStartOfDay().getMillis());
+        List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
         if(CollectionUtils.isEmpty(planDOs)){
-            planDataSource.createOneDayPlanDOs(dayTime);
+            int count = planDataSource.createOneDayPlanDOs(dayTime);
+            if(count > 0)
+                planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
         }
         if (isViewAttached()) {
             getView().showPlans(planDOs);

@@ -42,9 +42,10 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void addPlan(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
+
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPlanCount() + 1);
         }else {

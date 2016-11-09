@@ -15,7 +15,7 @@
         android:id="@+id/day_night_background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:animationDuration="0"/>
+        app:animationDuration="0" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -66,3 +66,40 @@
 
     </ScrollView>
 </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

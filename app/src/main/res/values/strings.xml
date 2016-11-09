@@ -6,6 +6,7 @@
     <string name="action_add">添加</string>
     <string name="action_done">完成</string>
     <string name="action_next">下一步</string>
+    <string name="action_search">搜索</string>
     <string name="sleep">休息</string>
     <string name="plan">计划</string>
     <string name="alert">提醒</string>

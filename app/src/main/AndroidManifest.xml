@@ -32,7 +32,6 @@
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity android:name=".module.planhistory.PlanHistoryActivity" />
         <activity android:name=".module.adddayplan.AddDayPlanActivity" />
-        <activity android:name=".module.otherdayplanlist.OtherDayPlanListActivity" />
         <activity android:name=".module.settings.SettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>
 

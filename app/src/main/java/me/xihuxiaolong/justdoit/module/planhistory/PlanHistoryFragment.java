@@ -83,7 +83,7 @@ public class PlanHistoryFragment extends BaseMvpFragment<PlanHistoryContract.IVi
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView);
+        planListWrapper = new PlanListWrapper(getContext(), recyclerView, null);
 
         return view;
     }

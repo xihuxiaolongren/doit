@@ -76,7 +76,7 @@ public class PlanTemplateFragment extends BaseMvpFragment<PlanTemplateContract.I
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView);
+        planListWrapper = new PlanListWrapper(getContext(), recyclerView, null);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_template_header, recyclerView, false);
         planListWrapper.addHeaderView(headerView);
 

@@ -10,23 +10,13 @@ import android.widget.Toast;
  */
 public class ToastUtil {
 
-    private Context mContext;
-
-    public ToastUtil(Context context){
-        this.mContext = context;
-    }
-
-    public void showToast(String message, int duration){
-        Toast.makeText(mContext,message, duration).show();
-    }
-
-    public void showToast(String message, int duration, int gravity){
-        Toast toast = Toast.makeText(mContext,message, duration);
+    public static void showToast(Context context, String message, int duration, int gravity){
+        Toast toast = Toast.makeText(context, message, duration);
         toast.setGravity(gravity, 0, 0);
         toast.show();
     }
 
-    public static void showToast1(Context context, String message, int duration){
+    public static void showToast(Context context, String message, int duration){
         Toast toast = Toast.makeText(context, message, duration);
         toast.show();
     }

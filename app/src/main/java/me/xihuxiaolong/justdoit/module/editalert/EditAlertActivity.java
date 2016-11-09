@@ -38,10 +38,6 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
 
     private Menu menu;
 
-    @Inject
-    ToastUtil toastUtil;
-
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.backgroundIV)
@@ -65,6 +61,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
         ButterKnife.bind(this);
 
         setToolbar(toolbar, true);
+        contentET.requestFocus();
         singleTimeView.setTimeListener(this);
         presenter.loadAlert();
     }
@@ -115,7 +112,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
                 return true;
             case R.id.action_confirm:
                 if(TextUtils.isEmpty(contentET.getText()))
-                    toastUtil.showToast("不能保存一条空的提醒", Toast.LENGTH_SHORT);
+                    ToastUtil.showToast(this, "不能保存一条空的提醒", Toast.LENGTH_SHORT);
                 else
                     presenter.saveAlert(singleTimeView.getHour(), singleTimeView.getMinute(), contentET.getText().toString());
                 return true;
@@ -149,8 +146,10 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
 
     @Override
     public void showAlert(PlanDO alert) {
-        singleTimeView.setTime(alert.getStartHour(), alert.getStartMinute());
-        contentET.setText(alert.getContent());
+        if(alert != null) {
+            singleTimeView.setTime(alert.getStartHour(), alert.getStartMinute());
+            contentET.setText(alert.getContent());
+        }
     }
 
     @Override

@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.common.database.localentity;
 
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;

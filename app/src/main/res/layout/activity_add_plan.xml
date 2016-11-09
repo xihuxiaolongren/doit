@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
 
     <ImageView
         android:id="@+id/backgroundIV"
@@ -31,11 +33,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:fitsSystemWindows="true">
+        android:clickable="true"
+        android:fitsSystemWindows="true"
+        android:focusableInTouchMode="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView
@@ -65,7 +71,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <RelativeLayout
                     android:id="@+id/tagRL"
@@ -77,8 +84,8 @@
                         android:id="@+id/tagIV"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
                         android:layout_marginRight="10dp"
+                        android:layout_marginTop="5dp"
                         android:src="@drawable/add_tag"
                         android:tint="@color/titleTextColor" />
 
@@ -103,6 +110,52 @@
                         android:textColor="@color/titleTextColor"
                         android:textSize="12sp" />
                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/repeatRL"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/repeatIV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/repeat_plan"
+                        android:tint="@color/titleTextColor" />
+
+                    <TextView
+                        android:id="@+id/repeatTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/repeatIV"
+                        android:text="设为每日任务"
+                        android:textColor="@color/titleTextColor" />
+
+                    <TextView
+                        android:id="@+id/repeatDetailTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/repeatTV"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/repeatIV"
+                        android:text="从不"
+                        android:textColor="@color/titleTextColor"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <RelativeLayout
                     android:id="@+id/linkAppRL"
@@ -140,45 +193,6 @@
                 </RelativeLayout>
 
             </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/repeatRL"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:layout_marginBottom="10dp">
-
-                <ImageView
-                    android:id="@+id/repeatIV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/repeat_plan"
-                    android:tint="@color/titleTextColor" />
-
-                <TextView
-                    android:id="@+id/repeatTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_toRightOf="@id/repeatIV"
-                    android:text="设为每日任务"
-                    android:textColor="@color/titleTextColor" />
-
-                <TextView
-                    android:id="@+id/repeatDetailTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/repeatTV"
-                    android:layout_marginRight="10dp"
-                    android:layout_toRightOf="@id/repeatIV"
-                    android:text="从不"
-                    android:textColor="@color/titleTextColor"
-                    android:textSize="12sp" />
-
-            </RelativeLayout>
 
         </LinearLayout>
 

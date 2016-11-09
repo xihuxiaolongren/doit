@@ -101,8 +101,6 @@ public class SettingsActivity extends BaseMvpActivity<SettingsContract.IView, Se
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @Inject
-    ToastUtil toastUtil;
     SettingsComponent settingsComponent;
     UserSettings userSettings;
     @BindView(R.id.scrollView)

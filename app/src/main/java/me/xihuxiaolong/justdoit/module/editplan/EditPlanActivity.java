@@ -1,16 +1,23 @@
 package me.xihuxiaolong.justdoit.module.editplan;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,20 +34,21 @@ import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
+import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolong.library.utils.ToastUtil;
@@ -55,14 +63,11 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     EditPlanComponent editPlanComponent;
 
-    @Inject
-    ToastUtil toastUtil;
-
     Long planId;
 
     long dayTime;
 
-    int selected = 0;
+    int selected = -1;
     Integer[] selectedArr;
 
     @BindView(R.id.toolbar)
@@ -96,6 +101,15 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         ButterKnife.bind(this);
 
         setToolbar(toolbar, true);
+
+        contentET.requestFocus();
+        contentET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus)
+                    ActivityUtils.hideSoftKeyboard(contentET);
+            }
+        });
         startAndEndTV.setStartAndEndListener(this);
         repeatRL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +140,6 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
                         selected = which;
-                        int repeatMode = 0;
                         switch (which) {
                             case 0:
                                 repeatDetailTV.setTag(which);
@@ -164,7 +177,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         repeatDetailTV.setText("");
                         for (int i : selectedArr) {
                             CharSequence s = (getResources().getTextArray(R.array.repeat_week_arr))[i];
-                            String ss = repeatDetailTV.getText().toString() + s + "，";
+                            String ss = repeatDetailTV.getText().toString() + s + ",";
                             repeatDetailTV.setText(ss);
                         }
                         repeatDetailTV.setText(repeatDetailTV.getText().subSequence(0, repeatDetailTV.getText().length() - 1));
@@ -195,6 +208,12 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                     }
                 })
                 .negativeText(getResources().getString(R.string.action_cancel))
+                .dismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ActivityUtils.hideSoftKeyboard(EditPlanActivity.this);
+                    }
+                })
                 .show();
 
         selectTagsFl = (FlexboxLayout) dialog.findViewById(R.id.select_tags_fl);
@@ -250,13 +269,65 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     };
 
     MaterialDialog thirdAppDialog;
+    RecyclerView thirdAppRecyclerView;
+    MaterialEditText searchET;
+    List<ThirdAppUtils.AppItem> appItems;
 
     @Override
     public void showThirdAppDialog() {
         thirdAppDialog = new MaterialDialog.Builder(EditPlanActivity.this)
                 .title("关联第三方应用")
-                .adapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, ThirdAppUtils.getAllApps(this)), null)
+                .customView(R.layout.dialog_third_app, false)
+//                .adapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, ThirdAppUtils.getAllApps(this)), null)
                 .show();
+        searchET = (MaterialEditText) thirdAppDialog.findViewById(R.id.searchET);
+        searchET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && v.getText().length() > 0) {
+                    List<ThirdAppUtils.AppItem> appItems1 = new ArrayList<ThirdAppUtils.AppItem>();
+                    for (ThirdAppUtils.AppItem appItem : appItems) {
+                        if (appItem.getAppName().contains(v.getText().toString()))
+                            appItems1.add(appItem);
+                    }
+                    thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems1));
+                    return true;
+                } else {
+                    thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems));
+                }
+                return false;
+            }
+        });
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!TextUtils.isEmpty(s.toString().trim())) {
+                    List<ThirdAppUtils.AppItem> appItems1 = new ArrayList<ThirdAppUtils.AppItem>();
+                    for (ThirdAppUtils.AppItem appItem : appItems) {
+                        if (appItem.getAppName().toLowerCase().contains(s.toString().trim().toLowerCase()))
+                            appItems1.add(appItem);
+                    }
+                    thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems1));
+                } else {
+                    thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems));
+                }
+            }
+        });
+        thirdAppRecyclerView = (RecyclerView) thirdAppDialog.findViewById(R.id.recyclerView);
+        thirdAppRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if(appItems == null)
+            appItems = ThirdAppUtils.getAllApps(this);
+        thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems));
     }
 
     class ThirdAppAdapter extends CommonAdapter<ThirdAppUtils.AppItem> {
@@ -272,6 +343,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
             holder.setOnClickListener(R.id.rootView, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if(searchET.hasFocus())
+                        ActivityUtils.hideSoftKeyboard(searchET);
                     thirdAppDialog.dismiss();
                     linkAppDetailTV.setText(mDatas.get(position).getAppName());
                     linkAppDetailTV.setTag(mDatas.get(position));
@@ -327,29 +400,29 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 return true;
             case R.id.action_confirm:
                 if (TextUtils.isEmpty(contentET.getText()))
-                    toastUtil.showToast("不能保存一条空的计划", Toast.LENGTH_SHORT);
+                    ToastUtil.showToast(this, "不能保存一条空的计划", Toast.LENGTH_SHORT);
                 else {
                     String tags = null;
                     String linkAppName = null;
                     String linkAppPackageName = null;
-                    if(!tagDetailTV.getText().toString().equals("无"))
+                    if (!tagDetailTV.getText().toString().equals("无"))
                         tags = tagDetailTV.getText().toString();
-                    if(linkAppDetailTV.getTag() != null){
+                    if (linkAppDetailTV.getTag() != null) {
                         ThirdAppUtils.AppItem appItem = (ThirdAppUtils.AppItem) linkAppDetailTV.getTag();
                         linkAppName = appItem.getAppName();
                         linkAppPackageName = appItem.getAppPackageName();
                     }
                     int repeatMode = 0;
-                    switch (selected){
-                        case 0 :
-                            for(int i = 0; i < 7; ++i)
+                    switch (selected) {
+                        case 0:
+                            for (int i = 0; i < 7; ++i)
                                 repeatMode |= 1 << i;
                             break;
-                        case 1 :
-                            for(int i = 0; i < 5; ++i)
+                        case 1:
+                            for (int i = 0; i < 5; ++i)
                                 repeatMode |= 1 << i;
                             break;
-                        case 2 :
+                        case 2:
                             for (int i : selectedArr) {
                                 repeatMode |= 1 << i;
                             }
@@ -409,10 +482,10 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 if (hourOfDay > startAndEndTV.getEndHour()) {
                     startAndEndTV.setEndTime(hourOfDay + 1, minute);
                 }
+                endClick();
                 break;
             case FRAG_TAG_TIME_PICKER_END:
                 startAndEndTV.setEndTime(hourOfDay, minute);
-                contentET.requestFocus();
                 break;
         }
     }
@@ -449,7 +522,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     }
 
     public void addTagSuccess(String tag) {
-        if(mSelectedTags.add(tag)) {
+        if (mSelectedTags.add(tag)) {
             addTagToSelectView(tag);
             if (allTagsFl.findViewWithTag(tag) != null)
                 allTagsFl.findViewWithTag(tag).setVisibility(View.GONE);
@@ -460,12 +533,20 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         if (!CollectionUtils.isEmpty(mSelectedTags)) {
             tagDetailTV.setText("");
             for (String tag : mSelectedTags) {
-                tagDetailTV.setText(tagDetailTV.getText().toString() + tag + "，");
+                tagDetailTV.setText(tagDetailTV.getText().toString() + tag + ",");
             }
             tagDetailTV.setText(tagDetailTV.getText().subSequence(0, tagDetailTV.getText().length() - 1));
         } else {
             tagDetailTV.setText("无");
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.
+                INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        return true;
     }
 
 }

@@ -32,6 +32,7 @@ import java.util.List;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 /**
@@ -47,11 +48,11 @@ public class PlanListWrapper {
     EmptyWrapper mEmptyWrapper;
     HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
-    public PlanListWrapper(Context context, RecyclerView recyclerView){
+    public PlanListWrapper(Context context, RecyclerView recyclerView, PlanListOnClickListener planListOnClickListener){
         this.recyclerView = recyclerView;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new PlanListAdapter(context, new ArrayList<PlanDO>(), null);
+        adapter = new PlanListAdapter(context, new ArrayList<PlanDO>(), planListOnClickListener);
         mEmptyWrapper = new EmptyWrapper(adapter);
         mEmptyWrapper.setEmptyView(LayoutInflater.from(context).inflate(R.layout.recycler_empty, recyclerView, false));
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mEmptyWrapper);
@@ -121,6 +122,7 @@ public class PlanListWrapper {
 
             @Override
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
+                holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
                 DateTime dateTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
                 DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
                 holder.setText(R.id.startTimeTV, dateTime.toString(builder));
@@ -152,6 +154,7 @@ public class PlanListWrapper {
 
             @Override
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
+                holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
                 DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
                 DateTime startTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
                 holder.setText(R.id.startTimeTV, startTime.toString(builder));
@@ -205,7 +208,7 @@ public class PlanListWrapper {
                 if(!TextUtils.isEmpty(planDO.getTags())){
                     flexboxLayout.removeAllViews();
                     flexboxLayout.setVisibility(View.VISIBLE);
-                    for(String tag : planDO.getTags().split("，")){
+                    for(String tag : planDO.getTags().split(",")){
                         TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
                         textView.setText("# " + tag);
                         flexboxLayout.addView(textView);

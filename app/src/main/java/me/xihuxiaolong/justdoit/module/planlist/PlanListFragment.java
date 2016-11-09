@@ -59,7 +59,7 @@ import me.xihuxiaolong.library.utils.ActivityUtils;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks {
+public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
@@ -197,7 +197,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             }
         });
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView);
+        planListWrapper = new PlanListWrapper(getContext(), recyclerView, this);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
         planListWrapper.addHeaderView(headerView);
         recyclerView.setScrollViewCallbacks(this);
@@ -404,7 +404,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
         ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.2)) / mFlexibleSpaceImageHeight );
+        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight );
         ViewHelper.setAlpha(signatureTV, alpha);
 
         // Translate toolbar
@@ -496,4 +496,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     }
 
+    @Override
+    public void planListenr(PlanDO planDO) {
+        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
+    }
+
+    @Override
+    public void alertListenr(PlanDO planDO) {
+        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
+    }
 }
