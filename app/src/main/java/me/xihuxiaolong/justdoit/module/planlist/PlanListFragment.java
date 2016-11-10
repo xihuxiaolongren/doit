@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -52,6 +53,7 @@ import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.library.utils.ActivityUtils;
+import me.xihuxiaolong.library.utils.CollectionUtils;
 
 
 /**
@@ -201,17 +203,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
         planListWrapper.addHeaderView(headerView);
         recyclerView.setScrollViewCallbacks(this);
-//        recyclerView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(4, mActionBarSize + mStatusBarSize);
-//            }
-//        });
+
 //        Icepick.restoreInstanceState(this, savedInstanceState);
         return view;
     }
 
-    @Override public void onSaveInstanceState(Bundle outState) {
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 //        Icepick.saveInstanceState(this, outState);
     }
@@ -220,9 +218,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if(isTodayDay) {
+        if (isTodayDay) {
             inflater.inflate(R.menu.menu_frament_planlist, menu);
-        }else{
+        } else {
             inflater.inflate(R.menu.menu_frament_planlist_other_day, menu);
         }
         addMenuItem = menu.findItem(R.id.action_add);
@@ -273,12 +271,28 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void showPlans(final List<PlanDO> plans) {
         planListWrapper.setItems(plans);
+//        recyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (!CollectionUtils.isEmpty(plans) && plans.get(0).getDayTime() == DateTime.now().withTimeAtStartOfDay().getMillis()) {
+//                    for (PlanDO planDO : plans) {
+//                        DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+//                        DateTime endTime = new DateTime(planDO.getDayTime()).withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
+//                        if(startTime.isBeforeNow() && endTime.isAfterNow()) {
+////                            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPositionWithOffset(4, mActionBarSize + mStatusBarSize);
+//                            ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(4);
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
     public void showDayInfo(String avatarUrl, DateTime dateTime) {
         calendarWeekTv.setText(dateTime.toString(DateTimeFormat.forPattern("EEEE")));
-        if(avatarUrl == null){
+        if (avatarUrl == null) {
             avatarIV.setVisibility(View.GONE);
             calendarDayTv.setVisibility(View.VISIBLE);
             calendarDayTv.setText(dateTime.toString(DateTimeFormat.forPattern("d")));
@@ -294,7 +308,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void showSignature(final String signature, final String preSignature) {
-        if(preSignature == null)
+        if (preSignature == null)
             signatureTV.setText(signature);
         else {
             signatureTV.setText(preSignature);
@@ -386,7 +400,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 //        ViewHelper.setPivotY(calendarRL, 0);
         ViewHelper.setScaleX(calendarRL, scale);
         ViewHelper.setScaleY(calendarRL, scale);
-        if(avatarIV.getVisibility() == View.VISIBLE) {
+        if (avatarIV.getVisibility() == View.VISIBLE) {
             float scaleAvatar = ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0.8f, 1f);
             ViewHelper.setScaleX(avatarIV, scaleAvatar);
             ViewHelper.setScaleY(avatarIV, scaleAvatar);
@@ -404,7 +418,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
         ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight );
+        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
         ViewHelper.setAlpha(signatureTV, alpha);
 
         // Translate toolbar
@@ -412,7 +426,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
 
         // Translate toolbar
-        if(scale == 1.0f)
+        if (scale == 1.0f)
             shadowFrame.setForeground(shadow);
         else
             shadowFrame.setForeground(null);
@@ -420,13 +434,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
-    public void onDownMotionEvent() {}
+    public void onDownMotionEvent() {
+    }
 
     @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {}
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
 
     private void showFab() {
-        if(!mFabIsShown) {
+        if (!mFabIsShown) {
             for (int i = 0; i < fab.getChildCount(); ++i) {
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(1).scaleY(1).setDuration(200).start();
@@ -437,7 +453,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     private void hideFab() {
-        if(mFabIsShown) {
+        if (mFabIsShown) {
             for (int i = 0; i < fab.getChildCount(); ++i) {
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(0).scaleY(0).setDuration(200).start();
@@ -490,7 +506,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onResume() {
         super.onResume();
-        if(hasChangeDayNight) {
+        if (hasChangeDayNight) {
             ((PlanListActivity) getActivity()).restart();
             hasChangeDayNight = false;
         }

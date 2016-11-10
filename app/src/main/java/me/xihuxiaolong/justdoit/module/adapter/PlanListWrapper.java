@@ -123,7 +123,8 @@ public class PlanListWrapper {
             @Override
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
                 holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
-                DateTime dateTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+                DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+//                DateTime dateTime = DateTime.now().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
                 DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
                 holder.setText(R.id.startTimeTV, dateTime.toString(builder));
                 holder.setText(R.id.contentTV, planDO.getContent());
@@ -156,9 +157,11 @@ public class PlanListWrapper {
             public void convert(ViewHolder holder, PlanDO planDO, int position) {
                 holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
                 DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-                DateTime startTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+                DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+//                DateTime startTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
                 holder.setText(R.id.startTimeTV, startTime.toString(builder));
-                DateTime endTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
+                DateTime endTime = new DateTime(planDO.getDayTime()).withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
+//                DateTime endTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
                 holder.setText(R.id.endTimeTV, endTime.toString(builder));
                 holder.setText(R.id.contentTV, planDO.getContent());
                 Interval interv = new Interval(startTime, endTime);
