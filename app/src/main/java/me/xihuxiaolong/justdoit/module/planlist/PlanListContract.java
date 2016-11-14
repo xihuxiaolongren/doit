@@ -30,7 +30,7 @@ public class PlanListContract {
 
         void showSignature(String signature, String preSignature);
 
-        void changeDayNight();
+//        void changeDayNight();
 
         void gotoTemplates();
 

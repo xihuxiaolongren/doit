@@ -1,8 +1,173 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recyclerView"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="50dp"
-    android:clipChildren="false"
-    android:clipToPadding="false"/>
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/headerIV"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/flexible_space_image_height"
+        android:scaleType="centerCrop"
+        android:src="@drawable/example" />
+
+    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
+        android:id="@+id/day_night_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:animationDuration="2000" />
+
+    <View
+        android:id="@+id/recycler_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/shadowFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingBottom="50dp" />
+    </FrameLayout>
+
+    <me.grantland.widget.AutofitTextView
+        android:id="@+id/signatureTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:gravity="right"
+        android:maxLines="2"
+        android:maxWidth="150dp"
+        android:shadowColor="@color/shadowColor"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:text="一日之计在于晨"
+        android:textColor="@color/titleTextColor"
+        android:textSize="@dimen/signature_size"
+        autofit:minTextSize="@dimen/signature_min_size" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+    <LinearLayout
+        android:id="@+id/calendar_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:gravity="center_vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarIV"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/avatar"
+            app:civ_border_color="@color/titleTextColor"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/calendar_day_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:shadowColor="@color/shadowColor"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="8"
+            android:textColor="@color/titleTextColor"
+            android:textSize="@dimen/calendar_day_size" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calendar_week_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="星期三"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_week_size" />
+
+            <TextView
+                android:id="@+id/calendar_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendar_week_tv"
+                android:layout_toRightOf="@id/calendar_day_tv"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="5月 2016"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_month_year_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        fab:menu_colorNormal="@color/accent"
+        fab:menu_fab_size="normal"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_openDirection="down">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/planFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_plan"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/plan"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/alertFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_clock"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/alert"
+            fab:fab_size="mini" />
+
+        <!--<com.github.clans.fab.FloatingActionButton-->
+        <!--android:id="@+id/tomorrowPlanFab"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/menu_tomorrow"-->
+        <!--fab:fab_colorNormal="@android:color/white"-->
+        <!--fab:fab_label="@string/tomorrow_plan"-->
+        <!--fab:fab_size="mini"/>-->
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+</RelativeLayout>

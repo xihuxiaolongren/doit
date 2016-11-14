@@ -6,6 +6,7 @@
     <color name="colorControlActivated">#FF4081</color>
     <color name="colorStatus">#11FFFFFF</color>
     <color name="titleTextColor">#FFFFFF</color>
+    <color name="unselectedTitleTextColor">#80FFFFFF</color>
     <color name="shadowColor">#333333</color>
     <color name="sky">#1E7AC7</color>
     <color name="dark_sky">#145185</color>

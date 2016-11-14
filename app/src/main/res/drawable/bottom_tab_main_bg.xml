@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 边框颜色值 -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#10000000"
+                android:endColor="#40000000"
+                android:angle="270"
+                >
+            </gradient>
+        </shape>
+    </item>
+    <!-- 主体背景颜色值 -->
+    <item android:top="2dp">
+        <shape>
+            <solid android:color="@color/sky" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:gravity="center"
+	android:clipChildren="false"
+	android:clipToPadding="false">
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:clipChildren="false"
+		android:clipToPadding="false"
+		>
+		<me.xihuxiaolong.library.widget.TintableImageView
+			android:id="@+id/img_tab"
+			android:layout_width="20dp"
+			android:layout_height="20dp"
+			android:layout_centerHorizontal="true"/>
+
+		<!--<ImageView-->
+			<!--android:id="@+id/img_tab"-->
+			<!--android:layout_width="25dp"-->
+			<!--android:layout_height="25dp"-->
+			<!--android:layout_centerHorizontal="true"/>-->
+
+		<ImageView
+			android:id="@+id/img_unread"
+			android:layout_width="8dp"
+			android:layout_height="8dp"
+			android:layout_alignTop="@id/img_tab"
+			android:layout_toRightOf="@id/img_tab"
+			android:layout_marginRight="-7dp"
+			android:visibility="gone"/>
+		<TextView
+			android:id="@+id/text_tab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/img_tab"
+			android:textSize="10sp"
+			android:layout_marginTop="1dp"
+			android:layout_centerHorizontal="true"/>
+	</RelativeLayout>
+</LinearLayout>

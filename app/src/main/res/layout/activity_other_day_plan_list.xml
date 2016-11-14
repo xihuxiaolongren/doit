@@ -1,87 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/backgroundIV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/example_1" />
-
-    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
-        android:id="@+id/day_night_background_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:animationDuration="0" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
-        app:contentInsetStartWithNavigation="0dp"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
-        app:title="@string/tomorrow_plan"
-        app:titleTextAppearance="@style/Toolbar.TitleText">
-
-        <RelativeLayout
-            android:id="@+id/calendar_rl"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/toolbar"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="40dp">
-
-            <TextView
-                android:id="@+id/calendar_day_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:shadowColor="@color/shadowColor"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="8"
-                android:textColor="@color/titleTextColor"
-                android:textSize="@dimen/calendar_day_size" />
-
-            <TextView
-                android:id="@+id/calendar_week_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/calendar_day_tv"
-                android:shadowColor="@color/shadowColor"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="星期三"
-                android:textColor="@color/titleTextColor"
-                android:textSize="@dimen/calendar_week_size" />
-
-            <TextView
-                android:id="@+id/calendar_month_year_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/calendar_week_tv"
-                android:layout_toRightOf="@id/calendar_day_tv"
-                android:shadowColor="@color/shadowColor"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="5月 2016"
-                android:textColor="@color/titleTextColor"
-                android:textSize="@dimen/calendar_month_year_size" />
-        </RelativeLayout>
-    </android.support.v7.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/contentFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
         android:clipChildren="false"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false" />
+
 </RelativeLayout>

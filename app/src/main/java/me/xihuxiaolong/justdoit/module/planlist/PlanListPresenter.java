@@ -98,10 +98,10 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         loadUserSettings();
     }
 
-    @Subscribe
-    public void onEvent(Event.ChangeDayNightTheme changeDayNightTheme) {
-        if(isViewAttached())
-            getView().changeDayNight();
-    }
+//    @Subscribe
+//    public void onEvent(Event.ChangeDayNightTheme changeDayNightTheme) {
+//        if(isViewAttached())
+//            getView().changeDayNight();
+//    }
 
 }

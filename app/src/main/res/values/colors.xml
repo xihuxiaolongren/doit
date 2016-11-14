@@ -6,6 +6,7 @@
     <color name="colorControlActivated">#333333</color>
     <color name="colorStatus">#11FFFFFF</color>
     <color name="titleTextColor">#333333</color>
+    <color name="unselectedTitleTextColor">#80333333</color>
     <color name="notificationNightTitleTextColor">#FFFFFF</color>
     <color name="shadowColor">#00FFFFFF</color>
     <color name="sky">#DDEFF9</color>

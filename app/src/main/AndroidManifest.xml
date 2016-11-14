@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".module.planlist.PlanListActivity"
+            android:name=".module.main.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,6 +31,7 @@
             android:name=".module.editalert.EditAlertActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity android:name=".module.planhistory.PlanHistoryActivity" />
+        <activity android:name=".module.planlist.OtherDayActivity" />
         <activity android:name=".module.adddayplan.AddDayPlanActivity" />
         <activity android:name=".module.settings.SettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan"/>

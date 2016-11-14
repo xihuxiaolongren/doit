@@ -50,14 +50,14 @@ public class ActivityUtils {
         void afterDelay();
     }
 
-    public static void delay(int secs, final DelayCallback delayCallback){
+    public static void delay(long delayMillis, final DelayCallback delayCallback){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 delayCallback.afterDelay();
             }
-        }, secs * 1000); // afterDelay will be executed after (secs*1000) milliseconds.
+        }, delayMillis); // afterDelay will be executed after (secs*1000) milliseconds.
     }
 
     public static void openSoftKeyboard(Activity activity, EditText editText){

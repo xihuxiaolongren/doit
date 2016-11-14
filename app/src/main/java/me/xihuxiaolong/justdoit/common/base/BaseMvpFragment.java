@@ -56,13 +56,19 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
         }
     }
 
+    private boolean isFirstSet = true;
+
     public void setToolbar(Toolbar toolbar, boolean showHomeAsUp){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-            layoutParams.height = layoutParams.height + getStatusBarHeight();
-            toolbar.setLayoutParams(layoutParams);
+        if(toolbar != null) {
+            if (isFirstSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+                layoutParams.height = layoutParams.height + getStatusBarHeight();
+                toolbar.setLayoutParams(layoutParams);
+                toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+                isFirstSet = false;
+            }
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
         }
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
     }
 }

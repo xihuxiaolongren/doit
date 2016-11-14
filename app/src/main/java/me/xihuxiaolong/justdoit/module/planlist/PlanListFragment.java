@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -38,22 +39,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
-import me.xihuxiaolong.justdoit.common.base.BaseActivity;
-import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
-import me.xihuxiaolong.justdoit.module.adddayplan.AddDayPlanActivity;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.main.MainActivity;
+import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
-import me.xihuxiaolong.library.utils.ActivityUtils;
-import me.xihuxiaolong.library.utils.CollectionUtils;
 
 
 /**
@@ -61,7 +60,7 @@ import me.xihuxiaolong.library.utils.CollectionUtils;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener {
+public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
@@ -70,7 +69,39 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @BindView(R.id.recyclerView)
     ObservableRecyclerView recyclerView;
-    private int mFlexibleSpaceImageHeight, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
+
+    //    @BindView(R.id.contentFrame)
+//    FrameLayout contentFrame;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.calendar_day_tv)
+    TextView calendarDayTv;
+    @BindView(R.id.calendar_week_tv)
+    TextView calendarWeekTv;
+    @BindView(R.id.calendar_month_year_tv)
+    TextView calendarMonthYearTv;
+    @BindView(R.id.recycler_background)
+    View recyclerBackground;
+    @BindView(R.id.day_night_background_view)
+    DayNightBackgroundView dayNightBackgroundView;
+    @BindView(R.id.signatureTV)
+    AutofitTextView signatureTV;
+    @BindView(R.id.avatarIV)
+    CircleImageView avatarIV;
+    @BindView(R.id.calendar_rl)
+    LinearLayout calendarRl;
+    @BindView(R.id.planFab)
+    FloatingActionButton planFab;
+    @BindView(R.id.alertFab)
+    FloatingActionButton alertFab;
+    @BindView(R.id.fab)
+    FloatingActionMenu fab;
+    @BindView(R.id.headerIV)
+    ImageView headerIV;
+    @BindView(R.id.shadowFrame)
+    FrameLayout shadowFrame;
+
+    private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
             mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
     private int mActionBarSize, mStatusBarSize;
 
@@ -78,16 +109,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     MenuItem addMenuItem;
 
-    Toolbar toolbar;
-    DayNightBackgroundView dayNightBackgroundView;
-    FloatingActionMenu fab;
-    ImageView headerIV;
-    ImageView avatarIV;
-    View recyclerBackground;
-    View calendarRL;
-    TextView calendarDayTv, calendarWeekTv, calendarMonthYearTv;
-    AutofitTextView signatureTV;
-    FrameLayout shadowFrame;
     Drawable shadow;
 
     int vibrant, darkVibrant;
@@ -97,6 +118,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     PlanListWrapper planListWrapper;
 
     long dayTime;
+
+    ScrollListener scrollListener;
 
     public static PlanListFragment newInstance() {
         PlanListFragment fragment = new PlanListFragment();
@@ -116,6 +139,10 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 .build();
     }
 
+    public void setScrollListener(ScrollListener scrollListener){
+        this.scrollListener = scrollListener;
+    }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -132,9 +159,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_plan_list, container, false);
         ButterKnife.bind(this, view);
+        setToolbar(toolbar, false);
         setHasOptionsMenu(true);
+        if (dayTime != -1L)
+            dayNightBackgroundView.setAnimationDuration(0);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
@@ -142,28 +173,17 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
-        toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        dayNightBackgroundView = (DayNightBackgroundView) getActivity().findViewById(R.id.day_night_background_view);
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mStatusBarSize = getStatusBarHeight();
         }
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
-        avatarIV = (ImageView) getActivity().findViewById(R.id.avatarIV);
-        fab = (FloatingActionMenu) getActivity().findViewById(R.id.fab);
-        fab.findViewById(R.id.planFab).setOnClickListener(fabListener);
-        fab.findViewById(R.id.alertFab).setOnClickListener(fabListener);
+        planFab.setOnClickListener(fabListener);
+        alertFab.setOnClickListener(fabListener);
 //        fab.findViewById(R.id.tomorrowPlanFab).setOnClickListener(fabListener);
         fab.setClosedOnTouchOutside(true);
-        headerIV = (ImageView) getActivity().findViewById(R.id.headerIV);
-        recyclerBackground = getActivity().findViewById(R.id.recycler_background);
-        calendarRL = getActivity().findViewById(R.id.calendar_rl);
-        calendarDayTv = (TextView) getActivity().findViewById(R.id.calendar_day_tv);
-        calendarWeekTv = (TextView) getActivity().findViewById(R.id.calendar_week_tv);
-        calendarMonthYearTv = (TextView) getActivity().findViewById(R.id.calendar_month_year_tv);
-        signatureTV = (AutofitTextView) getActivity().findViewById(R.id.signatureTV);
-        shadowFrame = (FrameLayout) getActivity().findViewById(R.id.shadowFrame);
+//        shadowFrame = (FrameLayout) getActivity().findViewById(R.id.shadowFrame);
 //        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.example);
 //        Palette.Builder builder = new Palette.Builder(largeIcon);
 //        Palette palette = builder.generate();
@@ -173,20 +193,20 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
-        calendarRL.post(new Runnable() {
+        calendarRl.post(new Runnable() {
             @Override
             public void run() {
                 float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
                 float scale = 1 + ScrollUtils.getFloat((flexibleRange - mScollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-                ViewHelper.setPivotX(calendarRL, 0);
-                ViewHelper.setPivotY(calendarRL, 0);
-                ViewHelper.setScaleX(calendarRL, scale);
-                ViewHelper.setScaleY(calendarRL, scale);
-                int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRL.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+                ViewHelper.setPivotX(calendarRl, 0);
+                ViewHelper.setPivotY(calendarRl, 0);
+                ViewHelper.setScaleX(calendarRl, scale);
+                ViewHelper.setScaleY(calendarRl, scale);
+                int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
                 int titleTranslationY = maxTitleTranslationY - mScollY;
-                ViewHelper.setTranslationY(calendarRL, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRL.getHeight()) / 2 + mStatusBarSize,
+                ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
                         maxTitleTranslationY));
-                ViewHelper.setTranslationX(calendarRL, ScrollUtils.getFloat(mScollY, 0,
+                ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(mScollY, 0,
                         mActionBarSize));
             }
         });
@@ -244,7 +264,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                 return true;
             case R.id.action_add_tomorrow_plan:
-                startActivity(new Intent(getActivity(), PlanListActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
+                startActivity(new Intent(getActivity(), OtherDayActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -332,12 +352,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     }
 
-    boolean hasChangeDayNight = false;
-
-    @Override
-    public void changeDayNight() {
-        hasChangeDayNight = true;
-    }
 
     @Override
     public void gotoTemplates() {
@@ -372,6 +386,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        if(scrollListener != null)
+            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
         mScollY = scrollY;
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
 
@@ -394,24 +410,24 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setTranslationY(headerIV, -scrollY / 2);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
 
-        // Scale calendarRL
+        // Scale calendarRl
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-//        ViewHelper.setPivotX(calendarRL, 0);
-//        ViewHelper.setPivotY(calendarRL, 0);
-        ViewHelper.setScaleX(calendarRL, scale);
-        ViewHelper.setScaleY(calendarRL, scale);
+//        ViewHelper.setPivotX(calendarRl, 0);
+//        ViewHelper.setPivotY(calendarRl, 0);
+        ViewHelper.setScaleX(calendarRl, scale);
+        ViewHelper.setScaleY(calendarRl, scale);
         if (avatarIV.getVisibility() == View.VISIBLE) {
             float scaleAvatar = ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0.8f, 1f);
             ViewHelper.setScaleX(avatarIV, scaleAvatar);
             ViewHelper.setScaleY(avatarIV, scaleAvatar);
         }
 
-        // Translate calendarRL
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRL.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+        // Translate calendarRl
+        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
         int titleTranslationY = maxTitleTranslationY - scrollY;
-        ViewHelper.setTranslationY(calendarRL, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRL.getHeight()) / 2 + mStatusBarSize,
+        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
                 maxTitleTranslationY));
-        ViewHelper.setTranslationX(calendarRL, ScrollUtils.getFloat(scrollY, 0,
+        ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
 
         // Translate signature text
@@ -422,7 +438,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setAlpha(signatureTV, alpha);
 
         // Translate toolbar
-        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleSpaceImageHeight - mActionBarSize));
+        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
         toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
 
         // Translate toolbar
@@ -506,10 +522,10 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onResume() {
         super.onResume();
-        if (hasChangeDayNight) {
-            ((PlanListActivity) getActivity()).restart();
-            hasChangeDayNight = false;
-        }
+//        if (hasChangeDayNight) {
+//            ((MainActivity) getActivity()).restart();
+//            hasChangeDayNight = false;
+//        }
     }
 
     @Override
@@ -521,4 +537,14 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     public void alertListenr(PlanDO planDO) {
         startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
     }
+
+    @Override
+    public void reloadToolbar() {
+        setToolbar(toolbar, false);
+    }
+
+    public interface ScrollListener{
+        void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging);
+    }
+
 }

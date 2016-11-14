@@ -9,13 +9,12 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
-import me.xihuxiaolong.justdoit.module.planlist.PlanListActivity;
+import me.xihuxiaolong.justdoit.module.main.MainActivity;
 
 public class PlanService extends Service {
 
@@ -83,7 +82,7 @@ public class PlanService extends Service {
         remoteViewNormal.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
 
         remoteViewBig.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
-        Intent intent = new Intent(this, PlanListActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        int requestCode = (int) SystemClock.uptimeMillis();
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
