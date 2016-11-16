@@ -4,6 +4,7 @@ import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 
 /**

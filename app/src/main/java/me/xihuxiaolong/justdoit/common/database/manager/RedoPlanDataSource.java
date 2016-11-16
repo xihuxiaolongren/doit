@@ -8,6 +8,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.DaoMaster;
 import me.xihuxiaolong.justdoit.common.database.localentity.DaoSession;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDODao;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +27,7 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     }
 
     @Override
-    public RedoPlanDO getRedoPlanDOById(Long id) {
+    public RedoPlanDO getRedoPlanById(Long id) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
@@ -59,5 +60,20 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
         List<RedoPlanDO> redoPlanDOs = daoSession.getRedoPlanDODao().queryBuilder().orderDesc(RedoPlanDODao.Properties.Id).list();
         clear(daoSession, database);
         return redoPlanDOs;
+    }
+
+    @Override
+    public List<TargetDO> listAllTarget() {
+        return null;
+    }
+
+    @Override
+    public long insertOrReplaceTargetDO(TargetDO targetDO) {
+        return 0;
+    }
+
+    @Override
+    public void deleteTargetById(TargetDO targetDO) {
+
     }
 }

@@ -2,6 +2,6 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/icon_menu_delete"
+        android:drawable="@drawable/menu_delete"
         android:right="0dp"/>
 </layer-list>

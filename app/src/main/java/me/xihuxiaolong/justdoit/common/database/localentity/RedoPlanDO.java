@@ -43,11 +43,13 @@ public class RedoPlanDO {
 
     private long dayTime;
 
-    @Generated(hash = 1934573533)
+    private String targetName;
+
+    @Generated(hash = 1824583652)
     public RedoPlanDO(Long id, long createdTime, long modifiedTime, int repeatMode,
             int planType, String title, String content, String tags, String linkAppName,
             String linkAppPackageName, int startTime, int startHour, int startMinute,
-            int endTime, int endHour, int endMinute, long dayTime) {
+            int endTime, int endHour, int endMinute, long dayTime, String targetName) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -65,6 +67,7 @@ public class RedoPlanDO {
         this.endHour = endHour;
         this.endMinute = endMinute;
         this.dayTime = dayTime;
+        this.targetName = targetName;
     }
     @Generated(hash = 585329377)
     public RedoPlanDO() {
@@ -170,6 +173,12 @@ public class RedoPlanDO {
     }
     public void setDayTime(long dayTime) {
         this.dayTime = dayTime;
+    }
+    public String getTargetName() {
+        return this.targetName;
+    }
+    public void setTargetName(String targetName) {
+        this.targetName = targetName;
     }
 
 }

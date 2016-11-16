@@ -3,6 +3,7 @@ package me.xihuxiaolong.justdoit.common.database.manager;
 import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 
 /**
@@ -14,10 +15,16 @@ public interface IRedoPlanDataSource {
 
     void deleteRedoPlanById(Long id);
 
-    RedoPlanDO getRedoPlanDOById(Long id);
+    RedoPlanDO getRedoPlanById(Long id);
 
     long insertOrReplaceRedoPlanDO(RedoPlanDO redoPlanDO);
 
     List<RedoPlanDO> listRedoPlanDOs();
+
+    List<TargetDO> listAllTarget();
+
+    long insertOrReplaceTargetDO(TargetDO targetDO);
+
+    void deleteTargetById(TargetDO targetDO);
 
 }

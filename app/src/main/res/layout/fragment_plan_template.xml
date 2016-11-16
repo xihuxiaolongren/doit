@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:padding="10dp"
+    card_view:contentPadding="10dp"
     card_view:cardBackgroundColor="@color/sky"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="6dp"

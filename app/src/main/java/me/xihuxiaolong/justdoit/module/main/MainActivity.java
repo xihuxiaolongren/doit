@@ -29,10 +29,11 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.service.PlanService;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
+import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.widget.BottomTabView;
 
-public class MainActivity extends BaseActivity implements PlanListFragment.ScrollListener {
+public class MainActivity extends BaseActivity implements ScrollListener {
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
@@ -191,7 +192,8 @@ public class MainActivity extends BaseActivity implements PlanListFragment.Scrol
         restart();
     }
 
-    PlanListFragment planListFragment, planListFragment1, planListFragment2;
+    PlanListFragment planListFragment;
+    TargetListFragment targetListFragment;
     SettingsFragment settingsFragment;
 
     public class MainFragmentPageAdapter extends FragmentPagerAdapter {
@@ -214,11 +216,11 @@ public class MainActivity extends BaseActivity implements PlanListFragment.Scrol
                     }
                     return planListFragment;
                 case 1:
-                    if (planListFragment1 == null) {
-                        planListFragment1 = PlanListFragment.newInstance();
-                        planListFragment1.setScrollListener(MainActivity.this);
+                    if (targetListFragment == null) {
+                        targetListFragment = TargetListFragment.newInstance();
+                        targetListFragment.setScrollListener(MainActivity.this);
                     }
-                    return planListFragment1;
+                    return targetListFragment;
                 case 2:
                     if (settingsFragment == null) {
                         settingsFragment = SettingsFragment.newInstance();

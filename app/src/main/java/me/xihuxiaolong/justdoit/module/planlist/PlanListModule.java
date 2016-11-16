@@ -34,9 +34,4 @@ public class PlanListModule {
         return new PlanDataSource();
     }
 
-//    @Provides
-//    IUserSettingsDataSource provideUserSettingsDataSource() {
-//        return new UserSettingsDataSource();
-//    }
-
 }

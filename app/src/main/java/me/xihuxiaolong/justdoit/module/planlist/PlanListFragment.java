@@ -51,6 +51,7 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
+import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 
@@ -181,15 +182,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
         planFab.setOnClickListener(fabListener);
         alertFab.setOnClickListener(fabListener);
-//        fab.findViewById(R.id.tomorrowPlanFab).setOnClickListener(fabListener);
         fab.setClosedOnTouchOutside(true);
-//        shadowFrame = (FrameLayout) getActivity().findViewById(R.id.shadowFrame);
-//        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.example);
-//        Palette.Builder builder = new Palette.Builder(largeIcon);
-//        Palette palette = builder.generate();
-//        vibrant = palette.getVibrantColor(0x000000);
-//        darkVibrant = palette.getDarkVibrantColor(0x000000);
-//        recyclerBackground.setBackgroundColor(vibrant);
+
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
@@ -541,10 +535,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void reloadToolbar() {
         setToolbar(toolbar, false);
-    }
-
-    public interface ScrollListener{
-        void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging);
     }
 
 }

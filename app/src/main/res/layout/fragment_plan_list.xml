@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginRight="@dimen/text_margin"
         android:gravity="right"
         android:maxLines="2"
         android:maxWidth="150dp"
@@ -158,15 +158,6 @@
             fab:fab_colorNormal="@android:color/white"
             fab:fab_label="@string/alert"
             fab:fab_size="mini" />
-
-        <!--<com.github.clans.fab.FloatingActionButton-->
-        <!--android:id="@+id/tomorrowPlanFab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:src="@drawable/menu_tomorrow"-->
-        <!--fab:fab_colorNormal="@android:color/white"-->
-        <!--fab:fab_label="@string/tomorrow_plan"-->
-        <!--fab:fab_size="mini"/>-->
 
     </com.github.clans.fab.FloatingActionMenu>
 
