@@ -1,6 +1,7 @@
 package me.xihuxiaolong.library.utils;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.widget.Toast;
 
 /**
@@ -20,4 +21,5 @@ public class ToastUtil {
         Toast toast = Toast.makeText(context, message, duration);
         toast.show();
     }
+
 }

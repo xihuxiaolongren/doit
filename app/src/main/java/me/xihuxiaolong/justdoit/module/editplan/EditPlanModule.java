@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.module.editplan;
 
+import android.support.annotation.Nullable;
+
 import javax.inject.Named;
 
 import dagger.Module;
@@ -19,9 +21,12 @@ public class EditPlanModule {
 
     private long dayTime;
 
-    public EditPlanModule(Long planId, long dayTime){
+    private String targetName;
+
+    public EditPlanModule(Long planId, long dayTime, String targetName){
         this.planId = planId;
         this.dayTime = dayTime;
+        this.targetName = targetName;
     }
 
     @Provides @Named("planId")
@@ -32,6 +37,11 @@ public class EditPlanModule {
     @Provides @Named("dayTime")
     long provideDayTime() {
         return dayTime;
+    }
+
+    @Provides @Nullable
+    String provideTargetName() {
+        return targetName;
     }
 
     @Provides

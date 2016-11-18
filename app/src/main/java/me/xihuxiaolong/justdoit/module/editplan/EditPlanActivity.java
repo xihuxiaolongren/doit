@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,7 +44,6 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
@@ -58,6 +58,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     public static final String ARGUMENT_EDIT_PLAN_ID = "EDIT_PLAN_ID";
     public static final String ARGUMENT_DAY_TIME = "DAY_TIME";
+    public static final String ARGUMENT_TARGET_NAME = "TARGET_NAME";
     private static final String FRAG_TAG_TIME_PICKER_START = "frag_tag_time_picker_start";
     private static final String FRAG_TAG_TIME_PICKER_END = "frag_tag_time_picker_end";
 
@@ -66,6 +67,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     Long planId;
 
     long dayTime;
+
+    String targetName;
 
     int selected = -1;
     Integer[] selectedArr;
@@ -90,11 +93,14 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     TextView linkAppDetailTV;
     @BindView(R.id.linkAppRL)
     RelativeLayout linkAppRL;
+    @BindView(R.id.rootView)
+    RelativeLayout rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         planId = getIntent().getLongExtra(ARGUMENT_EDIT_PLAN_ID, -1L);
         dayTime = getIntent().getLongExtra(ARGUMENT_DAY_TIME, -1L);
+        targetName = getIntent().getStringExtra(ARGUMENT_TARGET_NAME);
         injectDependencies();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_plan);
@@ -106,7 +112,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         contentET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)
+                if (!hasFocus)
                     ActivityUtils.hideSoftKeyboard(contentET);
             }
         });
@@ -169,7 +175,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         return false;
                     }
                 })
-                .positiveText(getResources().getString(R.string.action_confirm))
+                .positiveText(R.string.action_confirm)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
@@ -183,7 +189,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         repeatDetailTV.setText(repeatDetailTV.getText().subSequence(0, repeatDetailTV.getText().length() - 1));
                     }
                 })
-                .negativeText(getResources().getString(R.string.action_cancel))
+                .negativeText(R.string.action_cancel)
                 .show();
     }
 
@@ -325,7 +331,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         });
         thirdAppRecyclerView = (RecyclerView) thirdAppDialog.findViewById(R.id.recyclerView);
         thirdAppRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        if(appItems == null)
+        if (appItems == null)
             appItems = ThirdAppUtils.getAllApps(this);
         thirdAppRecyclerView.setAdapter(new ThirdAppAdapter(EditPlanActivity.this, R.layout.item_third_app, appItems));
     }
@@ -343,7 +349,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
             holder.setOnClickListener(R.id.rootView, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(searchET.hasFocus())
+                    if (searchET.hasFocus())
                         ActivityUtils.hideSoftKeyboard(searchET);
                     thirdAppDialog.dismiss();
                     linkAppDetailTV.setText(mDatas.get(position).getAppName());
@@ -362,7 +368,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     protected void injectDependencies() {
         editPlanComponent = DaggerEditPlanComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
-                .editPlanModule(new EditPlanModule(planId, dayTime)).build();
+                .editPlanModule(new EditPlanModule(planId, dayTime, targetName)).build();
     }
 
     @NonNull
@@ -399,9 +405,20 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 });
                 return true;
             case R.id.action_confirm:
+                ActivityUtils.hideSoftKeyboard(this);
                 if (TextUtils.isEmpty(contentET.getText()))
-                    ToastUtil.showToast(this, "不能保存一条空的计划", Toast.LENGTH_SHORT);
-                else {
+                    contentET.setError("计划不能为空");
+//                    ToastUtil.showToast(this, "不能保存一条空的计划", Toast.LENGTH_SHORT);
+//                    Snackbar.make(rootView, "不能保存一条空的计划", Snackbar.LENGTH_SHORT).show();
+                else if (!TextUtils.isEmpty(targetName) && selected == -1) {
+//                    ToastUtil.showToast(this, "", Toast.LENGTH_SHORT);
+                    Snackbar.make(rootView, "请选择重复模式", Snackbar.LENGTH_SHORT).setAction("确定", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showRepeatDialog();
+                        }
+                    }).show();
+                } else {
                     String tags = null;
                     String linkAppName = null;
                     String linkAppPackageName = null;

@@ -18,7 +18,7 @@
         android:id="@+id/day_night_background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:animationDuration="2000" />
+        app:animationDuration="0" />
 
     <View
         android:id="@+id/recycler_background"

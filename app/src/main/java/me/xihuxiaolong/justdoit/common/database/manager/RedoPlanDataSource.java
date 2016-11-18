@@ -9,6 +9,8 @@ import me.xihuxiaolong.justdoit.common.database.localentity.DaoSession;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDODao;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDODao;
+import me.xihuxiaolong.library.utils.CollectionUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,11 +41,24 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     }
 
     @Override
+    public TargetDO getTargetByName(String targetName, boolean withRedoPlanList) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+
+        TargetDO targetDO = daoSession.getTargetDODao().queryBuilder()
+                .where(TargetDODao.Properties.Name.eq(targetName)).unique();
+        if(targetDO != null && withRedoPlanList)
+            targetDO.setRedoPlanDOList(listRedoPlanDOsByTarget(targetName));
+        clear(daoSession, database);
+        return targetDO;
+    }
+
+    @Override
     public long insertOrReplaceRedoPlanDO(RedoPlanDO redoPlanDO) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
-        if(redoPlanDO.getId() == null){
+        if (redoPlanDO.getId() == null) {
             redoPlanDO.setCreatedTime(System.currentTimeMillis());
         }
         redoPlanDO.setModifiedTime(System.currentTimeMillis());
@@ -63,17 +78,49 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     }
 
     @Override
-    public List<TargetDO> listAllTarget() {
-        return null;
+    public List<RedoPlanDO> listRedoPlanDOsByTarget(String targetName) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+
+        List<RedoPlanDO> redoPlanDOs = daoSession.getRedoPlanDODao().queryBuilder().where(RedoPlanDODao.Properties.TargetName.eq(targetName)).orderAsc(RedoPlanDODao.Properties.CreatedTime).list();
+
+        clear(daoSession, database);
+        return redoPlanDOs;
+    }
+
+    @Override
+    public List<TargetDO> listAllTarget(boolean withRedoPlanList) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().orderDesc(TargetDODao.Properties.CreatedTime).list();
+        if(!CollectionUtils.isEmpty(targetDOs) && withRedoPlanList) {
+            for(TargetDO targetDO : targetDOs)
+                targetDO.setRedoPlanDOList(listRedoPlanDOsByTarget(targetDO.getName()));
+        }
+        clear(daoSession, database);
+        return targetDOs;
     }
 
     @Override
     public long insertOrReplaceTargetDO(TargetDO targetDO) {
-        return 0;
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+
+        if (targetDO.getName() == null) {
+            targetDO.setCreatedTime(System.currentTimeMillis());
+        }
+        targetDO.setModifiedTime(System.currentTimeMillis());
+        long targetId = daoSession.getTargetDODao().insertOrReplace(targetDO);
+
+        clear(daoSession, database);
+        return targetId;
     }
 
     @Override
-    public void deleteTargetById(TargetDO targetDO) {
-
+    public void deleteTargetByName(String targetName) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        daoSession.getTargetDODao().deleteByKey(targetName);
+        clear(daoSession, database);
     }
 }

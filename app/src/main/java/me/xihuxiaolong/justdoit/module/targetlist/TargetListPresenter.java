@@ -38,11 +38,11 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
 
     @Override
     public void loadTargets() {
-        List<TargetDO> targetDOs = redoPlanDataSource.listAllTarget();
+        List<TargetDO> targetDOs = redoPlanDataSource.listAllTarget(true);
         if(targetDOs == null)
             targetDOs = new ArrayList<>();
         for(int i = 0; i < 10; ++i){
-            TargetDO targetDO = new TargetDO("重复任务 - " + i, 3);
+            TargetDO targetDO = new TargetDO("重复任务 - " + i, 0, 0 , 3);
             List<RedoPlanDO> redoPlanDOs = new ArrayList<>();
             for(int j = 0; j < NumberUtils.randInt(0, 3); ++j){
                 RedoPlanDO redoPlanDO = new RedoPlanDO();
@@ -56,6 +56,15 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         if (isViewAttached()) {
             getView().showTargets(targetDOs);
         }
+    }
+
+    @Override
+    public void createTarget(String name) {
+        TargetDO targetDO = new TargetDO();
+        targetDO.setName(name);
+        redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+        if(isViewAttached())
+            getView().createTargetSuccess(name);
     }
 
 }

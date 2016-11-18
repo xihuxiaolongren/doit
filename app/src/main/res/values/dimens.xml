@@ -20,7 +20,9 @@
     <dimen name="flexible_recyclerview_header_height">130dp</dimen>
     <dimen name="flexible_space_calendar_bottom_offset">30dp</dimen>
     <dimen name="flexible_space_arcprogress_bottom_offset">20dp</dimen>
+    <dimen name="flexible_space_title_bottom_offset">65dp</dimen>
     <dimen name="flexible_space_calendar_left_offset">80dp</dimen>
+    <dimen name="flexible_space_title_left_offset">40dp</dimen>
     <dimen name="flexible_space_calendar_left_offset_other">150dp</dimen>
     <dimen name="flexible_space_signature_bottom_offset">56dp</dimen>
     <dimen name="flexible_space_show_fab_offset">80dp</dimen>

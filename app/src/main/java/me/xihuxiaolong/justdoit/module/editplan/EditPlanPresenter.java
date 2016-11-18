@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.module.editplan;
 
+import android.support.annotation.Nullable;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,6 +30,9 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
 
     @Inject @Named("dayTime")
     long dayTime;
+
+    @Inject @Nullable
+    String targetName;
 
     @Inject
     IPlanDataSource planDataSource;

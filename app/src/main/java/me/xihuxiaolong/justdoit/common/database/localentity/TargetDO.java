@@ -18,14 +18,19 @@ public class TargetDO {
     @Id
     private String name;
 
+    private long createdTime;
+    private long modifiedTime;
+
     private int count;
 
     @Transient
     private List<RedoPlanDO> redoPlanDOList;
 
-    @Generated(hash = 707541905)
-    public TargetDO(String name, int count) {
+    @Generated(hash = 778472336)
+    public TargetDO(String name, long createdTime, long modifiedTime, int count) {
         this.name = name;
+        this.createdTime = createdTime;
+        this.modifiedTime = modifiedTime;
         this.count = count;
     }
 
@@ -55,5 +60,21 @@ public class TargetDO {
 
     public void setRedoPlanDOList(List<RedoPlanDO> redoPlanDOList) {
         this.redoPlanDOList = redoPlanDOList;
+    }
+
+    public long getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public long getModifiedTime() {
+        return this.modifiedTime;
+    }
+
+    public void setModifiedTime(long modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 }

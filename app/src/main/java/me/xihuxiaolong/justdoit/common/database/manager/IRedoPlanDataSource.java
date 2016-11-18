@@ -17,14 +17,18 @@ public interface IRedoPlanDataSource {
 
     RedoPlanDO getRedoPlanById(Long id);
 
+    TargetDO getTargetByName(String targetName, boolean withRedoPlanList);
+
     long insertOrReplaceRedoPlanDO(RedoPlanDO redoPlanDO);
 
     List<RedoPlanDO> listRedoPlanDOs();
 
-    List<TargetDO> listAllTarget();
+    List<RedoPlanDO> listRedoPlanDOsByTarget(String targetName);
+
+    List<TargetDO> listAllTarget(boolean withRedoPlanList);
 
     long insertOrReplaceTargetDO(TargetDO targetDO);
 
-    void deleteTargetById(TargetDO targetDO);
+    void deleteTargetByName(String targetName);
 
 }

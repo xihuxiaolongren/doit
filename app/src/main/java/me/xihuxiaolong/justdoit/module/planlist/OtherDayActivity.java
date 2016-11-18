@@ -16,11 +16,6 @@ import me.xihuxiaolong.library.utils.ActivityUtils;
 
 public class OtherDayActivity extends BaseActivity {
 
-    private ServiceConnection sc;
-    private PlanService planService;
-
-//    private long dayTime;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

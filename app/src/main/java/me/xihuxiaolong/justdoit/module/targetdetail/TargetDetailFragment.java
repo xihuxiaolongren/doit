@@ -19,8 +19,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -38,10 +40,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
@@ -51,7 +53,7 @@ import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
-import me.xihuxiaolong.justdoit.module.targetlist.DaggerTargetListComponent;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 
 /**
@@ -59,12 +61,16 @@ import me.xihuxiaolong.justdoit.module.targetlist.DaggerTargetListComponent;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
+public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
 
-    private static final float MAX_TEXT_SCALE_DELTA = 1.3f;
+    private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
 
-    TargetListComponent targetListComponent;
+    public static final String ARG_TARGET_NAME = "targetName";
+
+    private String targetName;
+
+    TargetDetailComponent targetDetailComponent;
 
     @BindView(R.id.recyclerView)
     ObservableRecyclerView recyclerView;
@@ -75,19 +81,20 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     View recyclerBackground;
     @BindView(R.id.day_night_background_view)
     DayNightBackgroundView dayNightBackgroundView;
-    @BindView(R.id.signatureTV)
-    AutofitTextView signatureTV;
-    @BindView(R.id.calendar_rl)
-    LinearLayout calendarRl;
-    @BindView(R.id.fab)
-    FloatingActionButton fab;
     @BindView(R.id.headerIV)
     ImageView headerIV;
     @BindView(R.id.shadowFrame)
     FrameLayout shadowFrame;
+    @BindView(R.id.title_tv)
+    TextView titleTv;
+    @BindView(R.id.planFab)
+    FloatingActionButton planFab;
+    @BindView(R.id.alertFab)
+    FloatingActionButton alertFab;
+    @BindView(R.id.fab)
+    FloatingActionMenu fab;
 
-    private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
-            mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
+    private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset, mFabSizeNormal;
     private int mActionBarSize, mStatusBarSize;
 
     boolean mFabIsShown = true;
@@ -98,28 +105,26 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     int vibrant, darkVibrant;
 
-    int mScollY;
-
-    TargetAdapter targetAdapter;
+    RedoPlanAdapter redoPlanAdapter;
     HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
     ScrollListener scrollListener;
 
-    public static TargetListFragment newInstance() {
-        TargetListFragment fragment = new TargetListFragment();
+    public static TargetDetailFragment newInstance() {
+        TargetDetailFragment fragment = new TargetDetailFragment();
         return fragment;
     }
 
     @Override
-    public TargetListContract.IPresenter createPresenter() {
-        return targetListComponent.presenter();
+    public TargetDetailContract.IPresenter createPresenter() {
+        return targetDetailComponent.presenter();
     }
 
     @Override
     protected void injectDependencies() {
-        targetListComponent = DaggerTargetListComponent.builder()
+        targetDetailComponent = DaggerTargetDetailComponent.builder()
                 .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
-                .targetListModule(new TargetListModule())
+                .targetDetailModule(new TargetDetailModule(targetName))
                 .build();
     }
 
@@ -130,27 +135,31 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.loadTargets();
+        presenter.loadTarget();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        targetName = getActivity().getIntent().getStringExtra(ARG_TARGET_NAME);
         injectDependencies();
-        View view = inflater.inflate(R.layout.fragment_target_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_target_detail, container, false);
         ButterKnife.bind(this, view);
-        setToolbar(toolbar, false);
+        setToolbar(toolbar, true, false);
         setHasOptionsMenu(true);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_arcprogress_bottom_offset);
-        mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
-        mFlexibleSpaceSignatureBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_signature_bottom_offset);
-        shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
+        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_title_bottom_offset);
+        mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_title_left_offset);
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
+
+        shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
+        planFab.setOnClickListener(fabListener);
+        alertFab.setOnClickListener(fabListener);
+        fab.setClosedOnTouchOutside(true);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -161,57 +170,35 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
-        calendarRl.post(new Runnable() {
+        titleTv.setText(targetName);
+        titleTv.post(new Runnable() {
             @Override
             public void run() {
-                animateCanlendarRl(mScollY);
-            }
-        });
-        signatureTV.post(new Runnable() {
-            @Override
-            public void run() {
-                // Translate title text
-                int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
-                ViewHelper.setTranslationY(signatureTV, maxSignatureTranslationY);
+                animateCanlendarRl(0);
             }
         });
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        targetAdapter = new TargetAdapter(getContext(), R.layout.item_target, new ArrayList<TargetDO>());
-        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(targetAdapter);
+        redoPlanAdapter = new RedoPlanAdapter(getContext(), R.layout.item_redo_plan_detail, new ArrayList<RedoPlanDO>());
+        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_detail_header, recyclerView, false);
+        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(redoPlanAdapter);
         mHeaderAndFooterWrapper.addHeaderView(headerView);
         recyclerView.setAdapter(mHeaderAndFooterWrapper);
         recyclerView.setScrollViewCallbacks(this);
 
-        fab.setOnClickListener(fabListener);
-
         return view;
     }
 
-    class TargetAdapter extends CommonAdapter<TargetDO> {
+    class RedoPlanAdapter extends CommonAdapter<RedoPlanDO> {
 
-        int showRedoPlanCount = 3;
-
-        public TargetAdapter(Context context, int layoutId, List<TargetDO> datas) {
+        public RedoPlanAdapter(Context context, int layoutId, List<RedoPlanDO> datas) {
             super(context, layoutId, datas);
         }
 
         @Override
-        protected void convert(ViewHolder holder, TargetDO targetDO, final int position) {
-            holder.setText(R.id.title, targetDO.getName());
-            LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
-            if (linearLayout.getChildCount() <= 0) {
-                for (int i = 0; i < showRedoPlanCount; i++) {
-                    View redoView = LayoutInflater.from(getContext()).inflate(R.layout.item_redo_plan, linearLayout, false);
-                    linearLayout.addView(redoView);
-                }
-            }
-            for (int i = 0; i < showRedoPlanCount; i++) {
-                View redoView = linearLayout.getChildAt(i);
-                redoView.setVisibility(i < targetDO.getRedoPlanDOList().size() ? View.VISIBLE : View.GONE);
-            }
+        protected void convert(ViewHolder holder, RedoPlanDO redoPlanDO, final int position) {
+            holder.setText(R.id.title_tv, redoPlanDO.getTitle());
         }
     }
 
@@ -223,7 +210,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_frament_targetlist, menu);
+        inflater.inflate(R.menu.menu_frament_targetdetail, menu);
         addMenuItem = menu.findItem(R.id.action_add);
         addMenuItem.setVisible(!mFabIsShown);
         super.onCreateOptionsMenu(menu, inflater);
@@ -235,11 +222,17 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             case android.R.id.home:
                 getActivity().finish();
                 return true;
-            case R.id.action_add:
-                startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+            case R.id.action_bg:
+                return true;
+            case R.id.action_add_alert:
+                startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
+                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
+                return true;
+            case R.id.action_add_plan:
+                startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
+                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
                 return true;
             case R.id.action_settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -260,7 +253,12 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         if (scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
-        mScollY = scrollY;
+
+        // Translate imageView parallax
+        ViewHelper.setTranslationY(headerIV, -scrollY);
+        ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
+
+        animateCanlendarRl(scrollY);
 
         // Translate FAB
         int maxFabTranslationY = mFlexibleSpaceImageHeight - mFabSizeNormal / 2;
@@ -277,18 +275,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             showFab();
         }
 
-        // Translate imageView parallax
-        ViewHelper.setTranslationY(headerIV, -scrollY / 2);
-        ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
-
-        animateCanlendarRl(scrollY);
-
-        // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
-        int signatureTranslationY = maxSignatureTranslationY - scrollY;
-        ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-        ViewHelper.setAlpha(signatureTV, alpha);
+//        ViewHelper.setTranslationY(fbsLl, -scrollY);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
@@ -303,35 +290,29 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     }
 
     // Scale calendarRl
-    void animateCanlendarRl(int scrollY){
+    void animateCanlendarRl(int scrollY) {
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) * 1.3f / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-        ViewHelper.setPivotX(calendarRl, 0);
-        ViewHelper.setPivotY(calendarRl, 0);
-        ViewHelper.setScaleX(calendarRl, scale);
-        ViewHelper.setScaleY(calendarRl, scale);
+        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
+        ViewHelper.setPivotX(titleTv, 0);
+        ViewHelper.setPivotY(titleTv, 0);
+        ViewHelper.setScaleX(titleTv, scale);
+        ViewHelper.setScaleY(titleTv, scale);
 
         // Translate calendarRl
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - titleTv.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
         int titleTranslationY = maxTitleTranslationY - scrollY;
-        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
+        ViewHelper.setTranslationY(titleTv, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - titleTv.getHeight()) / 2 + mStatusBarSize,
                 maxTitleTranslationY));
-        ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
+        ViewHelper.setTranslationX(titleTv, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
     }
 
     private void showFab() {
         if (!mFabIsShown) {
-            ViewPropertyAnimator.animate(fab).cancel();
-            ViewPropertyAnimator.animate(fab).scaleX(1).scaleY(1).setDuration(200).start();
+            for (int i = 0; i < fab.getChildCount(); ++i) {
+                ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
+                ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(1).scaleY(1).setDuration(200).start();
+            }
             getActivity().invalidateOptionsMenu();
             mFabIsShown = true;
         }
@@ -339,8 +320,10 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     private void hideFab() {
         if (mFabIsShown) {
-            ViewPropertyAnimator.animate(fab).cancel();
-            ViewPropertyAnimator.animate(fab).scaleX(0).scaleY(0).setDuration(200).start();
+            for (int i = 0; i < fab.getChildCount(); ++i) {
+                ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
+                ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(0).scaleY(0).setDuration(200).start();
+            }
             getActivity().invalidateOptionsMenu();
             mFabIsShown = false;
         }
@@ -349,9 +332,27 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     private View.OnClickListener fabListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+            switch (v.getId()) {
+                case R.id.planFab:
+                    startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
+                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
+                    break;
+                case R.id.alertFab:
+                    startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
+                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
+                    break;
+            }
+            fab.close(true);
         }
     };
+
+    @Override
+    public void onDownMotionEvent() {
+    }
+
+    @Override
+    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
+    }
 
     @Override
     public void onPause() {
@@ -379,24 +380,25 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     }
 
     @Override
-    public void removeTargetItem(long targetId) {
+    public void removePlanItem(long targetId) {
 
     }
 
     @Override
-    public void addTargetItem(TargetDO targetDO) {
+    public void addPlanItem(TargetDO targetDO) {
 
     }
 
     @Override
-    public void updateTargetItem(TargetDO targetDO) {
+    public void updatePlanItem(TargetDO targetDO) {
 
     }
 
     @Override
-    public void showTargets(List<TargetDO> targets) {
-        targetAdapter.getDatas().addAll(targets);
-        targetAdapter.notifyDataSetChanged();
+    public void showTarget(TargetDO targetDO) {
+        redoPlanAdapter.getDatas().addAll(targetDO.getRedoPlanDOList());
+        redoPlanAdapter.notifyDataSetChanged();
         mHeaderAndFooterWrapper.notifyDataSetChanged();
     }
+
 }

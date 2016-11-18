@@ -59,6 +59,10 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
     private boolean isFirstSet = true;
 
     public void setToolbar(Toolbar toolbar, boolean showHomeAsUp){
+        setToolbar(toolbar, showHomeAsUp, true);
+    }
+
+    public void setToolbar(Toolbar toolbar, boolean showHomeAsUp, boolean showTitle){
         if(toolbar != null) {
             if (isFirstSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
@@ -69,6 +73,7 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
             }
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(showTitle);
         }
     }
 }

@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".module.main.MainActivity">
+    <item
+        android:id="@+id/action_add"
+        android:icon="@drawable/menu_add"
+        android:orderInCategory="1"
+        android:title="@string/action_add"
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/action_add_alert"
+                android:title="@string/add_alert" />
+            <item
+                android:id="@+id/action_add_plan"
+                android:title="@string/add_plan" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/action_bg"
+        android:icon="@drawable/menu_target_bg"
+        android:orderInCategory="1"
+        android:title="@string/action_add"
+        app:showAsAction="always">
+    </item>
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="5"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+</menu>

@@ -12,23 +12,23 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
  * User: xiaolong
  * Date: 16/8/12.
  */
-public class TargetListContract {
+public class TargetDetailContract {
 
     interface IView extends MvpView {
 
-        void removeTargetItem(long targetId);
+        void removePlanItem(long targetId);
 
-        void addTargetItem(TargetDO targetDO);
+        void addPlanItem(TargetDO targetDO);
 
-        void updateTargetItem(TargetDO targetDO);
+        void updatePlanItem(TargetDO targetDO);
 
-        void showTargets(List<TargetDO> targets);
+        void showTarget(TargetDO targetDO);
 
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
-        void loadTargets();
+        void loadTarget();
 
     }
 }

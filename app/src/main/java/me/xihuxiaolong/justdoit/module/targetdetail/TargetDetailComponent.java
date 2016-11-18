@@ -10,8 +10,8 @@ import me.xihuxiaolong.justdoit.common.dagger.scope.ActivityScope;
  * Date: 16/10/9.
  */
 @ActivityScope
-@Component(dependencies = AppComponent.class, modules = {TargetListModule.class})
-public interface TargetListComponent {
+@Component(dependencies = AppComponent.class, modules = {TargetDetailModule.class})
+public interface TargetDetailComponent {
 
-    TargetListPresenter presenter();
+    TargetDetailPresenter presenter();
 }

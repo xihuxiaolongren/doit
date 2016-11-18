@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,45 +10,61 @@
         android:id="@+id/day_night_background_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:animationDuration="2000" />
-
+        app:animationDuration="0" />
     <ImageView
         android:id="@+id/headerIV"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop" />
-
-    <LinearLayout
-        android:id="@+id/fbs_ll"
+        android:scaleType="centerCrop"
+        />
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="150dp"
-        android:orientation="horizontal">
+        android:layout_height="220dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginRight="-5dp"
+        android:layout_marginLeft="-5dp"
+        android:background="@drawable/shadow">
 
-        <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/add_plan_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:padding="10dp"
-            fancy:fb_borderColor="@color/titleTextColor"
-            fancy:fb_borderWidth="1dp"
-            fancy:fb_defaultColor="@android:color/transparent"
-            fancy:fb_text="添加计划"
-            fancy:fb_textColor="@color/titleTextColor" />
+    </FrameLayout>
 
-        <mehdi.sakout.fancybuttons.FancyButton
-            android:id="@+id/add_alert_fb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            fancy:fb_borderColor="@color/titleTextColor"
-            fancy:fb_borderWidth="1dp"
-            fancy:fb_defaultColor="@android:color/transparent"
-            fancy:fb_text="添加提醒"
-            fancy:fb_textColor="@color/titleTextColor" />
-    </LinearLayout>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/fbs_ll"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="15dp"-->
+    <!--android:layout_marginTop="160dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<mehdi.sakout.fancybuttons.FancyButton-->
+    <!--android:id="@+id/add_plan_fb"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginRight="30dp"-->
+    <!--android:paddingBottom="5dp"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:paddingRight="15dp"-->
+    <!--android:paddingTop="5dp"-->
+    <!--fancy:fb_borderColor="@color/titleTextColor"-->
+    <!--fancy:fb_borderWidth="1dp"-->
+    <!--fancy:fb_defaultColor="@android:color/transparent"-->
+    <!--fancy:fb_text="添加计划"-->
+    <!--fancy:fb_textColor="@color/titleTextColor" />-->
+
+    <!--<mehdi.sakout.fancybuttons.FancyButton-->
+    <!--android:id="@+id/add_alert_fb"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingBottom="5dp"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:paddingRight="15dp"-->
+    <!--android:paddingTop="5dp"-->
+    <!--fancy:fb_borderColor="@color/titleTextColor"-->
+    <!--fancy:fb_borderWidth="1dp"-->
+    <!--fancy:fb_defaultColor="@android:color/transparent"-->
+    <!--fancy:fb_text="添加提醒"-->
+    <!--fancy:fb_textColor="@color/titleTextColor" />-->
+    <!--</LinearLayout>-->
 
     <View
         android:id="@+id/recycler_background"
@@ -77,8 +93,7 @@
         android:layout_height="?attr/actionBarSize"
         android:fitsSystemWindows="true"
         app:contentInsetStartWithNavigation="0dp"
-        app:title="@string/app_name"
-        app:titleTextAppearance="@style/Toolbar.TitleText" />
+        app:title="" />
 
     <TextView
         android:id="@+id/title_tv"
@@ -91,5 +106,37 @@
         android:text="减掉小肚子"
         android:textColor="@color/titleTextColor"
         android:textSize="@dimen/title_size" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        fab:menu_colorNormal="@color/accent"
+        fab:menu_fab_size="normal"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_openDirection="down">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/planFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_plan"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/plan"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/alertFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_clock"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/alert"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

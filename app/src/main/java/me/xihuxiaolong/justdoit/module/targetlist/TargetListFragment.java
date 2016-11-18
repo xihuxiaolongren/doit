@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,10 +21,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -40,7 +42,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
@@ -53,9 +54,11 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
-import me.xihuxiaolong.justdoit.module.planlist.OtherDayActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
+import me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity;
+import me.xihuxiaolong.library.utils.CollectionUtils;
+
+import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailFragment.ARG_TARGET_NAME;
 
 
 /**
@@ -63,7 +66,7 @@ import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
+public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 1.3f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
@@ -203,7 +206,13 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         }
 
         @Override
-        protected void convert(ViewHolder holder, TargetDO targetDO, final int position) {
+        protected void convert(ViewHolder holder, final TargetDO targetDO, final int position) {
+            holder.setOnClickListener(R.id.rootView, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
+                }
+            });
             holder.setText(R.id.title, targetDO.getName());
             LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
             if (linearLayout.getChildCount() <= 0) {
@@ -212,9 +221,10 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                     linearLayout.addView(redoView);
                 }
             }
+            int redoSize = CollectionUtils.isEmpty(targetDO.getRedoPlanDOList()) ? 0 : targetDO.getRedoPlanDOList().size();
             for (int i = 0; i < showRedoPlanCount; i++) {
                 View redoView = linearLayout.getChildAt(i);
-                redoView.setVisibility(i < targetDO.getRedoPlanDOList().size() ? View.VISIBLE : View.GONE);
+                redoView.setVisibility(i < redoSize ? View.VISIBLE : View.GONE);
             }
         }
     }
@@ -240,7 +250,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 getActivity().finish();
                 return true;
             case R.id.action_add:
-                startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+                fabListener.onClick(null);
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
@@ -353,7 +363,26 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     private View.OnClickListener fabListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+            new MaterialDialog.Builder(getContext())
+                    .title(R.string.add_target_title)
+                    .widgetColorRes(R.color.colorAccent)
+                    .inputRange(1, 20)
+                    .inputType(InputType.TYPE_CLASS_TEXT)
+                    .input(R.string.add_target_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
+                        @Override
+                        public void onInput(MaterialDialog dialog, CharSequence input) {
+                            // Do something
+                        }
+                    })
+                    .positiveText(R.string.action_confirm)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            presenter.createTarget(dialog.getInputEditText().getText().toString());
+                        }
+                    })
+                    .negativeText(R.string.action_cancel)
+                    .show();
         }
     };
 
@@ -365,16 +394,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void planListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
-    }
-
-    @Override
-    public void alertListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
     }
 
     @Override
@@ -402,5 +421,10 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         targetAdapter.getDatas().addAll(targets);
         targetAdapter.notifyDataSetChanged();
         mHeaderAndFooterWrapper.notifyDataSetChanged();
+    }
+
+    @Override
+    public void createTargetSuccess(String targetName) {
+        startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetName));
     }
 }
