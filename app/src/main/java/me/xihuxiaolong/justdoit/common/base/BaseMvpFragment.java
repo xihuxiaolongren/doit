@@ -21,6 +21,7 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
+import com.orhanobut.logger.Logger;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import me.xihuxiaolong.justdoit.R;
@@ -34,6 +35,7 @@ import me.xihuxiaolong.justdoit.R;
 public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<V>> extends MvpFragment<V, P> {
 
     protected int menuColor;
+    private boolean isFirstSet;
 
     abstract protected void injectDependencies();
 
@@ -44,6 +46,11 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    @Override public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isFirstSet = true;
     }
 
     @Override
@@ -88,7 +95,17 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeAsUpIndicator(upArrow);
     }
 
-    private boolean isFirstSet = true;
+    public void initToolbar(Toolbar toolbar, boolean showHomeAsUp) {
+        initToolbar(toolbar, showHomeAsUp, true);
+    }
+
+    public void initToolbar(Toolbar toolbar, boolean showHomeAsUp, boolean showTitle) {
+        ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
+        layoutParams.height = layoutParams.height + getStatusBarHeight();
+        toolbar.setLayoutParams(layoutParams);
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+        setToolbar(toolbar, showHomeAsUp, true);
+    }
 
     public void setToolbar(Toolbar toolbar, boolean showHomeAsUp) {
         setToolbar(toolbar, showHomeAsUp, true);
@@ -96,16 +113,15 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
 
     public void setToolbar(Toolbar toolbar, boolean showHomeAsUp, boolean showTitle) {
         if (toolbar != null) {
-            if (isFirstSet && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-                layoutParams.height = layoutParams.height + getStatusBarHeight();
-                toolbar.setLayoutParams(layoutParams);
+            //解决当一个activity中多个fragment使用不同toolbar时，padding会在特定情况下被置0，具体原因未知
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && toolbar.getPaddingTop() == 0) {
                 toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-                isFirstSet = false;
             }
             ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(showHomeAsUp);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(showTitle);
+            Logger.d("%d, %d, %d, %d, %d, %d", toolbar.getMeasuredHeight(), toolbar.getHeight(), toolbar.getPaddingTop(), toolbar.getPaddingBottom(), toolbar.getPaddingLeft(), toolbar.getPaddingRight());
         }
     }
+
 }

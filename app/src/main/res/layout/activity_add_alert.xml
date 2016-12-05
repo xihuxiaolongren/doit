@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
 
     <ImageView
         android:id="@+id/backgroundIV"
@@ -31,11 +33,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:fitsSystemWindows="true">
+        android:clickable="true"
+        android:fitsSystemWindows="true"
+        android:focusableInTouchMode="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <me.xihuxiaolong.justdoit.common.widget.SingleTimeView

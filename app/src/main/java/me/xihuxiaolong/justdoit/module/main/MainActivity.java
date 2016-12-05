@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +14,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
+
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -91,6 +96,12 @@ public class MainActivity extends BaseActivity implements ScrollListener {
             viewPager.setCurrentItem(0);
             bottomTabView.setCurrentItem(0);
         }
+        viewPager.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                invalidateFragmentMenus(0);
+            }
+        }, 0);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -98,7 +109,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
             }
 
             @Override
-            public void onPageSelected(int position) {
+            public void onPageSelected(final int position) {
                 invalidateFragmentMenus(position);
             }
 
@@ -147,12 +158,14 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void invalidateFragmentMenus(int position) {
+        Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
-            mainFragmentPageAdapter.getItem(i).setHasOptionsMenu(i == position);
-            if (i == position)
-                ((MainActivityListener) mainFragmentPageAdapter.getItem(i)).reloadToolbar();
+//            if(mainFragmentPageAdapter.getRegisteredFragment(i) != null)
+//                mainFragmentPageAdapter.getRegisteredFragment(i).setHasOptionsMenu(i == position);
+            if (i == position && mainFragmentPageAdapter.getRegisteredFragment(i) != null)
+                ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
         }
-        invalidateOptionsMenu(); //or respectively its support method.
+//        invalidateOptionsMenu(); //or respectively its support method.
     }
 
     int mScrollY;
@@ -189,11 +202,9 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         restart();
     }
 
-    PlanListFragment planListFragment;
-    TargetListFragment targetListFragment;
-    SettingsFragment settingsFragment;
-
     public class MainFragmentPageAdapter extends FragmentPagerAdapter {
+        SparseArray<Fragment> registeredFragments = new SparseArray<Fragment>();
+
         public MainFragmentPageAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -207,34 +218,35 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    if (planListFragment == null) {
-                        planListFragment = PlanListFragment.newInstance();
-                        planListFragment.setScrollListener(MainActivity.this);
-                    }
+                    PlanListFragment planListFragment = PlanListFragment.newInstance();
                     return planListFragment;
                 case 1:
-                    if (targetListFragment == null) {
-                        targetListFragment = TargetListFragment.newInstance();
-                        targetListFragment.setScrollListener(MainActivity.this);
-                    }
+                    TargetListFragment targetListFragment = TargetListFragment.newInstance();
                     return targetListFragment;
                 case 2:
-                    if (settingsFragment == null) {
-                        settingsFragment = SettingsFragment.newInstance();
-                    }
+                    SettingsFragment settingsFragment = SettingsFragment.newInstance();
                     return settingsFragment;
-//                case 2:
-//                    return MineFragment.newInstance();
                 default:
                     return null;
             }
         }
 
         @Override
-        public int getItemPosition(Object object) {
-            return super.getItemPosition(object);
+        public Object instantiateItem(ViewGroup container, int position) {
+            Fragment fragment = (Fragment) super.instantiateItem(container, position);
+            registeredFragments.put(position, fragment);
+            return fragment;
         }
 
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            registeredFragments.remove(position);
+            super.destroyItem(container, position, object);
+        }
+
+        public Fragment getRegisteredFragment(int position) {
+            return registeredFragments.get(position);
+        }
     }
 
 }

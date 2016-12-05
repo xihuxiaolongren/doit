@@ -31,6 +31,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.orhanobut.logger.Logger;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
@@ -130,8 +131,13 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 .build();
     }
 
-    public void setScrollListener(ScrollListener scrollListener) {
-        this.scrollListener = scrollListener;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //对传递进来的Activity进行接口转换
+        if(activity instanceof ScrollListener){
+            scrollListener = ((ScrollListener)activity);
+        }
     }
 
     @Override
@@ -147,7 +153,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_target_list, container, false);
         ButterKnife.bind(this, view);
-        setToolbar(toolbar, false);
+        Logger.d(toolbar);
+        initToolbar(toolbar, false);
         setHasOptionsMenu(true);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -398,7 +405,10 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void reloadToolbar() {
-        setToolbar(toolbar, false);
+        if(toolbar != null) {
+            Logger.d(toolbar);
+            setToolbar(toolbar, false);
+        }
     }
 
     @Override

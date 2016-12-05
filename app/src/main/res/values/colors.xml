@@ -8,6 +8,7 @@
     <color name="titleTextColor">#333333</color>
     <color name="unselectedTitleTextColor">#80333333</color>
     <color name="notificationNightTitleTextColor">#FFFFFF</color>
+    <color name="bottomShadow">#80999999</color>
     <color name="shadowColor">#00FFFFFF</color>
     <color name="sky">#DDEFF9</color>
     <color name="notificationNightSky">#1E7AC7</color>

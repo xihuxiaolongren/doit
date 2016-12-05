@@ -25,6 +25,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.widget.SingleTimeView;
+import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolong.library.utils.ToastUtil;
 
@@ -111,6 +112,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
                 });
                 return true;
             case R.id.action_confirm:
+                ActivityUtils.hideSoftKeyboard(this);
                 if(TextUtils.isEmpty(contentET.getText()))
                     ToastUtil.showToast(this, "不能保存一条空的提醒", Toast.LENGTH_SHORT);
                 else

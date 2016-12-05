@@ -19,10 +19,7 @@
     <me.xihuxiaolong.library.widget.BottomTabView
         android:id="@+id/bottomTabView"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="-6dp"
-        android:layout_marginLeft="-6dp"
-        android:layout_marginBottom="-5dp"
-        android:background="@drawable/shadow_bottom" />
+        android:background="@drawable/bg_bottom"/>
 </RelativeLayout>

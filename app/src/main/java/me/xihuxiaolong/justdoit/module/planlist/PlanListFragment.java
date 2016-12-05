@@ -31,6 +31,7 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.orhanobut.logger.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -140,8 +141,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 .build();
     }
 
-    public void setScrollListener(ScrollListener scrollListener){
-        this.scrollListener = scrollListener;
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        //对传递进来的Activity进行接口转换
+        if(activity instanceof ScrollListener){
+            scrollListener = ((ScrollListener)activity);
+        }
     }
 
     @Override
@@ -160,7 +166,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_plan_list, container, false);
         ButterKnife.bind(this, view);
-        setToolbar(toolbar, false);
+        Logger.d(toolbar);
+        initToolbar(toolbar, false);
         setHasOptionsMenu(true);
         if (dayTime != -1L)
             dayNightBackgroundView.setAnimationDuration(0);
@@ -539,7 +546,10 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void reloadToolbar() {
-        setToolbar(toolbar, false);
+        if(toolbar != null) {
+            Logger.d(toolbar);
+            setToolbar(toolbar, false);
+        }
     }
 
 }

@@ -32,6 +32,7 @@ import com.github.aakira.expandablelayout.Utils;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.orhanobut.logger.Logger;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.RadioButton;
 import com.rey.material.widget.Switch;
@@ -146,7 +147,8 @@ public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, Se
         injectDependencies();
         View view = inflater.inflate(R.layout.activity_settings, container, false);
         ButterKnife.bind(this, view);
-        setToolbar(toolbar, false);
+        Logger.d(toolbar);
+        initToolbar(toolbar, false);
         setHasOptionsMenu(true);
 
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
@@ -438,6 +440,9 @@ public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, Se
 
     @Override
     public void reloadToolbar() {
-        setToolbar(toolbar, false);
+        if(toolbar != null) {
+            Logger.d(toolbar);
+            setToolbar(toolbar, false);
+        }
     }
 }
