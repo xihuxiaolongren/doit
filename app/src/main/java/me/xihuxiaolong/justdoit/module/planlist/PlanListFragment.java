@@ -358,6 +358,11 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
+    public void showEmptyView() {
+        fab.open(true);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
         if (requestCode == SELECT_TEMPLATE_REQUEST) {

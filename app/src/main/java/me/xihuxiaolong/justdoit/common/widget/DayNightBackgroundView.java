@@ -6,6 +6,8 @@ import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -100,6 +102,14 @@ public class DayNightBackgroundView extends FrameLayout{
     public void setAnimationDuration(int animationDuration) {
         this.animationDuration = animationDuration;
         mWaveHelper = new WaveHelper(waveView, animationDuration);
+    }
+
+    public void setRootBackgroundColor(@ColorInt int color){
+        rootView.setBackgroundColor(color);
+    }
+
+    public void setRootBackgroundResource(@DrawableRes int resid) {
+        rootView.setBackgroundResource(resid);
     }
 
     private void initDay(final Context context) {

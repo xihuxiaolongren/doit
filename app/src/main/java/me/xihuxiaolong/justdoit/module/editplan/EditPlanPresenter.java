@@ -70,11 +70,11 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         if(planId != -1L && editPlanDO != null) {
             plan.setId(planId);
             plan.setDayTime(editPlanDO.getDayTime());
-            planDataSource.insertOrReplacePlanDO(plan);
+            planDataSource.insertOrReplacePlanDO(plan, targetName);
             EventBus.getDefault().post(new Event.UpdatePlan(plan));
         }else {
             plan.setDayTime(dayTime);
-            long planId = planDataSource.insertOrReplacePlanDO(plan);
+            long planId = planDataSource.insertOrReplacePlanDO(plan, targetName);
             plan.setId(planId);
             EventBus.getDefault().post(new Event.AddPlan(plan));
         }

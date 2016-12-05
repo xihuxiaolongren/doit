@@ -34,6 +34,8 @@ public class PlanListContract {
 
         void gotoTemplates();
 
+        void showEmptyView();
+
         void showOtherDayUI();
 
     }

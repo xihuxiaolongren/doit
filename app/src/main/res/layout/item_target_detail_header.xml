@@ -5,6 +5,6 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingTop="150dp">
+    android:paddingTop="170dp">
 
 </LinearLayout>

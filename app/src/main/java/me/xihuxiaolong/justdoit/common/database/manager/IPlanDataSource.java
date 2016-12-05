@@ -22,7 +22,7 @@ public interface IPlanDataSource {
 
     PlanDO getPlanDOById(Long id);
 
-    long insertOrReplacePlanDO(PlanDO planDO);
+    long insertOrReplacePlanDO(PlanDO planDO, String targetName);
 
     List<PlanDO> listPlanDOs(Long id, int count);
 

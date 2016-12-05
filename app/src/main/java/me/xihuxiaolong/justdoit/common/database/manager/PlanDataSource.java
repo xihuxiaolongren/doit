@@ -26,6 +26,8 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
     IPlanHistoryDataSource planHistoryDataSource;
     IRedoPlanDataSource redoPlanDataSource;
 
+    Gson gson = new Gson();
+
     public PlanDataSource(){
         super();
         planHistoryDataSource = new PlanHistoryDataSource();
@@ -79,15 +81,13 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
     }
 
     @Override
-    public long insertOrReplacePlanDO(PlanDO planDO) {
+    public long insertOrReplacePlanDO(PlanDO planDO, String targetName) {
         if(planDO.getId() == null){
             planDO.setCreatedTime(System.currentTimeMillis());
             if(planDO.getTempRepeatmode() != 0){
-//                ObjectMapper mapper = new ObjectMapper();
-//                RedoPlanDO redoPlanDO = mapper.convertValue(planDO, RedoPlanDO.class);
-                Gson gson = new Gson();
                 RedoPlanDO redoPlanDO = gson.fromJson(gson.toJson(planDO), RedoPlanDO.class);
                 redoPlanDO.setRepeatMode(planDO.getTempRepeatmode());
+                redoPlanDO.setTargetName(targetName);
                 redoPlanDataSource.insertOrReplaceRedoPlanDO(redoPlanDO);
             }
             if(!TextUtils.isEmpty(planDO.getTags())){
@@ -144,7 +144,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
                 PlanDO planDO = gson.fromJson(gson.toJson(redoPlanDO), PlanDO.class);
                 planDO.setId(null);
                 planDO.setDayTime(dayTime);
-                insertOrReplacePlanDO(planDO);
+                insertOrReplacePlanDO(planDO, null);
                 planDOs.add(planDO);
             }
         }

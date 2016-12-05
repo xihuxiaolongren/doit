@@ -17,4 +17,8 @@
     <color name="wave_front">#3C1E7AC7</color>
     <color name="sea">#1E7AC7</color>
     <color name="sun">#F3E14F</color>
+
+    <color name="targetTitleTextColor">#FFFFFF</color>
+    <color name="targetTitleTextShadowColor">#000000</color>
+
 </resources>

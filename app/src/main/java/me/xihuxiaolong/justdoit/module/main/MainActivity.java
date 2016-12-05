@@ -45,9 +45,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     @BindView(R.id.bottomTabView)
     BottomTabView bottomTabView;
 
-    @BindView(R.id.bt_cardview)
-    CardView btCardview;
-
     private List<BottomTabView.TabData> bottomTabDatas;
 
     MainFragmentPageAdapter mainFragmentPageAdapter;
@@ -68,7 +65,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         bottomTabDatas.add(new BottomTabView.TabData("目标管理", R.color.bottom_color_state_list, R.drawable.tab_state_target));
         bottomTabDatas.add(new BottomTabView.TabData("我的", R.color.bottom_color_state_list, R.drawable.tab_state_me));
         bottomTabView.init(bottomTabDatas);
-        btCardview.setVisibility(View.INVISIBLE);
+        bottomTabView.setVisibility(View.INVISIBLE);
 
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
@@ -77,7 +74,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         if(getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
             bottomTabView.setCurrentItem(2);
-            btCardview.setVisibility(View.VISIBLE);
+            bottomTabView.setVisibility(View.VISIBLE);
         }else {
             ActivityUtils.delay(500, new ActivityUtils.DelayCallback() {
                 @Override
@@ -172,15 +169,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void hideBottom(int duration) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(btCardview, "translationY", btCardview.getHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomTabView, "translationY", bottomTabView.getHeight());
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = false;
     }
 
     private void showBottom(int duration) {
-        btCardview.setVisibility(View.VISIBLE);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(btCardview, "translationY", 0);
+        bottomTabView.setVisibility(View.VISIBLE);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomTabView, "translationY", 0);
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = true;

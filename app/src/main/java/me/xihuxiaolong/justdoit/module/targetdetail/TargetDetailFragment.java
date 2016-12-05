@@ -1,13 +1,17 @@
 package me.xihuxiaolong.justdoit.module.targetdetail;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.clans.fab.FloatingActionButton;
@@ -35,6 +38,7 @@ import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import org.joda.time.DateTime;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +56,8 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
-import mehdi.sakout.fancybuttons.FancyButton;
+import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
 
 /**
@@ -64,9 +68,14 @@ import mehdi.sakout.fancybuttons.FancyButton;
 public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
-    private static final int SELECT_TEMPLATE_REQUEST = 1;
 
     public static final String ARG_TARGET_NAME = "targetName";
+    @BindView(R.id.headerFL)
+    FrameLayout headerFL;
+    @BindView(R.id.headerCV)
+    CardView headerCV;
+    @BindView(R.id.headerEmptyShadowFL)
+    FrameLayout headerEmptyShadowFL;
 
     private String targetName;
 
@@ -99,16 +108,20 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     boolean mFabIsShown = true;
 
+    Menu menu;
+
     MenuItem addMenuItem;
 
     Drawable shadow;
 
-    int vibrant, darkVibrant;
+    int vibrant, titleColor, textColor;
 
     RedoPlanAdapter redoPlanAdapter;
     HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
     ScrollListener scrollListener;
+
+    int mSCrollY;
 
     public static TargetDetailFragment newInstance() {
         TargetDetailFragment fragment = new TargetDetailFragment();
@@ -168,7 +181,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-        darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
+        titleColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
+        textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
         titleTv.setText(targetName);
         titleTv.post(new Runnable() {
@@ -198,7 +212,12 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
         @Override
         protected void convert(ViewHolder holder, RedoPlanDO redoPlanDO, final int position) {
-            holder.setText(R.id.title_tv, redoPlanDO.getTitle());
+            holder.setBackgroundColor(R.id.rootView, vibrant);
+            holder.setTextColor(R.id.title_tv, textColor);
+            holder.setTextColor(R.id.persist_tv, textColor);
+            holder.setTextColor(R.id.redo_tv, textColor);
+            holder.setTextColor(R.id.time_tv, textColor);
+            holder.setText(R.id.title_tv, redoPlanDO.getContent());
         }
     }
 
@@ -213,6 +232,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         inflater.inflate(R.menu.menu_frament_targetdetail, menu);
         addMenuItem = menu.findItem(R.id.action_add);
         addMenuItem.setVisible(!mFabIsShown);
+        this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -222,15 +242,23 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             case android.R.id.home:
                 getActivity().finish();
                 return true;
-            case R.id.action_bg:
+            case R.id.action_set_image:
+                Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
+                //chose_mode选择模式 0单选 1多选
+                intent.putExtra("chose_mode", 0);
+                //是否显示需要第一个是图片相机按钮
+                intent.putExtra("isNeedfcamera", true);
+                //是否剪裁图片(只有单选模式才有剪裁)
+                intent.putExtra("crop", true);
+                startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
                 return true;
             case R.id.action_add_alert:
                 startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
+                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
                 return true;
             case R.id.action_add_plan:
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
+                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
                 return true;
             case R.id.action_settings:
                 return true;
@@ -241,21 +269,56 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
-        if (requestCode == SELECT_TEMPLATE_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
+            if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
+                ArrayList<String> uris = data.getStringArrayListExtra("data");
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(uris.get(0))));
+                    headerCV.setVisibility(View.VISIBLE);
+                    headerEmptyShadowFL.setVisibility(View.GONE);
+                    headerIV.setImageBitmap(bitmap);
 
+//                    headerIV.setImageURI(Uri.parse(uris.get(0)));
+                    Palette palette = Palette.from(bitmap).generate();
+                    Palette.Swatch swatch = palette.getDominantSwatch();
+//                    Palette.Swatch swatch = palette.getVibrantSwatch();
+                    //rgb颜色值
+                    vibrant = swatch.getRgb();
+                    //hsl颜色向量
+                    float[] hslValues = swatch.getHsl();
+                    //该颜色在图像中所占的像素数
+                    int pixelCount = swatch.getPopulation();
+                    //对应的标题字体颜色
+                    titleColor = swatch.getTitleTextColor();
+                    //对应的正文字体颜色
+                    textColor = swatch.getBodyTextColor();
+                    titleTv.setTextColor(titleColor);
+                    titleTv.setShadowLayer(1, 1, 1, vibrant);
+                    dayNightBackgroundView.setRootBackgroundColor(vibrant);
+                    float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
+                    toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+                    redoPlanAdapter.notifyDataSetChanged();
+                    mHeaderAndFooterWrapper.notifyDataSetChanged();
+                    menuColor = titleColor;
+                    setAllMenuColor(menu, toolbar);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+//                userSettings.setAvatarUri(uris.get(0));
+//                presenter.saveSettings(userSettings);
             }
         }
     }
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+        mSCrollY = scrollY;
         if (scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
 
         // Translate imageView parallax
-        ViewHelper.setTranslationY(headerIV, -scrollY);
+        ViewHelper.setTranslationY(headerFL, -scrollY);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
 
         animateCanlendarRl(scrollY);
@@ -335,7 +398,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             switch (v.getId()) {
                 case R.id.planFab:
                     startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME,targetName));
+                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
                     break;
                 case R.id.alertFab:
                     startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
@@ -396,9 +459,11 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     @Override
     public void showTarget(TargetDO targetDO) {
-        redoPlanAdapter.getDatas().addAll(targetDO.getRedoPlanDOList());
-        redoPlanAdapter.notifyDataSetChanged();
-        mHeaderAndFooterWrapper.notifyDataSetChanged();
+        if (targetDO != null) {
+            redoPlanAdapter.getDatas().addAll(targetDO.getRedoPlanDOList());
+            redoPlanAdapter.notifyDataSetChanged();
+            mHeaderAndFooterWrapper.notifyDataSetChanged();
+        }
     }
 
 }

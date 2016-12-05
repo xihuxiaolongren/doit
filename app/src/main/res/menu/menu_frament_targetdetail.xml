@@ -18,7 +18,7 @@
         </menu>
     </item>
     <item
-        android:id="@+id/action_bg"
+        android:id="@+id/action_set_image"
         android:icon="@drawable/menu_target_bg"
         android:orderInCategory="1"
         android:title="@string/action_add"
