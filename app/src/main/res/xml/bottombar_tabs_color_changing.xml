@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/item1"
+        icon="@drawable/ic_tab_every_plan_new"
+        title="今日计划"
+        barColorWhenSelected="@color/sky" />
+    <tab
+        id="@+id/item2"
+        icon="@drawable/ic_tab_every_plan_new"
+        title="目标"
+        barColorWhenSelected="@color/sky" />
+    <tab
+        id="@+id/item3"
+        icon="@drawable/ic_tab_every_plan_new"
+        title="我的"
+        barColorWhenSelected="@color/sky" />
+</tabs>

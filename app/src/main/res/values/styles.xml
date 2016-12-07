@@ -16,6 +16,8 @@
 
     </style>
 
+    <style name="AppTheme.TransNav" parent="AppTheme" />
+
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/title_size</item>
     </style>

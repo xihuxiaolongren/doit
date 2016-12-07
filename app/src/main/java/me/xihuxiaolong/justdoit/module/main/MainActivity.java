@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.orhanobut.logger.Logger;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,8 +46,8 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     private ServiceConnection sc;
     private PlanService planService;
 
-    @BindView(R.id.navigation)
-    BottomNavigationView navigation;
+    @BindView(R.id.bottomBar)
+    BottomBar bottomBar;
 
     MainFragmentPageAdapter mainFragmentPageAdapter;
 
@@ -58,11 +61,11 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
         viewPager.setOffscreenPageLimit(3);
-        navigation.setOnNavigationItemSelectedListener(
-                new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomBar.setOnTabSelectListener(
+                new OnTabSelectListener() {
                     @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        switch (item.getItemId()) {
+                    public void onTabSelected(@IdRes int tabId) {
+                        switch (tabId) {
                             case R.id.item1:
                                 viewPager.setCurrentItem(0, false);
                                 break;
@@ -73,15 +76,13 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                                 viewPager.setCurrentItem(2, false);
                                 break;
                         }
-                        updateNavigationBarState(item.getItemId());
-                        return false;
                     }
-                });
+                }
+        );
         if (getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
-            navigation.getMenu().getItem(2).setChecked(true);
-            navigation.getMenu().getItem(0).setChecked(false);
-            navigation.setVisibility(View.VISIBLE);
+            bottomBar.setDefaultTabPosition(2);
+            bottomBar.setVisibility(View.VISIBLE);
         } else {
             ActivityUtils.delay(500, new ActivityUtils.DelayCallback() {
                 @Override
@@ -142,15 +143,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         bindService(intent, sc, Context.BIND_AUTO_CREATE);
     }
 
-    private void updateNavigationBarState(int actionId) {
-        Menu menu = navigation.getMenu();
-
-        for (int i = 0, size = menu.size(); i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            item.setChecked(item.getItemId() == actionId);
-        }
-    }
-
     private void invalidateFragmentMenus(int position) {
         Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
@@ -173,15 +165,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void hideBottom(int duration) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(navigation, "translationY", navigation.getHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", bottomBar.getHeight());
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = false;
     }
 
     private void showBottom(int duration) {
-        navigation.setVisibility(View.VISIBLE);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(navigation, "translationY", 0);
+        bottomBar.setVisibility(View.VISIBLE);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", 0);
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = true;
@@ -201,7 +193,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
         @Override
         public int getCount() {
-            return navigation.getMenu().size();
+            return bottomBar.getTabCount();
         }
 
         @Override
