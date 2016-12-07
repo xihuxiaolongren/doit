@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -27,9 +25,6 @@ import com.orhanobut.logger.Logger;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
@@ -40,7 +35,6 @@ import me.xihuxiaolong.justdoit.module.service.PlanService;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 import me.xihuxiaolong.library.utils.ActivityUtils;
-import me.xihuxiaolong.library.widget.BottomTabView;
 
 public class MainActivity extends BaseActivity implements ScrollListener {
 
@@ -83,12 +77,12 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                         return false;
                     }
                 });
-        if(getIntent().getBooleanExtra("restart", false)) {
+        if (getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
             navigation.getMenu().getItem(2).setChecked(true);
             navigation.getMenu().getItem(0).setChecked(false);
             navigation.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             ActivityUtils.delay(500, new ActivityUtils.DelayCallback() {
                 @Override
                 public void afterDelay() {
@@ -102,8 +96,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                 }
             });
             viewPager.setCurrentItem(0);
-            navigation.getMenu().getItem(2).setChecked(true);
-            navigation.getMenu().getItem(0).setChecked(false);
         }
         viewPager.postDelayed(new Runnable() {
             @Override
@@ -150,7 +142,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         bindService(intent, sc, Context.BIND_AUTO_CREATE);
     }
 
-    private void updateNavigationBarState(int actionId){
+    private void updateNavigationBarState(int actionId) {
         Menu menu = navigation.getMenu();
 
         for (int i = 0, size = menu.size(); i < size; i++) {

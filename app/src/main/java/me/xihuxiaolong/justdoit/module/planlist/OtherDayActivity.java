@@ -1,17 +1,10 @@
 package me.xihuxiaolong.justdoit.module.planlist;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
-import me.xihuxiaolong.justdoit.module.service.PlanService;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 
 public class OtherDayActivity extends BaseActivity {
