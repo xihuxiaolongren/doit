@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:hint="查找手机应用"
+        android:hint="搜索应用关键字"
         android:imeActionLabel="@string/action_search"
         android:imeOptions="actionNext"
         android:inputType="text"

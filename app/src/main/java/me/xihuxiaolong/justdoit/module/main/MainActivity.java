@@ -8,6 +8,8 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -15,6 +17,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -45,41 +49,45 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     private ServiceConnection sc;
     private PlanService planService;
 
-//    private long dayTime;
-
-    @BindView(R.id.bottomTabView)
-    BottomTabView bottomTabView;
-
-    private List<BottomTabView.TabData> bottomTabDatas;
+    @BindView(R.id.navigation)
+    BottomNavigationView navigation;
 
     MainFragmentPageAdapter mainFragmentPageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        dayTime = getIntent().getLongExtra("dayTime", -1L);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-//        setToolbar(toolbar, false);
-//        if(dayTime != -1L)
-//            dayNightBackgroundView.setAnimationDuration(0);
-        //生成底部tab
-        bottomTabDatas = new ArrayList<>();
-        bottomTabDatas.add(new BottomTabView.TabData("每日计划", R.color.bottom_color_state_list, R.drawable.tab_state_every_plan));
-        bottomTabDatas.add(new BottomTabView.TabData("目标管理", R.color.bottom_color_state_list, R.drawable.tab_state_target));
-        bottomTabDatas.add(new BottomTabView.TabData("我的", R.color.bottom_color_state_list, R.drawable.tab_state_me));
-        bottomTabView.init(bottomTabDatas);
-        bottomTabView.setVisibility(View.INVISIBLE);
 
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
-        bottomTabView.setViewPager(viewPager, false);
         viewPager.setOffscreenPageLimit(3);
+        navigation.setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.item1:
+                                viewPager.setCurrentItem(0, false);
+                                break;
+                            case R.id.item2:
+                                viewPager.setCurrentItem(1, false);
+                                break;
+                            case R.id.item3:
+                                viewPager.setCurrentItem(2, false);
+                                break;
+                        }
+                        updateNavigationBarState(item.getItemId());
+                        return false;
+                    }
+                });
         if(getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
-            bottomTabView.setCurrentItem(2);
-            bottomTabView.setVisibility(View.VISIBLE);
+            navigation.getMenu().getItem(2).setChecked(true);
+            navigation.getMenu().getItem(0).setChecked(false);
+            navigation.setVisibility(View.VISIBLE);
         }else {
             ActivityUtils.delay(500, new ActivityUtils.DelayCallback() {
                 @Override
@@ -94,7 +102,8 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                 }
             });
             viewPager.setCurrentItem(0);
-            bottomTabView.setCurrentItem(0);
+            navigation.getMenu().getItem(2).setChecked(true);
+            navigation.getMenu().getItem(0).setChecked(false);
         }
         viewPager.postDelayed(new Runnable() {
             @Override
@@ -102,22 +111,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                 invalidateFragmentMenus(0);
             }
         }, 0);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(final int position) {
-                invalidateFragmentMenus(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
 
         sc = new ServiceConnection() {
             /*
@@ -157,15 +150,21 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         bindService(intent, sc, Context.BIND_AUTO_CREATE);
     }
 
+    private void updateNavigationBarState(int actionId){
+        Menu menu = navigation.getMenu();
+
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item = menu.getItem(i);
+            item.setChecked(item.getItemId() == actionId);
+        }
+    }
+
     private void invalidateFragmentMenus(int position) {
         Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
-//            if(mainFragmentPageAdapter.getRegisteredFragment(i) != null)
-//                mainFragmentPageAdapter.getRegisteredFragment(i).setHasOptionsMenu(i == position);
             if (i == position && mainFragmentPageAdapter.getRegisteredFragment(i) != null)
                 ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
         }
-//        invalidateOptionsMenu(); //or respectively its support method.
     }
 
     int mScrollY;
@@ -182,15 +181,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void hideBottom(int duration) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomTabView, "translationY", bottomTabView.getHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(navigation, "translationY", navigation.getHeight());
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = false;
     }
 
     private void showBottom(int duration) {
-        bottomTabView.setVisibility(View.VISIBLE);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomTabView, "translationY", 0);
+        navigation.setVisibility(View.VISIBLE);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(navigation, "translationY", 0);
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = true;
@@ -198,7 +197,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
     @Subscribe
     public void onEvent(Event.ChangeDayNightTheme changeDayNightTheme) {
-//        recreate();
         restart();
     }
 
@@ -211,7 +209,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
         @Override
         public int getCount() {
-            return bottomTabDatas.size();
+            return navigation.getMenu().size();
         }
 
         @Override

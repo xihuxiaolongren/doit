@@ -196,6 +196,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     FlexboxLayout selectTagsFl;
     FlexboxLayout allTagsFl;
     MaterialEditText tagET;
+    View addTagIV;
+    View tagPositive;
 
     LinkedHashSet<String> mSelectedTags, mAllTags;
 
@@ -203,7 +205,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     public void showTagDialog(LinkedHashSet<String> selectedTags, LinkedHashSet<String> allTags) {
         mSelectedTags = selectedTags;
         mAllTags = allTags;
-        MaterialDialog dialog = new MaterialDialog.Builder(EditPlanActivity.this)
+        MaterialDialog tagDialog = new MaterialDialog.Builder(EditPlanActivity.this)
                 .title("标签")
                 .customView(R.layout.dialog_tag, true)
                 .positiveText(getResources().getString(R.string.action_confirm))
@@ -221,16 +223,42 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                     }
                 })
                 .show();
+        tagPositive = tagDialog.getActionButton(DialogAction.POSITIVE);
+        tagPositive.setEnabled(false);
+        selectTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.select_tags_fl);
+        allTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.all_tags_fl);
+        tagET = (MaterialEditText) tagDialog.findViewById(R.id.tagET);
+        addTagIV = tagDialog.findViewById(R.id.addTagIV);
+        addTagIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!TextUtils.isEmpty(tagET.getText())) {
+                    addTagSuccess(tagET.getText().toString());
+                }
+            }
+        });
+        tagET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        selectTagsFl = (FlexboxLayout) dialog.findViewById(R.id.select_tags_fl);
-        allTagsFl = (FlexboxLayout) dialog.findViewById(R.id.all_tags_fl);
-        tagET = (MaterialEditText) dialog.findViewById(R.id.tagET);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addTagIV.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+
+            }
+        });
         tagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && v.getText().length() > 0) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT && !TextUtils.isEmpty(v.getText())) {
                     addTagSuccess(v.getText().toString());
-                    v.setText(null);
                     return true;
                 }
                 return false;
@@ -533,6 +561,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     public void deleteTagSuccess(String tag) {
         mSelectedTags.remove(tag);
+        if(mSelectedTags.size() <= 0)
+            tagPositive.setEnabled(false);
         selectTagsFl.removeView(selectTagsFl.findViewWithTag(tag));
         if (allTagsFl.findViewWithTag(tag) != null)
             allTagsFl.findViewWithTag(tag).setVisibility(View.VISIBLE);
@@ -544,9 +574,15 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
             if (allTagsFl.findViewWithTag(tag) != null)
                 allTagsFl.findViewWithTag(tag).setVisibility(View.GONE);
         }
+        tagET.setText(null);
+        tagPositive.setEnabled(true);
     }
 
     public void saveTagSuccess() {
+//        if(!TextUtils.isEmpty(tagET.getText())) {
+//            addTagSuccess(tagET.getText().toString());
+//            tagET.setText(null);
+//        }
         if (!CollectionUtils.isEmpty(mSelectedTags)) {
             tagDetailTV.setText("");
             for (String tag : mSelectedTags) {
