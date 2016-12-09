@@ -14,6 +14,7 @@ import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,7 +33,6 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.orhanobut.logger.Logger;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
@@ -55,9 +55,9 @@ import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolong.library.utils.ColorUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
 
@@ -66,7 +66,7 @@ import me.xihuxiaolongren.photoga.MediaChoseActivity;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
+public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener{
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
@@ -160,7 +160,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_target_detail, container, false);
         ButterKnife.bind(this, view);
-        setToolbar(toolbar, true, false);
+        initToolbar(toolbar, true, false);
         setHasOptionsMenu(true);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
@@ -251,6 +251,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                 intent.putExtra("isNeedfcamera", true);
                 //是否剪裁图片(只有单选模式才有剪裁)
                 intent.putExtra("crop", true);
+                intent.putExtra("crop_image_w", headerEmptyShadowFL.getWidth());
+                intent.putExtra("crop_image_h", headerEmptyShadowFL.getHeight());
                 startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
                 return true;
             case R.id.action_add_alert:
@@ -273,42 +275,45 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
             if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
                 ArrayList<String> uris = data.getStringArrayListExtra("data");
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(uris.get(0))));
-                    headerCV.setVisibility(View.VISIBLE);
-                    headerEmptyShadowFL.setVisibility(View.GONE);
-                    headerIV.setImageBitmap(bitmap);
-
-//                    headerIV.setImageURI(Uri.parse(uris.get(0)));
-                    Palette palette = Palette.from(bitmap).generate();
-                    Palette.Swatch swatch = palette.getDominantSwatch();
-//                    Palette.Swatch swatch = palette.getVibrantSwatch();
-                    //rgb颜色值
-                    vibrant = swatch.getRgb();
-                    //hsl颜色向量
-                    float[] hslValues = swatch.getHsl();
-                    //该颜色在图像中所占的像素数
-                    int pixelCount = swatch.getPopulation();
-                    //对应的标题字体颜色
-                    titleColor = swatch.getTitleTextColor();
-                    //对应的正文字体颜色
-                    textColor = swatch.getBodyTextColor();
-                    titleTv.setTextColor(titleColor);
-                    titleTv.setShadowLayer(1, 1, 1, vibrant);
-                    dayNightBackgroundView.setRootBackgroundColor(vibrant);
-                    float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
-                    toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
-                    redoPlanAdapter.notifyDataSetChanged();
-                    mHeaderAndFooterWrapper.notifyDataSetChanged();
-                    menuColor = titleColor;
-                    setAllMenuColor(menu, toolbar);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-//                userSettings.setAvatarUri(uris.get(0));
-//                presenter.saveSettings(userSettings);
+                setHeaderIV(uris.get(0));
+                presenter.updateTarget(uris.get(0));
             }
+        }
+    }
+
+    private void setHeaderIV(String uri){
+        if(TextUtils.isEmpty(uri))
+            return;
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(uri)));
+            headerCV.setVisibility(View.VISIBLE);
+            headerEmptyShadowFL.setVisibility(View.GONE);
+            headerIV.setImageBitmap(bitmap);
+
+            Palette palette = Palette.from(bitmap).generate();
+            Palette.Swatch swatch = palette.getDominantSwatch();
+//                    Palette.Swatch swatch = palette.getVibrantSwatch();
+            //rgb颜色值
+            vibrant = swatch.getRgb();
+            //对应的标题字体颜色
+            titleColor = swatch.getTitleTextColor();
+            //对应的正文字体颜色
+            textColor = swatch.getBodyTextColor();
+
+            int imageTextColor = ColorUtils.contrastColor(vibrant);
+
+            titleTv.setTextColor(imageTextColor);
+            titleTv.setShadowLayer(1, 1, 1, vibrant);
+            dayNightBackgroundView.setRootBackgroundColor(vibrant);
+            float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
+            toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+            fab.setMenuButtonColorNormal(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
+            redoPlanAdapter.notifyDataSetChanged();
+            mHeaderAndFooterWrapper.notifyDataSetChanged();
+
+            setAllMenuColor(menu, toolbar, imageTextColor);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -439,11 +444,6 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     }
 
     @Override
-    public void reloadToolbar() {
-        setToolbar(toolbar, false);
-    }
-
-    @Override
     public void removePlanItem(long targetId) {
 
     }
@@ -459,12 +459,18 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     }
 
     @Override
-    public void showTarget(TargetDO targetDO) {
+    public void showTarget(final TargetDO targetDO) {
         if (targetDO != null) {
+            setHeaderIV(targetDO.getHeaderImageUri());
             redoPlanAdapter.getDatas().addAll(targetDO.getRedoPlanDOList());
             redoPlanAdapter.notifyDataSetChanged();
             mHeaderAndFooterWrapper.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void updateTargetSuccess() {
+
     }
 
 }

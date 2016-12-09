@@ -8,16 +8,12 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -84,16 +80,16 @@ public class MainActivity extends BaseActivity implements ScrollListener {
             bottomBar.setDefaultTabPosition(2);
             bottomBar.setVisibility(View.VISIBLE);
         } else {
-            ActivityUtils.delay(500, new ActivityUtils.DelayCallback() {
+            ActivityUtils.delay(200, new ActivityUtils.DelayCallback() {
                 @Override
                 public void afterDelay() {
                     hideBottom(0);
                 }
             });
-            ActivityUtils.delay(5000, new ActivityUtils.DelayCallback() {
+            ActivityUtils.delay(3500, new ActivityUtils.DelayCallback() {
                 @Override
                 public void afterDelay() {
-                    showBottom(500);
+                    showBottom(600);
                 }
             });
             viewPager.setCurrentItem(0);

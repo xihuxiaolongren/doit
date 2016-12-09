@@ -21,16 +21,20 @@ public class TargetDO {
     private long createdTime;
     private long modifiedTime;
 
+    private String headerImageUri;
+
     private int count;
 
     @Transient
     private List<RedoPlanDO> redoPlanDOList;
 
-    @Generated(hash = 778472336)
-    public TargetDO(String name, long createdTime, long modifiedTime, int count) {
+    @Generated(hash = 848272262)
+    public TargetDO(String name, long createdTime, long modifiedTime,
+            String headerImageUri, int count) {
         this.name = name;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
+        this.headerImageUri = headerImageUri;
         this.count = count;
     }
 
@@ -76,5 +80,13 @@ public class TargetDO {
 
     public void setModifiedTime(long modifiedTime) {
         this.modifiedTime = modifiedTime;
+    }
+
+    public String getHeaderImageUri() {
+        return this.headerImageUri;
+    }
+
+    public void setHeaderImageUri(String headerImageUri) {
+        this.headerImageUri = headerImageUri;
     }
 }

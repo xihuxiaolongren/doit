@@ -3,8 +3,6 @@ package me.xihuxiaolong.justdoit.module.targetdetail;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import java.util.List;
-
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
@@ -24,11 +22,15 @@ public class TargetDetailContract {
 
         void showTarget(TargetDO targetDO);
 
+        void updateTargetSuccess();
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
         void loadTarget();
+
+        void updateTarget(String headerImageUri);
 
     }
 }

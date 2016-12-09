@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -106,10 +107,12 @@ public class DayNightBackgroundView extends FrameLayout{
 
     public void setRootBackgroundColor(@ColorInt int color){
         rootView.setBackgroundColor(color);
+        mBlueSkyColor = color;
     }
 
-    public void setRootBackgroundResource(@DrawableRes int resid) {
+    public void setRootBackgroundResource(@ColorRes int resid) {
         rootView.setBackgroundResource(resid);
+        mBlueSkyColor = ContextCompat.getColor(this.getContext(), resid);
     }
 
     private void initDay(final Context context) {
@@ -178,10 +181,10 @@ public class DayNightBackgroundView extends FrameLayout{
     private void moonrise() {
 //        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
         mWaveHelper.start();
+        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
-        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mStarX1Anim = getStarXAnimator(mStar1View, 0.0f, 1.0f);
         mStarX2Anim = getStarXAnimator(mStar2View, 0.0f, 1.0f);
         mStarX3Anim = getStarXAnimator(mStar3View, 0.0f, 1.0f);

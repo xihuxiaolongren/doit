@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +26,9 @@ import com.soundcloud.android.crop.Crop;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Locale;
 
 /**
  * 调用媒体选择库
@@ -40,7 +36,7 @@ import java.util.Locale;
  * 1. 选择模式 chose_mode  0  //单选 1多选
  * 2. 选择张数 max_chose_count  多选模式默认 9 张
  */
-public class MediaChoseActivity extends AppCompatActivity {
+public class NewMediaChoseActivity extends AppCompatActivity {
 
     public static final int REQUEST_CODE_CAMERA = 2001;
     public static final int REQUEST_CODE_CROP = 2002;
@@ -209,10 +205,6 @@ public class MediaChoseActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    public void log(String msg) {
-        Log.i("gallery", msg);
-    }
-
     public void popFragment() {
         FragmentManager fm = getSupportFragmentManager();
         fm.popBackStackImmediate();
@@ -284,7 +276,7 @@ public class MediaChoseActivity extends AppCompatActivity {
                     finish();
                 }
             } else {
-                Toast.makeText(MediaChoseActivity.this, "获取图片失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewMediaChoseActivity.this, "获取图片失败", Toast.LENGTH_SHORT).show();
             }
         } else if (resultCode == RESULT_OK && requestCode == REQUEST_CODE_CAMERA && (choseMode == CHOSE_MODE_MULTIPLE)) {
 
@@ -296,14 +288,14 @@ public class MediaChoseActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
-                Toast.makeText(MediaChoseActivity.this, "获取图片失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewMediaChoseActivity.this, "获取图片失败", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
 
     public void sendStartCamera() {
-        currentUri = getTempFile();
+        currentUri = getTempFile("IMG_CAMERA_");
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, currentUri);
@@ -314,7 +306,8 @@ public class MediaChoseActivity extends AppCompatActivity {
 
     private void beginCrop(Uri source) {
 //        Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-        Uri destination = Uri.fromFile(getCropFile());
+//        Uri destination = Uri.fromFile(getCropFile());
+        Uri destination = getTempFile("IMG_CROP_");
         Crop crop = Crop.of(source, destination);
         crop.asSquare();
         crop.start(this);
@@ -323,13 +316,10 @@ public class MediaChoseActivity extends AppCompatActivity {
     public void sendStartCrop(String path) {
         beginCrop(Uri.fromFile(new File(path)));
     }
-    public Uri getTempFile() {
-        Date date = new Date(System.currentTimeMillis());
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault());
-        String str = format.format(date);
-        File file = null;
+    public Uri getTempFile(String prefix) {
+        File file;
         try {
-            file = File.createTempFile("IMG_GE_", ".jpg", Environment.getExternalStorageDirectory());
+            file = File.createTempFile(prefix, ".jpg", Environment.getExternalStorageDirectory());
         } catch (IOException e) {
             return null;
         }
@@ -338,7 +328,15 @@ public class MediaChoseActivity extends AppCompatActivity {
         return Uri.fromFile(file);
     }
     public File getCropFile() {
-        return new File(getCacheFile(), "crop_" + System.currentTimeMillis() + ".jpg");
+        return new File(getTmpPhotos());
+    }
+
+    /**
+     * 获取tmp path
+     * @return
+     */
+    public  String getTmpPhotos() {
+        return new File(getCacheFile(), ".tmpcamara" + System.currentTimeMillis() + ".jpg").getAbsolutePath();
     }
 
     /**

@@ -1,28 +1,21 @@
 package me.xihuxiaolong.justdoit.common.base;
 
-import android.annotation.TargetApi;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.orhanobut.logger.Logger;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import me.xihuxiaolong.justdoit.R;
 
@@ -34,7 +27,7 @@ import me.xihuxiaolong.justdoit.R;
 
 public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<V>> extends MvpFragment<V, P> {
 
-    protected int menuColor;
+    private int menuColor;
     private boolean isFirstSet;
 
     abstract protected void injectDependencies();
@@ -72,9 +65,11 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
         }
     }
 
-    protected void setAllMenuColor(Menu menu, Toolbar toolbar) {
-        if (menuColor == 0)
+    protected void setAllMenuColor(Menu menu, Toolbar toolbar, int color) {
+        if (color == 0)
             menuColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
+        else
+            menuColor = color;
         if (menu != null) {
             for (int i = 0; i < menu.size(); i++) {
                 Drawable drawable = menu.getItem(i).getIcon();
@@ -84,6 +79,7 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
                 }
             }
         }
+        toolbar.setTitleTextColor(menuColor);
         Drawable drawable = toolbar.getOverflowIcon();
         if (drawable != null) {
             drawable = DrawableCompat.wrap(drawable);
@@ -104,7 +100,7 @@ public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<
         layoutParams.height = layoutParams.height + getStatusBarHeight();
         toolbar.setLayoutParams(layoutParams);
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-        setToolbar(toolbar, showHomeAsUp, true);
+        setToolbar(toolbar, showHomeAsUp, showTitle);
     }
 
     public void setToolbar(Toolbar toolbar, boolean showHomeAsUp) {

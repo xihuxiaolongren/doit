@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_alignParentBottom="true"
+        android:background="@color/sky"
         app:bb_tabXmlResource="@xml/bottombar_tabs_color_changing"
         app:bb_titleTextAppearance="@style/MyTextAppearance.Bottom"
         app:bb_behavior="shifting|underNavbar"

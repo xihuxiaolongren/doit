@@ -2,15 +2,10 @@ package me.xihuxiaolong.justdoit.module.targetdetail;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.library.utils.NumberUtils;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,15 +21,27 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
     @Inject
     IRedoPlanDataSource redoPlanDataSource;
 
+    TargetDO targetDO;
+
     @Inject
     public TargetDetailPresenter() {
     }
 
     @Override
     public void loadTarget() {
-        TargetDO targetDO = redoPlanDataSource.getTargetByName(targetName, true);
+        targetDO = redoPlanDataSource.getTargetByName(targetName, true);
         if (isViewAttached()) {
             getView().showTarget(targetDO);
+        }
+    }
+
+    @Override
+    public void updateTarget(String headerImageUri) {
+        if(targetDO != null) {
+            targetDO.setHeaderImageUri(headerImageUri);
+            redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+            if (isViewAttached())
+                getView().updateTargetSuccess();
         }
     }
 

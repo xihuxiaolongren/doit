@@ -3,16 +3,13 @@
     <tab
         id="@+id/item1"
         icon="@drawable/tab_every_plan_new"
-        title="今日计划"
-        barColorWhenSelected="@color/sky" />
+        title="今日计划" />
     <tab
         id="@+id/item2"
         icon="@drawable/tab_target_new"
-        title="目标"
-        barColorWhenSelected="@color/sky" />
+        title="目标" />
     <tab
         id="@+id/item3"
         icon="@drawable/tab_me_new"
-        title="我的"
-        barColorWhenSelected="@color/sky" />
+        title="我的" />
 </tabs>
