@@ -2,12 +2,15 @@ package me.xihuxiaolong.justdoit.module.editalert;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -25,17 +28,24 @@ import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.SingleTimeView;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
-import me.xihuxiaolong.library.utils.ToastUtil;
 
 public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, EditAlertContract.IPresenter> implements EditAlertContract.IView, SingleTimeView.TimeListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
 
     public static final String ARGUMENT_EDIT_ALERT_ID = "EDIT_ALERT_ID";
     public static final String ARGUMENT_DAY_TIME = "DAY_TIME";
+    public static final String ARGUMENT_TARGET_NAME = "TARGET_NAME";
     private static final String FRAG_TAG_TIME_PICKER = "frag_tag_time_picker";
 
     EditAlertComponent editAlertComponent;
 
-    private Menu menu;
+    Long alertId;
+
+    long dayTime;
+
+    String targetName;
+
+    int repeatSelected = -1;
+    Integer[] repeatSelectedArr;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -45,15 +55,22 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
     SingleTimeView singleTimeView;
     @BindView(R.id.contentET)
     MaterialEditText contentET;
-
-    Long alertId;
-
-    long dayTime;
+    @BindView(R.id.repeatIV)
+    ImageView repeatIV;
+    @BindView(R.id.repeatTV)
+    TextView repeatTV;
+    @BindView(R.id.repeatDetailTV)
+    TextView repeatDetailTV;
+    @BindView(R.id.repeatRL)
+    RelativeLayout repeatRL;
+    @BindView(R.id.rootView)
+    RelativeLayout rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         alertId = getIntent().getLongExtra(ARGUMENT_EDIT_ALERT_ID, -1L);
         dayTime = getIntent().getLongExtra(ARGUMENT_DAY_TIME, -1L);
+        targetName = getIntent().getStringExtra(ARGUMENT_TARGET_NAME);
         injectDependencies();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_alert);
@@ -62,6 +79,12 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
         setToolbar(toolbar, true);
         contentET.requestFocus();
         singleTimeView.setTimeListener(this);
+        repeatRL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRepeatDialog();
+            }
+        });
         presenter.loadAlert();
     }
 
@@ -73,7 +96,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
 
     protected void injectDependencies() {
         editAlertComponent = DaggerEditAlertComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
-                .editAlertModule(new EditAlertModule(alertId,dayTime)).build();
+                .editAlertModule(new EditAlertModule(alertId, dayTime, targetName)).build();
     }
 
     @NonNull
@@ -87,9 +110,9 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_activity_edit_alert, menu);
         menu.findItem(R.id.action_delete).setVisible(alertId != -1L);
-        if(alertId == -1L){
+        if (alertId == -1L) {
             getSupportActionBar().setTitle(getResources().getString(R.string.add_alert));
-        }else {
+        } else {
             getSupportActionBar().setTitle(getResources().getString(R.string.modify_alert));
         }
         return super.onCreateOptionsMenu(menu);
@@ -111,13 +134,92 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
                 return true;
             case R.id.action_confirm:
                 ActivityUtils.hideSoftKeyboard(this);
-                if(TextUtils.isEmpty(contentET.getText()))
-                    ToastUtil.showToast(this, "不能保存一条空的提醒", Toast.LENGTH_SHORT);
-                else
-                    presenter.saveAlert(singleTimeView.getHour(), singleTimeView.getMinute(), contentET.getText().toString());
+                if (TextUtils.isEmpty(contentET.getText()))
+                    contentET.setError("提醒内容不能为空");
+                else if (!TextUtils.isEmpty(targetName) && repeatSelected == -1) {
+                    Snackbar.make(rootView, "请选择重复模式", Snackbar.LENGTH_SHORT).setAction("确定", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            showRepeatDialog();
+                        }
+                    }).show();
+                } else {
+                    int repeatMode = 0;
+                    switch (repeatSelected) {
+                        case 0:
+                            for (int i = 0; i < 7; ++i)
+                                repeatMode |= 1 << i;
+                            break;
+                        case 1:
+                            for (int i = 0; i < 5; ++i)
+                                repeatMode |= 1 << i;
+                            break;
+                        case 2:
+                            for (int i : repeatSelectedArr) {
+                                repeatMode |= 1 << i;
+                            }
+                            break;
+                    }
+                    presenter.saveAlert(singleTimeView.getHour(), singleTimeView.getMinute(), contentET.getText().toString(), repeatMode);
+                }
                 return true;
         }
         return false;
+    }
+
+    private void showRepeatDialog() {
+        new MaterialDialog.Builder(EditAlertActivity.this)
+                .title("重复")
+                .items(R.array.repeat_arr)
+                .itemsCallbackSingleChoice(repeatSelected, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                        repeatSelected = which;
+                        switch (which) {
+                            case 0:
+                                repeatDetailTV.setTag(which);
+                                repeatDetailTV.setText("每天");
+                                break;
+                            case 1:
+                                repeatDetailTV.setTag(which);
+                                repeatDetailTV.setText("周一到周五");
+                                break;
+                            case 2:
+                                showCustomRepeatDialog();
+                                break;
+                        }
+                        return true;
+                    }
+                })
+                .show();
+    }
+
+    private void showCustomRepeatDialog() {
+        new MaterialDialog.Builder(EditAlertActivity.this)
+                .title("自定义重复日期")
+                .items(R.array.repeat_week_arr)
+                .itemsCallbackMultiChoice(repeatSelectedArr, new MaterialDialog.ListCallbackMultiChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                        return false;
+                    }
+                })
+                .positiveText(R.string.action_confirm)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        repeatSelectedArr = dialog.getSelectedIndices();
+                        repeatDetailTV.setText("");
+                        for (int i : repeatSelectedArr) {
+                            CharSequence s = (getResources().getTextArray(R.array.repeat_week_arr))[i];
+                            String ss = repeatDetailTV.getText().toString() + s + ",";
+                            repeatDetailTV.setText(ss);
+                        }
+                        repeatDetailTV.setText(repeatDetailTV.getText().subSequence(0, repeatDetailTV.getText().length() - 1));
+                    }
+                })
+                .negativeText(R.string.action_cancel)
+                .show();
     }
 
     @Override
@@ -127,7 +229,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
                 .setTitleText(getResources().getString(R.string.alert_time))
                 .setDoneText(getResources().getString(R.string.action_confirm))
                 .setCancelText(getResources().getString(R.string.action_cancel));
-        if(DayNightModeUtils.isCurrentNight())
+        if (DayNightModeUtils.isCurrentNight())
             rtpd.setThemeDark();
         else
             rtpd.setThemeLight();
@@ -146,7 +248,7 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
 
     @Override
     public void showAlert(PlanDO alert) {
-        if(alert != null) {
+        if (alert != null) {
             singleTimeView.setTime(alert.getStartHour(), alert.getStartMinute());
             contentET.setText(alert.getContent());
         }

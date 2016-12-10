@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
@@ -68,6 +69,52 @@
                 app:met_textColor="@color/titleTextColor"
                 app:met_textColorHint="@color/titleTextColor" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <RelativeLayout
+                    android:id="@+id/repeatRL"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/repeatIV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/repeat_plan"
+                        android:tint="@color/titleTextColor" />
+
+                    <TextView
+                        android:id="@+id/repeatTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/repeatIV"
+                        android:text="设为每日任务"
+                        android:textColor="@color/titleTextColor" />
+
+                    <TextView
+                        android:id="@+id/repeatDetailTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/repeatTV"
+                        android:layout_marginRight="10dp"
+                        android:layout_toRightOf="@id/repeatIV"
+                        android:text="从不"
+                        android:textColor="@color/titleTextColor"
+                        android:textSize="12sp" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

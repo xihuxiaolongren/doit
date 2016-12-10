@@ -47,10 +47,9 @@ import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
+import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.main.MainActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
@@ -62,7 +61,7 @@ import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener, MainActivityListener {
+public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, NewPlanListWrapper.PlanListOnClickListener, MainActivityListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
@@ -117,7 +116,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     int mScollY;
 
-    PlanListWrapper planListWrapper;
+    NewPlanListWrapper planListWrapper;
 
     long dayTime;
 
@@ -220,7 +219,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             }
         });
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView, this);
+        planListWrapper = new NewPlanListWrapper(getContext(), recyclerView, this);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
         planListWrapper.addHeaderView(headerView);
         recyclerView.setScrollViewCallbacks(this);

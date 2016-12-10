@@ -1,9 +1,10 @@
 package me.xihuxiaolong.justdoit.module.editalert;
 
+import android.support.annotation.Nullable;
+
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -26,8 +27,13 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
     @Inject @Named("dayTime")
     long dayTime;
 
+    @Inject @Nullable
+    String targetName;
+
     @Inject
     IPlanDataSource planDataSource;
+
+    PlanDO editAlert;
 
     @Inject
     public EditAlertPresenter() {}
@@ -35,26 +41,26 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
     @Override
     public void loadAlert() {
         if(alertId != -1L) {
-            PlanDO alert = planDataSource.getPlanDOById(alertId);
-            if(alert == null){
-                alert = new PlanDO();
+            editAlert = planDataSource.getPlanDOById(alertId);
+            if(editAlert == null){
+                editAlert = new PlanDO();
                 PlanDO lastPlanDO = planDataSource.getPlanByLastEndTime();
                 if(lastPlanDO != null) {
-                    alert.setStartTime(lastPlanDO.getEndTime() + 30);
-                    alert.setStartHour(alert.getStartTime() / 60);
-                    alert.setStartTime(alert.getStartTime() % 60);
-                    alert.setEndTime(alert.getEndTime() % 60);
-                    alert.setStartTime(alert.getEndTime() % 60);
-                    alert.setStartTime(alert.getEndTime() % 60);
+                    editAlert.setStartTime(lastPlanDO.getEndTime() + 30);
+                    editAlert.setStartHour(editAlert.getStartTime() / 60);
+                    editAlert.setStartTime(editAlert.getStartTime() % 60);
+                    editAlert.setEndTime(editAlert.getEndTime() % 60);
+                    editAlert.setStartTime(editAlert.getEndTime() % 60);
+                    editAlert.setStartTime(editAlert.getEndTime() % 60);
                 }
             }
             if (isViewAttached())
-                getView().showAlert(alert);
+                getView().showAlert(editAlert);
         }
     }
 
     @Override
-    public void saveAlert(int hour, int minute, String content) {
+    public void saveAlert(int hour, int minute, String content, int repeatMode) {
         PlanDO alert = new PlanDO();
         alert.setType(PlanDO.TYPE_ALERT);
         alert.setContent(content);
@@ -64,14 +70,15 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
         alert.setEndHour(hour);
         alert.setEndMinute(minute);
         alert.setEndTime(hour * 60 + minute);
+        alert.setTempRepeatmode(repeatMode);
 
         if(alertId != -1L) {
             alert.setId(alertId);
-            planDataSource.insertOrReplacePlanDO(alert, null);
+            planDataSource.insertOrReplacePlanDO(alert, targetName);
             EventBus.getDefault().post(new Event.UpdatePlan(alert));
         }else {
             alert.setDayTime(dayTime);
-            long alertId = planDataSource.insertOrReplacePlanDO(alert, null);
+            long alertId = planDataSource.insertOrReplacePlanDO(alert, targetName);
             alert.setId(alertId);
             EventBus.getDefault().post(new Event.AddPlan(alert));
         }

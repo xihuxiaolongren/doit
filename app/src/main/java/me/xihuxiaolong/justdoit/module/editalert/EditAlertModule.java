@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.module.editalert;
 
+import android.support.annotation.Nullable;
+
 import javax.inject.Named;
 
 import dagger.Module;
@@ -19,9 +21,12 @@ public class EditAlertModule {
 
     private long dayTime;
 
-    public EditAlertModule(Long alertId, long dayTime){
+    private String targetName;
+
+    public EditAlertModule(Long alertId, long dayTime, String targetName){
         this.alertId = alertId;
         this.dayTime = dayTime;
+        this.targetName = targetName;
     }
 
     @Provides @Named("alertId")
@@ -32,6 +37,11 @@ public class EditAlertModule {
     @Provides @Named("dayTime")
     long provideDayTime() {
         return dayTime;
+    }
+
+    @Provides @Nullable
+    String provideTargetName() {
+        return targetName;
     }
 
     @Provides

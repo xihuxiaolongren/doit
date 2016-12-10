@@ -64,12 +64,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                         switch (tabId) {
                             case R.id.item1:
                                 viewPager.setCurrentItem(0, false);
+                                invalidateFragmentMenus(0);
                                 break;
                             case R.id.item2:
                                 viewPager.setCurrentItem(1, false);
+                                invalidateFragmentMenus(1);
                                 break;
                             case R.id.item3:
                                 viewPager.setCurrentItem(2, false);
+                                invalidateFragmentMenus(2);
                                 break;
                         }
                     }
@@ -142,8 +145,11 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     private void invalidateFragmentMenus(int position) {
         Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
-            if (i == position && mainFragmentPageAdapter.getRegisteredFragment(i) != null)
-                ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
+            if (mainFragmentPageAdapter.getRegisteredFragment(i) != null) {
+//                mainFragmentPageAdapter.getRegisteredFragment(i).setHasOptionsMenu(i == position);
+                if(i == position)
+                    ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
+            }
         }
     }
 

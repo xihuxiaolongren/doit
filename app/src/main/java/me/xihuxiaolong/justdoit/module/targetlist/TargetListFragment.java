@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.module.targetlist;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -24,6 +23,9 @@ import android.widget.LinearLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -32,11 +34,6 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
-import com.zhy.adapter.recyclerview.CommonAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
-import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +43,9 @@ import butterknife.ButterKnife;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
-import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
-import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
@@ -109,7 +102,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     int mScollY;
 
     TargetAdapter targetAdapter;
-    HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
     ScrollListener scrollListener;
 
@@ -135,8 +127,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         //对传递进来的Activity进行接口转换
-        if(activity instanceof ScrollListener){
-            scrollListener = ((ScrollListener)activity);
+        if (activity instanceof ScrollListener) {
+            scrollListener = ((ScrollListener) activity);
         }
     }
 
@@ -192,11 +184,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        targetAdapter = new TargetAdapter(getContext(), R.layout.item_target, new ArrayList<TargetDO>());
+        targetAdapter = new TargetAdapter(R.layout.item_target, new ArrayList<TargetDO>());
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+                startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, ((TargetDO) adapter.getItem(position)).getName()));
+            }
+        });
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(targetAdapter);
-        mHeaderAndFooterWrapper.addHeaderView(headerView);
-        recyclerView.setAdapter(mHeaderAndFooterWrapper);
+        targetAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(targetAdapter);
         recyclerView.setScrollViewCallbacks(this);
 
         fab.setOnClickListener(fabListener);
@@ -204,22 +201,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         return view;
     }
 
-    class TargetAdapter extends CommonAdapter<TargetDO> {
+    class TargetAdapter extends BaseQuickAdapter<TargetDO, BaseViewHolder> {
 
         int showRedoPlanCount = 3;
 
-        public TargetAdapter(Context context, int layoutId, List<TargetDO> datas) {
-            super(context, layoutId, datas);
+        public TargetAdapter(int layoutId, List<TargetDO> datas) {
+            super(layoutId, datas);
         }
 
         @Override
-        protected void convert(ViewHolder holder, final TargetDO targetDO, final int position) {
-            holder.setOnClickListener(R.id.rootView, new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
-                }
-            });
+        protected void convert(BaseViewHolder holder, final TargetDO targetDO) {
             holder.setText(R.id.title, targetDO.getName());
             LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
             if (linearLayout.getChildCount() <= 0) {
@@ -324,7 +315,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     }
 
     // Scale calendarRl
-    void animateCanlendarRl(int scrollY){
+    void animateCanlendarRl(int scrollY) {
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) * 1.3f / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
         ViewHelper.setPivotX(calendarRl, 0);
@@ -405,7 +396,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void reloadToolbar() {
-        if(toolbar != null) {
+        if (toolbar != null) {
             Logger.d(toolbar);
             setToolbar(toolbar, false);
         }
@@ -428,13 +419,12 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
-        targetAdapter.getDatas().addAll(targets);
-        targetAdapter.notifyDataSetChanged();
-        mHeaderAndFooterWrapper.notifyDataSetChanged();
+        targetAdapter.setNewData(targets);
     }
 
     @Override
-    public void createTargetSuccess(String targetName) {
-        startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetName));
+    public void createTargetSuccess(TargetDO targetDO) {
+        targetAdapter.addData(0, targetDO);
+        startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
     }
 }

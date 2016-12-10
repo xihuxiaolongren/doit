@@ -97,6 +97,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
         fab:menu_colorNormal="@color/accent"
+        fab:menu_colorPressed="@color/accent"
         fab:menu_fab_size="normal"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
@@ -118,7 +119,7 @@
             android:src="@drawable/menu_clock"
             fab:fab_colorNormal="@android:color/white"
             fab:fab_label="@string/alert"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"/>
 
     </com.github.clans.fab.FloatingActionMenu>
 

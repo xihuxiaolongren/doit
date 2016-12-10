@@ -257,7 +257,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                 return true;
             case R.id.action_add_alert:
                 startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
+                        .putExtra(EditAlertActivity.ARGUMENT_TARGET_NAME, targetName));
                 return true;
             case R.id.action_add_plan:
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
@@ -308,6 +308,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
             toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
             fab.setMenuButtonColorNormal(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
+            fab.setMenuButtonColorPressed(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
             redoPlanAdapter.notifyDataSetChanged();
             mHeaderAndFooterWrapper.notifyDataSetChanged();
 

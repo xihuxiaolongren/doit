@@ -1,7 +1,8 @@
 package me.xihuxiaolong.justdoit.common.event;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -34,6 +35,33 @@ public class Event {
 
         public UpdatePlan(PlanDO plan) {
             this.plan = plan;
+        }
+    }
+
+    public static class DeleteTarget {
+
+        public TargetDO targetDO;
+
+        public DeleteTarget(TargetDO targetDO) {
+            this.targetDO = targetDO;
+        }
+    }
+
+    public static class AddTarget {
+
+        public TargetDO targetDO;
+
+        public AddTarget(TargetDO targetDO) {
+            this.targetDO = targetDO;
+        }
+    }
+
+    public static class UpdateTarget {
+
+        public TargetDO targetDO;
+
+        public UpdateTarget(TargetDO targetDO) {
+            this.targetDO = targetDO;
         }
     }
 

@@ -3,11 +3,8 @@ package me.xihuxiaolong.justdoit.module.targetlist;
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
@@ -27,7 +24,7 @@ public class TargetListContract {
 
         void showTargets(List<TargetDO> targets);
 
-        void createTargetSuccess(String targetName);
+        void createTargetSuccess(TargetDO target);
 
     }
 

@@ -8,7 +8,7 @@ import android.graphics.Color;
 public class ColorUtils {
 
     public static final int blackColor = Color.parseColor("#000000");
-    public static final int grayColor = Color.parseColor("#999999");
+    public static final int grayColor = Color.parseColor("#333333");
     public static final int whiteColor = Color.parseColor("#ffffff");
 
     /**

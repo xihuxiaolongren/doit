@@ -28,7 +28,7 @@ public class EditAlertContract {
 
         void loadAlert();
 
-        void saveAlert(int hour, int minute, String content);
+        void saveAlert(int hour, int minute, String content, int repeatMode);
 
         void deleteAlert();
 

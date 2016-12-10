@@ -22,7 +22,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -51,7 +50,6 @@ import me.xihuxiaolong.justdoit.common.widget.StartAndEndTimeView;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
-import me.xihuxiaolong.library.utils.ToastUtil;
 import mehdi.sakout.fancybuttons.FancyButton;
 
 public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, EditPlanContract.IPresenter> implements EditPlanContract.IView, StartAndEndTimeView.StartAndEndListener, CalendarDatePickerDialogFragment.OnDateSetListener, RadialTimePickerDialogFragment.OnTimeSetListener {
@@ -70,8 +68,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     String targetName;
 
-    int selected = -1;
-    Integer[] selectedArr;
+    int repeatSelected = -1;
+    Integer[] repeatSelectedArr;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -142,10 +140,10 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         new MaterialDialog.Builder(EditPlanActivity.this)
                 .title("重复")
                 .items(R.array.repeat_arr)
-                .itemsCallbackSingleChoice(selected, new MaterialDialog.ListCallbackSingleChoice() {
+                .itemsCallbackSingleChoice(repeatSelected, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
-                        selected = which;
+                        repeatSelected = which;
                         switch (which) {
                             case 0:
                                 repeatDetailTV.setTag(which);
@@ -169,7 +167,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
         new MaterialDialog.Builder(EditPlanActivity.this)
                 .title("自定义重复日期")
                 .items(R.array.repeat_week_arr)
-                .itemsCallbackMultiChoice(selectedArr, new MaterialDialog.ListCallbackMultiChoice() {
+                .itemsCallbackMultiChoice(repeatSelectedArr, new MaterialDialog.ListCallbackMultiChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
                         return false;
@@ -179,9 +177,9 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        selectedArr = dialog.getSelectedIndices();
+                        repeatSelectedArr = dialog.getSelectedIndices();
                         repeatDetailTV.setText("");
-                        for (int i : selectedArr) {
+                        for (int i : repeatSelectedArr) {
                             CharSequence s = (getResources().getTextArray(R.array.repeat_week_arr))[i];
                             String ss = repeatDetailTV.getText().toString() + s + ",";
                             repeatDetailTV.setText(ss);
@@ -436,10 +434,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 ActivityUtils.hideSoftKeyboard(this);
                 if (TextUtils.isEmpty(contentET.getText()))
                     contentET.setError("计划不能为空");
-//                    ToastUtil.showToast(this, "不能保存一条空的计划", Toast.LENGTH_SHORT);
-//                    Snackbar.make(rootView, "不能保存一条空的计划", Snackbar.LENGTH_SHORT).show();
-                else if (!TextUtils.isEmpty(targetName) && selected == -1) {
-//                    ToastUtil.showToast(this, "", Toast.LENGTH_SHORT);
+                else if (!TextUtils.isEmpty(targetName) && repeatSelected == -1) {
                     Snackbar.make(rootView, "请选择重复模式", Snackbar.LENGTH_SHORT).setAction("确定", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -458,7 +453,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                         linkAppPackageName = appItem.getAppPackageName();
                     }
                     int repeatMode = 0;
-                    switch (selected) {
+                    switch (repeatSelected) {
                         case 0:
                             for (int i = 0; i < 7; ++i)
                                 repeatMode |= 1 << i;
@@ -468,7 +463,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                                 repeatMode |= 1 << i;
                             break;
                         case 2:
-                            for (int i : selectedArr) {
+                            for (int i : repeatSelectedArr) {
                                 repeatMode |= 1 << i;
                             }
                             break;

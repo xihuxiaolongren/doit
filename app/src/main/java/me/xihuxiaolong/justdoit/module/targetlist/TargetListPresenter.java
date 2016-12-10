@@ -2,6 +2,9 @@ package me.xihuxiaolong.justdoit.module.targetlist;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +13,7 @@ import javax.inject.Inject;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.library.utils.NumberUtils;
 
 /**
@@ -25,6 +29,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
 
     @Inject
     public TargetListPresenter() {
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -54,8 +59,23 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         TargetDO targetDO = new TargetDO();
         targetDO.setName(name);
         redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
-        if(isViewAttached())
-            getView().createTargetSuccess(name);
+        if(isViewAttached()) {
+            getView().createTargetSuccess(targetDO);
+        }
     }
 
+    @Subscribe
+    public void onEvent(Event.AddTarget addTargetEvent) {
+        loadTargets();
+    }
+
+    @Subscribe
+    public void onEvent(Event.UpdateTarget updateTargetEvent) {
+        loadTargets();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeleteTarget deleteTargetEvent) {
+        loadTargets();
+    }
 }

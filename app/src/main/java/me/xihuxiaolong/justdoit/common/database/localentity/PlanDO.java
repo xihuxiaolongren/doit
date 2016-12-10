@@ -2,9 +2,12 @@ package me.xihuxiaolong.justdoit.common.database.localentity;
 
 //import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Transient;
 
 /**
@@ -13,7 +16,7 @@ import org.greenrobot.greendao.annotation.Transient;
  * Date: 16/8/8.
  */
 @Entity
-public class PlanDO {
+public class PlanDO implements MultiItemEntity{
 
     public final static int TYPE_PLAN = 0;
     public final static int TYPE_ALERT = 1;
@@ -210,4 +213,9 @@ public class PlanDO {
         this.dayTime = dayTime;
     }
 
+    @Keep
+    @Override
+    public int getItemType() {
+        return type;
+    }
 }
