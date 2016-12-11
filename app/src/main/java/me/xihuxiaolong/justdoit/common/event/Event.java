@@ -2,7 +2,6 @@ package me.xihuxiaolong.justdoit.common.event;
 
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,28 +39,28 @@ public class Event {
 
     public static class DeleteTarget {
 
-        public TargetDO targetDO;
+        public String targetName;
 
-        public DeleteTarget(TargetDO targetDO) {
-            this.targetDO = targetDO;
+        public DeleteTarget(String targetName) {
+            this.targetName = targetName;
         }
     }
 
     public static class AddTarget {
 
-        public TargetDO targetDO;
+        public String targetName;
 
-        public AddTarget(TargetDO targetDO) {
-            this.targetDO = targetDO;
+        public AddTarget(String targetName) {
+            this.targetName = targetName;
         }
     }
 
     public static class UpdateTarget {
 
-        public TargetDO targetDO;
+        public String targetName;
 
-        public UpdateTarget(TargetDO targetDO) {
-            this.targetDO = targetDO;
+        public UpdateTarget(String targetName) {
+            this.targetName = targetName;
         }
     }
 

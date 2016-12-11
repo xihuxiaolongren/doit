@@ -1,13 +1,13 @@
 package me.xihuxiaolong.justdoit.module.editplan;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -78,6 +78,8 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
             plan.setId(planId);
             EventBus.getDefault().post(new Event.AddPlan(plan));
         }
+        if(!TextUtils.isEmpty(targetName))
+            EventBus.getDefault().post(new Event.UpdateTarget(targetName));
         if(isViewAttached())
             getView().savePlanSuccess();
 

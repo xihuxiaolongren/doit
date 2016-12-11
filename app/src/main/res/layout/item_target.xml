@@ -7,7 +7,6 @@
     android:layout_marginBottom="10dp"
     android:layout_marginLeft="14dp"
     android:layout_marginRight="14dp"
-    android:background="#9CD0EE"
     card_view:cardBackgroundColor="@color/sky"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="2dp"
@@ -26,6 +25,7 @@
             android:src="@drawable/bg_target" />
 
         <ImageView
+            android:id="@+id/bgIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/contentRL"
@@ -46,7 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:textAppearance="@style/MyTextAppearance.Body3"
+                android:textAppearance="@style/MyTextAppearance.BodyLarge"
                 android:textSize="18sp" />
 
             <LinearLayout

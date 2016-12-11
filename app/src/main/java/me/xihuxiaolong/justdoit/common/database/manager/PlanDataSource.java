@@ -88,6 +88,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
                 RedoPlanDO redoPlanDO = gson.fromJson(gson.toJson(planDO), RedoPlanDO.class);
                 redoPlanDO.setRepeatMode(planDO.getTempRepeatmode());
                 redoPlanDO.setTargetName(targetName);
+                redoPlanDO.setPlanType(planDO.getType());
                 redoPlanDataSource.insertOrReplaceRedoPlanDO(redoPlanDO);
             }
             if(!TextUtils.isEmpty(planDO.getTags())){
@@ -137,9 +138,9 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
     public int createOneDayPlanDOs(Long dayTime) {
         List<RedoPlanDO> redoPlanDOs = redoPlanDataSource.listRedoPlanDOs();
         List<PlanDO> planDOs = new ArrayList<>();
-        int week = new DateTime(dayTime).getDayOfWeek();
+        int weekDay = new DateTime(dayTime).getDayOfWeek();
         for(RedoPlanDO redoPlanDO : redoPlanDOs){
-            if(inRedoDayTime(week, redoPlanDO.getRepeatMode())){
+            if(inRedoDayTime(weekDay, redoPlanDO.getRepeatMode())){
                 Gson gson = new Gson();
                 PlanDO planDO = gson.fromJson(gson.toJson(redoPlanDO), PlanDO.class);
                 planDO.setId(null);
@@ -151,8 +152,8 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         return planDOs.size();
     }
 
-    private boolean inRedoDayTime(int week, int repeatMode){
-        return (repeatMode & (1L << (week - 1))) != 0;
+    private boolean inRedoDayTime(int weekDay, int repeatMode){
+        return (repeatMode & (1L << (weekDay - 1))) != 0;
     }
 
     @Override

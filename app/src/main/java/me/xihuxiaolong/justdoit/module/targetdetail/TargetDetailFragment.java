@@ -1,6 +1,5 @@
 package me.xihuxiaolong.justdoit.module.targetdetail;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -25,6 +24,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -33,11 +34,11 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
-import com.zhy.adapter.recyclerview.CommonAdapter;
-import com.zhy.adapter.recyclerview.base.ViewHolder;
-import com.zhy.adapter.recyclerview.wrapper.HeaderAndFooterWrapper;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,9 +51,10 @@ import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
+import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
+import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
@@ -66,25 +68,24 @@ import me.xihuxiaolongren.photoga.MediaChoseActivity;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, PlanListWrapper.PlanListOnClickListener{
+public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, NewPlanListWrapper.PlanListOnClickListener{
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
     public static final String ARG_TARGET_NAME = "targetName";
+
+    private String targetName;
+
+    TargetDetailComponent targetDetailComponent;
+
     @BindView(R.id.headerFL)
     FrameLayout headerFL;
     @BindView(R.id.headerCV)
     CardView headerCV;
     @BindView(R.id.headerEmptyShadowFL)
     FrameLayout headerEmptyShadowFL;
-
-    private String targetName;
-
-    TargetDetailComponent targetDetailComponent;
-
     @BindView(R.id.recyclerView)
     ObservableRecyclerView recyclerView;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.recycler_background)
@@ -118,7 +119,6 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     int vibrant, titleColor, textColor;
 
     RedoPlanAdapter redoPlanAdapter;
-    HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
     ScrollListener scrollListener;
 
@@ -140,10 +140,6 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                 .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
                 .targetDetailModule(new TargetDetailModule(targetName))
                 .build();
-    }
-
-    public void setScrollListener(ScrollListener scrollListener) {
-        this.scrollListener = scrollListener;
     }
 
     @Override
@@ -195,30 +191,41 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        redoPlanAdapter = new RedoPlanAdapter(getContext(), R.layout.item_redo_plan_detail, new ArrayList<RedoPlanDO>());
+        redoPlanAdapter = new RedoPlanAdapter(R.layout.item_redo_plan_detail, new ArrayList<RedoPlanDO>());
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_detail_header, recyclerView, false);
-        mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(redoPlanAdapter);
-        mHeaderAndFooterWrapper.addHeaderView(headerView);
-        recyclerView.setAdapter(mHeaderAndFooterWrapper);
+        redoPlanAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(redoPlanAdapter);
         recyclerView.setScrollViewCallbacks(this);
 
         return view;
     }
 
-    class RedoPlanAdapter extends CommonAdapter<RedoPlanDO> {
+    class RedoPlanAdapter extends BaseQuickAdapter<RedoPlanDO, BaseViewHolder> {
 
-        public RedoPlanAdapter(Context context, int layoutId, List<RedoPlanDO> datas) {
-            super(context, layoutId, datas);
+        public RedoPlanAdapter(int layoutId, List<RedoPlanDO> datas) {
+            super(layoutId, datas);
         }
 
         @Override
-        protected void convert(ViewHolder holder, RedoPlanDO redoPlanDO, final int position) {
-            holder.setBackgroundColor(R.id.rootView, vibrant);
-            holder.setTextColor(R.id.title_tv, textColor);
-            holder.setTextColor(R.id.persist_tv, textColor);
-            holder.setTextColor(R.id.redo_tv, textColor);
-            holder.setTextColor(R.id.time_tv, textColor);
-            holder.setText(R.id.title_tv, redoPlanDO.getContent());
+        protected void convert(BaseViewHolder holder, RedoPlanDO redoPlanDO) {
+            DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
+            DateTime startTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getStartHour(), redoPlanDO.getStartMinute(), 0, 0);
+            DateTime endTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getEndHour(), redoPlanDO.getEndMinute(), 0, 0);
+            holder.setBackgroundColor(R.id.rootView, vibrant)
+                    .setTextColor(R.id.title_tv, textColor)
+                    .setTextColor(R.id.persist_tv, textColor)
+                    .setTextColor(R.id.redo_tv, textColor)
+                    .setTextColor(R.id.time_tv, textColor)
+                    .setText(R.id.title_tv, redoPlanDO.getContent())
+                    .setText(R.id.persist_tv, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays()  + " 天")
+                    .setText(R.id.redo_tv, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
+            if(PlanDO.TYPE_PLAN == redoPlanDO.getPlanType()){
+                holder.setText(R.id.time_tv, startTime.toString(builder) + " - " + endTime.toString(builder));
+                holder.setImageResource(R.id.typeIV, R.drawable.icon_plan);
+            }else if(PlanDO.TYPE_ALERT == redoPlanDO.getPlanType()){
+                holder.setText(R.id.time_tv, startTime.toString(builder));
+                holder.setImageResource(R.id.typeIV, R.drawable.icon_alert);
+            }
         }
     }
 
@@ -310,7 +317,6 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             fab.setMenuButtonColorNormal(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
             fab.setMenuButtonColorPressed(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
             redoPlanAdapter.notifyDataSetChanged();
-            mHeaderAndFooterWrapper.notifyDataSetChanged();
 
             setAllMenuColor(menu, toolbar, imageTextColor);
         } catch (Exception e) {
@@ -463,9 +469,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     public void showTarget(final TargetDO targetDO) {
         if (targetDO != null) {
             setHeaderIV(targetDO.getHeaderImageUri());
-            redoPlanAdapter.getDatas().addAll(targetDO.getRedoPlanDOList());
-            redoPlanAdapter.notifyDataSetChanged();
-            mHeaderAndFooterWrapper.notifyDataSetChanged();
+            redoPlanAdapter.setNewData(targetDO.getRedoPlanDOList());
         }
     }
 

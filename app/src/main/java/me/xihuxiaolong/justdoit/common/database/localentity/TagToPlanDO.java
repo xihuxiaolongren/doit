@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.common.database.localentity;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
 /**
@@ -12,12 +11,12 @@ import org.greenrobot.greendao.annotation.Generated;
 @Entity
 public class TagToPlanDO {
 
-    private long planId;
+    private Long planId;
 
     private String tagName;
 
-    @Generated(hash = 1205280131)
-    public TagToPlanDO(long planId, String tagName) {
+    @Generated(hash = 226136809)
+    public TagToPlanDO(Long planId, String tagName) {
         this.planId = planId;
         this.tagName = tagName;
     }
@@ -26,19 +25,19 @@ public class TagToPlanDO {
     public TagToPlanDO() {
     }
 
-    public long getPlanId() {
-        return this.planId;
-    }
-
-    public void setPlanId(long planId) {
-        this.planId = planId;
-    }
-
     public String getTagName() {
         return this.tagName;
     }
 
     public void setTagName(String tagName) {
         this.tagName = tagName;
+    }
+
+    public void setPlanId(Long planId) {
+        this.planId = planId;
+    }
+
+    public Long getPlanId() {
+        return this.planId;
     }
 }

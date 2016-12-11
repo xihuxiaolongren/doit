@@ -82,7 +82,7 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
-        List<RedoPlanDO> redoPlanDOs = daoSession.getRedoPlanDODao().queryBuilder().where(RedoPlanDODao.Properties.TargetName.eq(targetName)).orderAsc(RedoPlanDODao.Properties.CreatedTime).list();
+        List<RedoPlanDO> redoPlanDOs = daoSession.getRedoPlanDODao().queryBuilder().where(RedoPlanDODao.Properties.TargetName.eq(targetName)).orderDesc(RedoPlanDODao.Properties.CreatedTime).list();
 
         clear(daoSession, database);
         return redoPlanDOs;
@@ -106,7 +106,7 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
-        if (targetDO.getName() == null) {
+        if (targetDO.getCreatedTime() == null) {
             targetDO.setCreatedTime(System.currentTimeMillis());
         }
         targetDO.setModifiedTime(System.currentTimeMillis());

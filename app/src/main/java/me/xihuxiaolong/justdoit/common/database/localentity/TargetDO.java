@@ -18,8 +18,8 @@ public class TargetDO {
     @Id
     private String name;
 
-    private long createdTime;
-    private long modifiedTime;
+    private Long createdTime;
+    private Long modifiedTime;
 
     private String headerImageUri;
 
@@ -28,8 +28,8 @@ public class TargetDO {
     @Transient
     private List<RedoPlanDO> redoPlanDOList;
 
-    @Generated(hash = 848272262)
-    public TargetDO(String name, long createdTime, long modifiedTime,
+    @Generated(hash = 1388450240)
+    public TargetDO(String name, Long createdTime, Long modifiedTime,
             String headerImageUri, int count) {
         this.name = name;
         this.createdTime = createdTime;
@@ -66,27 +66,27 @@ public class TargetDO {
         this.redoPlanDOList = redoPlanDOList;
     }
 
-    public long getCreatedTime() {
-        return this.createdTime;
-    }
-
-    public void setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public long getModifiedTime() {
-        return this.modifiedTime;
-    }
-
-    public void setModifiedTime(long modifiedTime) {
-        this.modifiedTime = modifiedTime;
-    }
-
     public String getHeaderImageUri() {
         return this.headerImageUri;
     }
 
     public void setHeaderImageUri(String headerImageUri) {
         this.headerImageUri = headerImageUri;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setModifiedTime(Long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public Long getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public Long getModifiedTime() {
+        return this.modifiedTime;
     }
 }

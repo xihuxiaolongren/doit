@@ -35,6 +35,9 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +46,10 @@ import butterknife.ButterKnife;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
+import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
+import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
+import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
@@ -185,15 +191,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         targetAdapter = new TargetAdapter(R.layout.item_target, new ArrayList<TargetDO>());
+        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
+        targetAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(targetAdapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
                 startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, ((TargetDO) adapter.getItem(position)).getName()));
             }
         });
-        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
-        targetAdapter.addHeaderView(headerView);
-        recyclerView.setAdapter(targetAdapter);
         recyclerView.setScrollViewCallbacks(this);
 
         fab.setOnClickListener(fabListener);
@@ -201,7 +207,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         return view;
     }
 
-    class TargetAdapter extends BaseQuickAdapter<TargetDO, BaseViewHolder> {
+    class TargetAdapter extends BaseQuickAdapter<TargetDO, TargetAdapter.TargetViewHolder> {
 
         int showRedoPlanCount = 3;
 
@@ -210,20 +216,49 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         }
 
         @Override
-        protected void convert(BaseViewHolder holder, final TargetDO targetDO) {
+        protected void convert(TargetViewHolder holder, final TargetDO targetDO) {
             holder.setText(R.id.title, targetDO.getName());
+            ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.bgIV), targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
             LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
             if (linearLayout.getChildCount() <= 0) {
                 for (int i = 0; i < showRedoPlanCount; i++) {
                     View redoView = LayoutInflater.from(getContext()).inflate(R.layout.item_redo_plan, linearLayout, false);
+                    holder.addRedoPlanItem(new BaseViewHolder(redoView));
                     linearLayout.addView(redoView);
                 }
             }
             int redoSize = CollectionUtils.isEmpty(targetDO.getRedoPlanDOList()) ? 0 : targetDO.getRedoPlanDOList().size();
             for (int i = 0; i < showRedoPlanCount; i++) {
-                View redoView = linearLayout.getChildAt(i);
-                redoView.setVisibility(i < redoSize ? View.VISIBLE : View.GONE);
+                BaseViewHolder redoPlanViewHolder = holder.redoPlanItems.get(i);
+                if(i < redoSize){
+                    redoPlanViewHolder.setVisible(R.id.redoLL, true);
+                    RedoPlanDO redoPlanDO = targetDO.getRedoPlanDOList().get(i);
+                    redoPlanViewHolder.setText(R.id.redoTitleTV, redoPlanDO.getContent());
+                    redoPlanViewHolder.setText(R.id.redoModeTV, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
+                    redoPlanViewHolder.setText(R.id.lastTimeTV, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays()  + " 天") ;
+                }else{
+                    redoPlanViewHolder.setVisible(R.id.redoLL, false);
+                }
             }
+        }
+
+        @Override
+        protected TargetViewHolder createBaseViewHolder(View view) {
+            return new TargetViewHolder(view);
+        }
+
+        public class TargetViewHolder extends BaseViewHolder {
+
+            public List<BaseViewHolder> redoPlanItems = new ArrayList<>();
+
+            public TargetViewHolder(View view) {
+                super(view);
+            }
+
+            public void addRedoPlanItem(BaseViewHolder redoPlanViewHolder){
+                redoPlanItems.add(redoPlanViewHolder);
+            }
+
         }
     }
 

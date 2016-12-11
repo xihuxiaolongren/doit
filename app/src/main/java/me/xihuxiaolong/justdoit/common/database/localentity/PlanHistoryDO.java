@@ -14,12 +14,12 @@ public class PlanHistoryDO {
 
     @Id(autoincrement = true)
     private Long id;
-    private long dayTime;
+    private Long dayTime;
     private int planCount;
     private int alertCount;
     private int photoCount;
-    @Generated(hash = 56999003)
-    public PlanHistoryDO(Long id, long dayTime, int planCount, int alertCount,
+    @Generated(hash = 1536677951)
+    public PlanHistoryDO(Long id, Long dayTime, int planCount, int alertCount,
             int photoCount) {
         this.id = id;
         this.dayTime = dayTime;
@@ -59,6 +59,9 @@ public class PlanHistoryDO {
     }
     public void setPhotoCount(int photoCount) {
         this.photoCount = photoCount;
+    }
+    public void setDayTime(Long dayTime) {
+        this.dayTime = dayTime;
     }
     
 

@@ -3,7 +3,6 @@ package me.xihuxiaolong.justdoit.common.database.localentity;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,8 +14,8 @@ public class RedoPlanDO {
 
     @Id(autoincrement = true)
     private Long id;
-    private long createdTime;
-    private long modifiedTime;
+    private Long createdTime;
+    private Long modifiedTime;
 
     /**
      * 以星期为重复周期,0-6位表示周- 到 周日是否重复
@@ -45,8 +44,8 @@ public class RedoPlanDO {
 
     private String targetName;
 
-    @Generated(hash = 1824583652)
-    public RedoPlanDO(Long id, long createdTime, long modifiedTime, int repeatMode,
+    @Generated(hash = 251670105)
+    public RedoPlanDO(Long id, Long createdTime, Long modifiedTime, int repeatMode,
             int planType, String title, String content, String tags, String linkAppName,
             String linkAppPackageName, int startTime, int startHour, int startMinute,
             int endTime, int endHour, int endMinute, long dayTime, String targetName) {
@@ -77,18 +76,6 @@ public class RedoPlanDO {
     }
     public void setId(Long id) {
         this.id = id;
-    }
-    public long getCreatedTime() {
-        return this.createdTime;
-    }
-    public void setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
-    }
-    public long getModifiedTime() {
-        return this.modifiedTime;
-    }
-    public void setModifiedTime(long modifiedTime) {
-        this.modifiedTime = modifiedTime;
     }
     public int getPlanType() {
         return this.planType;
@@ -179,6 +166,18 @@ public class RedoPlanDO {
     }
     public void setTargetName(String targetName) {
         this.targetName = targetName;
+    }
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+    public void setModifiedTime(Long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+    public Long getCreatedTime() {
+        return this.createdTime;
+    }
+    public Long getModifiedTime() {
+        return this.modifiedTime;
     }
 
 }

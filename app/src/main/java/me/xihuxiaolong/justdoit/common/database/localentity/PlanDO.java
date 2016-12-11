@@ -24,8 +24,8 @@ public class PlanDO implements MultiItemEntity{
 
     @Id(autoincrement = true)
     private Long id;
-    private long createdTime;
-    private long modifiedTime;
+    private Long createdTime;
+    private Long modifiedTime;
 
     private int type;
 
@@ -50,11 +50,11 @@ public class PlanDO implements MultiItemEntity{
     @Transient
     private int tempRepeatmode;
 
-    @Generated(hash = 789130426)
-    public PlanDO(Long id, long createdTime, long modifiedTime, int type,
-            String title, String content, String tags, String linkAppName,
-            String linkAppPackageName, int startTime, int startHour,
-            int startMinute, int endTime, int endHour, int endMinute, long dayTime) {
+    @Generated(hash = 804775670)
+    public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, String title,
+            String content, String tags, String linkAppName, String linkAppPackageName,
+            int startTime, int startHour, int startMinute, int endTime, int endHour,
+            int endMinute, long dayTime) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -91,22 +91,6 @@ public class PlanDO implements MultiItemEntity{
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public long getCreatedTime() {
-        return this.createdTime;
-    }
-
-    public void setCreatedTime(long createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public long getModifiedTime() {
-        return this.modifiedTime;
-    }
-
-    public void setModifiedTime(long modifiedTime) {
-        this.modifiedTime = modifiedTime;
     }
 
     public int getType() {
@@ -217,5 +201,21 @@ public class PlanDO implements MultiItemEntity{
     @Override
     public int getItemType() {
         return type;
+    }
+
+    public void setCreatedTime(Long createdTime) {
+        this.createdTime = createdTime;
+    }
+
+    public void setModifiedTime(Long modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
+
+    public Long getCreatedTime() {
+        return this.createdTime;
+    }
+
+    public Long getModifiedTime() {
+        return this.modifiedTime;
     }
 }

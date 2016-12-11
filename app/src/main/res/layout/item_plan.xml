@@ -35,7 +35,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="2dp"
                 android:text="Done"
-                android:textAppearance="@style/MyTextAppearance.Body1"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
                 android:textSize="14sp" />
 
             <TextView
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="7 : 30"
-                android:textAppearance="@style/MyTextAppearance.Body1" />
+                android:textAppearance="@style/MyTextAppearance.BodyNormal" />
 
             <TextView
                 android:id="@+id/periodTV"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="|        "
-                android:textAppearance="@style/MyTextAppearance.Body1"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
                 android:textSize="10sp" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="10 : 00"
-                android:textAppearance="@style/MyTextAppearance.Body1" />
+                android:textAppearance="@style/MyTextAppearance.BodyNormal" />
 
         </LinearLayout>
     </FrameLayout>
@@ -91,7 +91,7 @@
             android:layout_marginBottom="20dp"
             android:gravity="center_vertical"
             android:paddingRight="15dp"
-            android:textAppearance="@style/MyTextAppearance.Body1" />
+            android:textAppearance="@style/MyTextAppearance.BodyNormal" />
 
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/linkAppFB"

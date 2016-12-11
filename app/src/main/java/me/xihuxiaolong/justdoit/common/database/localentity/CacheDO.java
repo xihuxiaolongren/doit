@@ -17,12 +17,12 @@ public class CacheDO {
 
     private String value;
 
-    private long createTime;
+    private Long createTime;
 
     private int expire;
 
-    @Generated(hash = 1255356223)
-    public CacheDO(String key, String value, long createTime, int expire) {
+    @Generated(hash = 615759278)
+    public CacheDO(String key, String value, Long createTime, int expire) {
         this.key = key;
         this.value = value;
         this.createTime = createTime;
@@ -49,20 +49,20 @@ public class CacheDO {
         this.value = value;
     }
 
-    public long getCreateTime() {
-        return this.createTime;
-    }
-
-    public void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
     public int getExpire() {
         return this.expire;
     }
 
     public void setExpire(int expire) {
         this.expire = expire;
+    }
+
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
+
+    public Long getCreateTime() {
+        return this.createTime;
     }
 
 }

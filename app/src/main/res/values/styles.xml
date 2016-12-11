@@ -22,7 +22,7 @@
         <item name="android:textSize">@dimen/title_size</item>
     </style>
 
-    <style name="MyTextAppearance.Body1" parent="Base.TextAppearance.AppCompat">
+    <style name="MyTextAppearance.BodyNormal" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/contentTextSize</item>
         <item name="android:textColor">@color/titleTextColor</item>
         <item name="android:shadowColor">@color/shadowColor</item>
@@ -31,13 +31,7 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
-    <style name="MyTextAppearance.Bottom" parent="Base.TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/contentTextSize</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:maxLines">1</item>
-    </style>
-
-    <style name="MyTextAppearance.Body2" parent="Base.TextAppearance.AppCompat">
+    <style name="MyTextAppearance.BodySmall" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/contentSmallTextSize</item>
         <item name="android:textColor">@color/titleTextColor</item>
         <item name="android:shadowColor">@color/shadowColor</item>
@@ -46,7 +40,7 @@
         <item name="android:shadowRadius">1</item>
     </style>
 
-    <style name="MyTextAppearance.Body3" parent="Base.TextAppearance.AppCompat">
+    <style name="MyTextAppearance.BodyLarge" parent="Base.TextAppearance.AppCompat">
         <item name="android:textSize">@dimen/contentLargeTextSize</item>
         <item name="android:textColor">@color/titleTextColor</item>
         <item name="android:shadowColor">@color/shadowColor</item>
@@ -62,6 +56,12 @@
         <item name="android:shadowDx">1</item>
         <item name="android:shadowDy">1</item>
         <item name="android:shadowRadius">1</item>
+    </style>
+
+    <style name="MyTextAppearance.Bottom" parent="Base.TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/contentTextSize</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="Theme.AppCompat.DayNight.NoActionBar">

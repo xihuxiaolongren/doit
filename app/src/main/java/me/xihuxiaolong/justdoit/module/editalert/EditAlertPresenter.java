@@ -1,6 +1,7 @@
 package me.xihuxiaolong.justdoit.module.editalert;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
@@ -82,6 +83,8 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
             alert.setId(alertId);
             EventBus.getDefault().post(new Event.AddPlan(alert));
         }
+        if(!TextUtils.isEmpty(targetName))
+            EventBus.getDefault().post(new Event.UpdateTarget(targetName));
         if(isViewAttached())
             getView().saveSuccess();
     }

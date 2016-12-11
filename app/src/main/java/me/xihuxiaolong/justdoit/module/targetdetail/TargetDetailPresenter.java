@@ -2,10 +2,14 @@ package me.xihuxiaolong.justdoit.module.targetdetail;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,7 +17,7 @@ import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
  * Date: 16/9/27.
  */
 
-public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract.IView> implements TargetDetailContract.IPresenter{
+public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract.IView> implements TargetDetailContract.IPresenter {
 
     @Inject
     String targetName;
@@ -25,6 +29,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
 
     @Inject
     public TargetDetailPresenter() {
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -37,12 +42,23 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
 
     @Override
     public void updateTarget(String headerImageUri) {
-        if(targetDO != null) {
+        if (targetDO != null) {
             targetDO.setHeaderImageUri(headerImageUri);
             redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+            EventBus.getDefault().post(new Event.UpdateTarget(targetName));
             if (isViewAttached())
                 getView().updateTargetSuccess();
         }
+    }
+
+    @Subscribe
+    public void onEvent(Event.UpdateTarget updateTargetEvent) {
+        loadTarget();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeleteTarget deleteTargetEvent) {
+        loadTarget();
     }
 
 }
