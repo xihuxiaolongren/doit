@@ -26,6 +26,7 @@
 
         <ImageView
             android:id="@+id/bgIV"
+            android:transitionName="targetIV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/contentRL"
@@ -43,6 +44,7 @@
 
             <TextView
                 android:id="@+id/title"
+                android:transitionName="targetTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"

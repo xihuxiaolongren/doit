@@ -25,7 +25,7 @@
             android:layout_marginRight="-15dp"
             android:layout_marginTop="-12dp"
             android:background="@drawable/target_bg_shadow"
-            android:paddingBottom="12dp"/>
+            android:paddingBottom="12dp" />
 
         <android.support.v7.widget.CardView
             android:id="@+id/headerCV"
@@ -34,17 +34,18 @@
             android:layout_marginLeft="-10dp"
             android:layout_marginRight="-10dp"
             android:layout_marginTop="-12dp"
+            android:visibility="gone"
             card_view:cardCornerRadius="0dp"
             card_view:cardElevation="8dp"
-            card_view:cardUseCompatPadding="true"
-            android:visibility="gone">
+            card_view:cardUseCompatPadding="true">
 
             <ImageView
                 android:id="@+id/headerIV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/test_bg_target"/>
+                android:src="@drawable/test_bg_target"
+                android:transitionName="targetIV" />
         </android.support.v7.widget.CardView>
 
     </FrameLayout>
@@ -67,7 +68,7 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingBottom="50dp"/>
+            android:paddingBottom="50dp" />
     </FrameLayout>
 
     <android.support.v7.widget.Toolbar
@@ -86,9 +87,9 @@
         android:shadowColor="@color/shadowColor"
         android:shadowDy="1"
         android:shadowRadius="1"
-        android:text="减掉小肚子"
         android:textColor="@color/titleTextColor"
-        android:textSize="@dimen/title_size" />
+        android:textSize="@dimen/title_size"
+        android:transitionName="targetTitle" />
 
     <com.github.clans.fab.FloatingActionMenu
         android:id="@+id/fab"
@@ -119,7 +120,7 @@
             android:src="@drawable/menu_clock"
             fab:fab_colorNormal="@android:color/white"
             fab:fab_label="@string/alert"
-            fab:fab_size="mini"/>
+            fab:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>
 

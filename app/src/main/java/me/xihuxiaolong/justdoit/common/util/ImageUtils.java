@@ -26,7 +26,7 @@ public class ImageUtils {
 
     public ImageUtils(){}
 
-    static int defaultPlaceholderId = me.xihuxiaolong.library.R.drawable.placeholder;
+    static int defaultPlaceholderId = -1;
 
     public static void loadImageFromUrl(Context context, String url, ImageView view) {
         loadImage(context, view, url, null, defaultPlaceholderId, DiskCacheStrategy.SOURCE);

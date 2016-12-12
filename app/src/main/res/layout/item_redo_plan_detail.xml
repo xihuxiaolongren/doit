@@ -9,7 +9,6 @@
     android:layout_marginRight="14dp"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:background="#9CD0EE"
     card_view:cardBackgroundColor="@color/sky"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="2dp"

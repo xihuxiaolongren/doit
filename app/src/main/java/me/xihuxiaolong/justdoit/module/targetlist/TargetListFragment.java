@@ -7,10 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -197,7 +200,18 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, ((TargetDO) adapter.getItem(position)).getName()));
+                TargetDO targetDO = ((TargetDO) adapter.getItem(position));
+                Intent intent = new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName());
+                if (!TextUtils.isEmpty(targetDO.getHeaderImageUri()) && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    View view1 = view.findViewById(R.id.bgIV);
+//                    View view2 = view.findViewById(R.id.title);
+                    Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
+//                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1);
+                    startActivity(intent, options.toBundle());
+                }else {
+                    startActivity(intent);
+                }
             }
         });
         recyclerView.setScrollViewCallbacks(this);

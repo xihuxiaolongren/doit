@@ -217,7 +217,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                     .setTextColor(R.id.redo_tv, textColor)
                     .setTextColor(R.id.time_tv, textColor)
                     .setText(R.id.title_tv, redoPlanDO.getContent())
-                    .setText(R.id.persist_tv, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays()  + " 天")
+                    .setText(R.id.persist_tv, "已持续 " + Days.daysBetween(new DateTime(redoPlanDO.getCreatedTime()), DateTime.now()).getDays()  + " 天")
                     .setText(R.id.redo_tv, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
             if(PlanDO.TYPE_PLAN == redoPlanDO.getPlanType()){
                 holder.setText(R.id.time_tv, startTime.toString(builder) + " - " + endTime.toString(builder));
@@ -248,7 +248,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().finish();
+//                getActivity().supportFinishAfterTransition();
+                getActivity().onBackPressed();
                 return true;
             case R.id.action_set_image:
                 Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
