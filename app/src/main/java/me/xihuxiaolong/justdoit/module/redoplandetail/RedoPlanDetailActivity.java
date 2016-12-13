@@ -85,6 +85,8 @@ public class RedoPlanDetailActivity extends BaseMvpActivity<RedoPlanContract.IVi
             public void onClick(View view) {
                 MaterialDialog materialDialog = new MaterialDialog.Builder(RedoPlanDetailActivity.this)
                         .content("确认删除该" + typeText + "吗？")
+                        .backgroundColor(vibrant)
+                        .contentColor(textColor)
                         .negativeText("取消")
                         .positiveText("确定")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
