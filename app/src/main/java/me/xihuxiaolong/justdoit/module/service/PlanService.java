@@ -1,16 +1,15 @@
 package me.xihuxiaolong.justdoit.module.service;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.RemoteViews;
+
+import com.orhanobut.logger.Logger;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
@@ -18,14 +17,13 @@ import me.xihuxiaolong.justdoit.module.main.MainActivity;
 
 public class PlanService extends Service {
 
-    public static final String ALARM_ALERT_ACTION = "me.xihuxiaolong.justdoit.ALARM_ALERT";
-    public static final int CLOSE_NOTIFY = 1;
+    public static final int CLOSE_NOTIFY = 10;
 
     public class LocalBinder extends Binder {
         public String stringToSend = "I'm the test String";
 
         public PlanService getService() {
-            Log.i("TAG", "getService ---> " + PlanService.this);
+            Logger.i("TAG getService ---> " + PlanService.this);
             return PlanService.this;
         }
     }
@@ -35,7 +33,7 @@ public class PlanService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
-        Log.i("TAG", "onBind~~~~~~~~~~~~");
+        Logger.i("TAG onBind~~~~~~~~~~~~");
         return mBinder;
     }
 
@@ -44,31 +42,33 @@ public class PlanService extends Service {
         // TODO Auto-generated method stub
         super.onCreate();
 
-        Log.i("TAG", "onCreate~~~~~~~~~~");
+        Logger.e("TAG onCreate~~~~~~~~~~");
     }
 
     @Override
     public void onDestroy() {
         // TODO Auto-generated method stub
+        stopForeground(true);
         super.onDestroy();
-        Log.i("TAG", "onDestroy~~~~~~~~~~~");
+        Logger.e("TAG onDestroy~~~~~~~~~~~");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO Auto-generated method stub
-        Log.i("TAG", "onStartCommand~~~~~~~~~~~~");
+        Logger.e("TAG onStartCommand~~~~~~~~~~~~");
+        sendNotification();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public boolean onUnbind(Intent intent) {
         // TODO Auto-generated method stub
-        Log.i("TAG", "onUnbind~~~~~~~~~~~~~~~~");
+        Logger.e("TAG onUnbind~~~~~~~~~~~~~~~~");
         return super.onUnbind(intent);
     }
 
-    public void sendNotification(){
+    private void sendNotification(){
         //当前版本remoteView 无法自动识别到夜间模式的资源目录
         RemoteViews remoteViewBig;
         RemoteViews remoteViewNormal;
@@ -95,13 +95,14 @@ public class PlanService extends Service {
         Notification notification = new NotificationCompat.Builder(this)
                 .setCustomBigContentView(remoteViewBig)
                 .setContent(remoteViewNormal)
+                .setPriority(2)
 //                .setLargeIcon(ContextCompat.getDrawable(this, R.drawable.icon_launcher))
                 .setSmallIcon(R.drawable.icon_small_notify).build();
-        NotificationManager notifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        NotificationManager notifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //第一个状态保证在top位置,第二个状态保证常驻
-        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR | Notification.FLAG_FOREGROUND_SERVICE;
         //        int notificationId = new Random().nextInt();
-        int notificationId = 0; //id相同的notification只会保留一个,并且会更新该通知栏
-        notifyMgr.notify(notificationId, notification);
+//        notifyMgr.notify(notificationId, notification);
+        startForeground(110, notification);// 开始前台服务
     }
 }

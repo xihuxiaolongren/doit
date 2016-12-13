@@ -9,6 +9,7 @@
     android:layout_marginRight="14dp"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:transitionName="redoPlanRootView"
     card_view:cardBackgroundColor="@color/sky"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="2dp"
@@ -40,7 +41,8 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
                     android:text="打乒乓"
-                    android:textAppearance="@style/MyTextAppearance.BodyLarge" />
+                    android:textAppearance="@style/MyTextAppearance.BodyLarge"
+                    android:transitionName="redoPlanTitleTV" />
 
                 <TextView
                     android:id="@+id/persist_tv"
@@ -49,7 +51,8 @@
                     android:layout_marginLeft="10dp"
                     android:text="已持续 3 天"
                     android:textAppearance="@style/MyTextAppearance.BodySmall"
-                    android:textSize="10dp" />
+                    android:textSize="10dp"
+                    android:transitionName="redoPlanPersistTV" />
 
             </LinearLayout>
 
@@ -67,7 +70,8 @@
                     android:layout_marginBottom="10dp"
                     android:gravity="right"
                     android:text="周一 至 周五"
-                    android:textAppearance="@style/MyTextAppearance.BodyNormal" />
+                    android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                    android:transitionName="redoPlanModeTV" />
 
                 <TextView
                     android:id="@+id/time_tv"
@@ -75,17 +79,19 @@
                     android:layout_height="match_parent"
                     android:gravity="right"
                     android:text="7 : 00 - 9 : 00"
-                    android:textAppearance="@style/MyTextAppearance.BodyNormal" />
+                    android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                    android:transitionName="redoPlanTimeTV" />
 
             </LinearLayout>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/typeIV"
+            android:transitionName="redoTypeIV"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/icon_alert"
             android:layout_marginLeft="-3dp"
-            android:layout_marginTop="-4dp"/>
+            android:layout_marginTop="-4dp"
+            android:src="@drawable/icon_alert" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

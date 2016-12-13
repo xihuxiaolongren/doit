@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
 
     <application
         android:name=".common.MyApplication"
@@ -19,8 +20,8 @@
         <activity
             android:name=".module.main.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.TransNav">
+            android:theme="@style/AppTheme.TransNav"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,15 +38,34 @@
         <activity android:name=".module.planlist.OtherDayActivity" />
         <activity android:name=".module.adddayplan.AddDayPlanActivity" />
         <activity android:name=".module.targetdetail.TargetDetailActivity" />
-        <activity android:name=".module.settings.SettingsActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity
+            android:name=".module.settings.SettingsActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+        <activity
+            android:name="com.soundcloud.android.crop.CropImageActivity"
+            android:theme="@style/CropTheme" />
 
-        <activity android:name="com.soundcloud.android.crop.CropImageActivity"
-            android:theme="@style/CropTheme"/>
+        <service android:name=".module.service.PlanService"></service>
 
-        <service android:name=".module.service.PlanService">
-        </service>
+        <receiver android:name=".module.receiver.MyReceiver">
+            <intent-filter>
 
+                <!-- 手机开机 -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- 手机唤醒解锁 -->
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+            <intent-filter>
+
+                <!-- 程序包安装与卸载 -->
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".module.redoplandetail.RedoPlanDetailActivity" android:theme="@style/MyDialogStyle"/>
     </application>
 
 </manifest>

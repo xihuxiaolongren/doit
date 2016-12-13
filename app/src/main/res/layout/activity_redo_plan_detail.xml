@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootFL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#50000000"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/rootView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:transitionName="redoPlanRootView"
+        card_view:cardBackgroundColor="@color/sky"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false">
+
+                <ImageView
+                    android:id="@+id/typeIV"
+                    android:transitionName="redoTypeIV"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="-2dp"
+                    android:layout_marginLeft="-2dp"/>
+
+                <ImageView
+                    android:id="@+id/deleteIV"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="6dp"
+                    android:layout_toLeftOf="@+id/closeIV"
+                    android:padding="10dp"
+                    android:src="@drawable/menu_delete"
+                    android:tint="@color/titleTextColor" />
+
+                <ImageView
+                    android:id="@+id/closeIV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_delete"
+                    android:tint="@color/titleTextColor"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="20dp"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/title_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:text="打乒乓"
+                android:textAppearance="@style/MyTextAppearance.BodyLarge"
+                android:transitionName="redoPlanTitleTV" />
+
+            <TextView
+                android:id="@+id/persist_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="已持续 3 天"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                android:transitionName="redoPlanPersistTV" />
+
+
+            <TextView
+                android:id="@+id/redo_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp"
+                android:text="周一 至 周五"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                android:transitionName="redoPlanModeTV" />
+
+            <TextView
+                android:id="@+id/time_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="7 : 00 - 9 : 00"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                android:transitionName="redoPlanTimeTV" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+</FrameLayout>

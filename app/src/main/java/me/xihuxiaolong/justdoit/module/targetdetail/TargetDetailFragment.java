@@ -8,7 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -58,6 +61,7 @@ import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
+import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.ColorUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
@@ -178,7 +182,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-        titleColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
+//        titleColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
         titleTv.setText(targetName);
@@ -196,7 +200,32 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         redoPlanAdapter.addHeaderView(headerView);
         recyclerView.setAdapter(redoPlanAdapter);
         recyclerView.setScrollViewCallbacks(this);
-
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+                RedoPlanDO redoPlanDO = ((RedoPlanDO) adapter.getItem(position));
+                Intent intent = new Intent(getActivity(), RedoPlanDetailActivity.class).putExtra(RedoPlanDetailActivity.ARG_TARGET, redoPlanDO)
+                        .putExtra("vibrant", vibrant).putExtra("textColor", textColor);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    View view1 = view.findViewById(R.id.rootView);
+                    View view2 = view.findViewById(R.id.title_tv);
+                    View view3 = view.findViewById(R.id.persist_tv);
+                    View view4 = view.findViewById(R.id.redo_tv);
+                    View view5 = view.findViewById(R.id.time_tv);
+                    View view6 = view.findViewById(R.id.typeIV);
+                    Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
+                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
+                    Pair<View, String> p3 = Pair.create(view3, view3.getTransitionName());
+                    Pair<View, String> p4 = Pair.create(view4, view4.getTransitionName());
+                    Pair<View, String> p5 = Pair.create(view5, view5.getTransitionName());
+                    Pair<View, String> p6 = Pair.create(view6, view6.getTransitionName());
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1, p2, p3, p4, p5, p6);
+                    startActivity(intent, options.toBundle());
+                }else {
+                    startActivity(intent);
+                }
+            }
+        });
         return view;
     }
 
@@ -304,7 +333,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             //rgb颜色值
             vibrant = swatch.getRgb();
             //对应的标题字体颜色
-            titleColor = swatch.getTitleTextColor();
+//            titleColor = swatch.getTitleTextColor();
             //对应的正文字体颜色
             textColor = swatch.getBodyTextColor();
 
