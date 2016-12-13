@@ -204,7 +204,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
                 RedoPlanDO redoPlanDO = ((RedoPlanDO) adapter.getItem(position));
-                Intent intent = new Intent(getActivity(), RedoPlanDetailActivity.class).putExtra(RedoPlanDetailActivity.ARG_TARGET, redoPlanDO)
+                Intent intent = new Intent(getActivity(), RedoPlanDetailActivity.class).putExtra(RedoPlanDetailActivity.ARG_REDO_PLAN, redoPlanDO)
                         .putExtra("vibrant", vibrant).putExtra("textColor", textColor);
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                     View view1 = view.findViewById(R.id.rootView);

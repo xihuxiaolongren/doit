@@ -40,6 +40,8 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:text="打乒乓"
                     android:textAppearance="@style/MyTextAppearance.BodyLarge"
                     android:transitionName="redoPlanTitleTV" />
@@ -68,7 +70,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
+                    android:ellipsize="end"
                     android:gravity="right"
+                    android:maxLines="1"
                     android:text="周一 至 周五"
                     android:textAppearance="@style/MyTextAppearance.BodyNormal"
                     android:transitionName="redoPlanModeTV" />
@@ -87,11 +91,11 @@
 
         <ImageView
             android:id="@+id/typeIV"
-            android:transitionName="redoTypeIV"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginLeft="-3dp"
             android:layout_marginTop="-4dp"
-            android:src="@drawable/icon_alert" />
+            android:src="@drawable/icon_alert"
+            android:transitionName="redoTypeIV" />
     </RelativeLayout>
 </android.support.v7.widget.CardView>
