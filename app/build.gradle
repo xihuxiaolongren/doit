@@ -22,6 +22,24 @@ android {
         versionName "1.0"
         multiDexEnabled = true
     }
+
+    //签名配置
+    signingConfigs {
+        debug {
+            storeFile file("../key_store/justdoit-key.jks")
+            storePassword "3230861"
+            keyAlias "justdoit-alias"
+            keyPassword "3230861"
+        }
+
+        release {
+            storeFile file("../key_store/justdoit-key.jks")
+            storePassword "3230861"
+            keyAlias "justdoit-alias"
+            keyPassword "3230861"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
