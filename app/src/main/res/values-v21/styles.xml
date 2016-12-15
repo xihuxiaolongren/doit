@@ -1,38 +1,39 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="android:windowDisablePreview">false</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@color/sky</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorControlNormal">@color/titleTextColor</item>
-        <item name="colorControlActivated">@color/colorControlActivated</item>
-        <item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>
-        <item name="android:windowContentTransitions">true</item>
-        <!--<item name="android:homeAsUpIndicator">@drawable/actionbar_space_between_icon_and_title</item>-->
+    <!--<style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">-->
+        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+        <!--<item name="android:windowDisablePreview">true</item>-->
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <!--&lt;!&ndash;<item name="android:windowBackground">@color/sky</item>&ndash;&gt;-->
+        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <!--<item name="colorAccent">@color/colorAccent</item>-->
+        <!--<item name="colorControlNormal">@color/titleTextColor</item>-->
+        <!--<item name="colorControlActivated">@color/colorControlActivated</item>-->
+        <!--<item name="android:actionButtonStyle">@style/MyActionButtonStyle</item>-->
+        <!--<item name="android:windowContentTransitions">true</item>-->
+        <!--&lt;!&ndash;<item name="android:homeAsUpIndicator">@drawable/actionbar_space_between_icon_and_title</item>&ndash;&gt;-->
 
-    </style>
+    <!--</style>-->
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-    </style>
-
-    <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowBackground">@color/sky</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="AppTheme.TransNav" parent="AppTheme">
-        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
-        <!--<item name="android:windowTranslucentNavigation">true</item>-->
+    <!--<style name="AppTheme.NoActionBar">-->
+        <!--<item name="windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
         <!--<item name="android:windowDrawsSystemBarBackgrounds">true</item>-->
+        <!--<item name="android:statusBarColor">@android:color/transparent</item>-->
+    <!--</style>-->
+
+    <!--<style name="SplashTheme" parent="AppTheme">-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
+        <!--<item name="android:windowBackground">@color/sky</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
+
+    <!-- 底部导航栏透明化-->
+    <style name="AppTheme.TransNav" parent="AppTheme">
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 </resources>

@@ -52,6 +52,7 @@ public class PlanService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.e("TAG onStartCommand~~~~~~~~~~~~");
+//        data=(String) intent.getSerializableExtra();
         sendNotification();
         return super.onStartCommand(intent, flags, startId);
     }

@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="android:windowDisablePreview">false</item>
+        <item name="android:windowDisablePreview">true</item>
         <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowBackground">@color/sunset_sky</item>
+        <item name="android:windowBackground">@color/sky</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -16,11 +16,16 @@
 
     </style>
 
-    <style name="SplashTheme" parent="AppTheme">
-        <item name="android:windowBackground">@color/sky</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+    <!--夜间主题 专为首页闪屏 无效！！！windowBackground 似乎在application生效前就已经加载了-->
+    <!--<style name="NightTheme" parent="AppTheme">-->
+        <!--<item name="android:windowBackground">@color/notificationNightSky</item>-->
+    <!--</style>-->
+
+    <!--<style name="SplashTheme" parent="AppTheme">-->
+        <!--<item name="android:windowBackground">@color/sky</item>-->
+        <!--<item name="android:windowFullscreen">true</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
+    <!--</style>-->
 
     <style name="AppTheme.TransNav" parent="AppTheme" />
 
