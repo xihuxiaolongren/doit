@@ -32,30 +32,25 @@ public class PlanService extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO Auto-generated method stub
         Logger.i("TAG onBind~~~~~~~~~~~~");
         return mBinder;
     }
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
         super.onCreate();
-
         Logger.e("TAG onCreate~~~~~~~~~~");
     }
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
+        Logger.e("TAG onDestroy~~~~~~~~~~~");
         stopForeground(true);
         super.onDestroy();
-        Logger.e("TAG onDestroy~~~~~~~~~~~");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // TODO Auto-generated method stub
         Logger.e("TAG onStartCommand~~~~~~~~~~~~");
         sendNotification();
         return super.onStartCommand(intent, flags, startId);
@@ -63,7 +58,6 @@ public class PlanService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        // TODO Auto-generated method stub
         Logger.e("TAG onUnbind~~~~~~~~~~~~~~~~");
         return super.onUnbind(intent);
     }

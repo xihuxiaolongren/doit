@@ -8,7 +8,6 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -165,12 +164,12 @@ public class DayNightBackgroundView extends FrameLayout{
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
-        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
+//        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mCloud1Anim = getCloud1Animator(0, mCloud1View.getLeft());
         mCloud2Anim = getCloud2Animator(0, mCloud2View.getRight());
         mSunriseAnimSet = new AnimatorSet();
         mSunriseAnimSet.play(mSunAnim).with(mSunXAnim).with(mSunAlphaAnim)
-                .with(mSkyAnim)
+//                .with(mSkyAnim)
                 .with(mCloud1Anim).with(mCloud2Anim);
         mSunriseAnimSet.start();
     }
@@ -181,7 +180,7 @@ public class DayNightBackgroundView extends FrameLayout{
     private void moonrise() {
 //        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
         mWaveHelper.start();
-        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
+//        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
@@ -202,7 +201,7 @@ public class DayNightBackgroundView extends FrameLayout{
         mStarR5Anim = getStarRotationAnimator(mStar5View, 0.0f, 270f);
         mSunriseAnimSet = new AnimatorSet();
         mSunriseAnimSet.play(mSunAnim).with(mSunXAnim).with(mSunAlphaAnim)
-                .with(mSkyAnim)
+//                .with(mSkyAnim)
                 .with(mStarX1Anim).with(mStarX2Anim).with(mStarX3Anim).with(mStarX4Anim).with(mStarX5Anim)
                 .with(mStarY1Anim).with(mStarY2Anim).with(mStarY3Anim).with(mStarY4Anim).with(mStarY5Anim)
                 .with(mStarR1Anim).with(mStarR2Anim).with(mStarR3Anim).with(mStarR4Anim).with(mStarR5Anim);
