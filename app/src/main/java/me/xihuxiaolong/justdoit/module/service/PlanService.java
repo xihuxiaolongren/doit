@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.module.service;
 
+import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -11,7 +13,16 @@ import android.widget.RemoteViews;
 
 import com.orhanobut.logger.Logger;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.joda.time.DateTime;
+
+import java.util.List;
+
 import me.xihuxiaolong.justdoit.R;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
+import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.module.main.MainActivity;
 
@@ -39,12 +50,14 @@ public class PlanService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        EventBus.getDefault().register(this);
         Logger.e("TAG onCreate~~~~~~~~~~");
     }
 
     @Override
     public void onDestroy() {
         Logger.e("TAG onDestroy~~~~~~~~~~~");
+        EventBus.getDefault().unregister(this);
         stopForeground(true);
         super.onDestroy();
     }
@@ -53,7 +66,9 @@ public class PlanService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Logger.e("TAG onStartCommand~~~~~~~~~~~~");
 //        data=(String) intent.getSerializableExtra();
-        sendNotification();
+        setAlarmForPlan();
+        if (intent != null && intent.getBooleanExtra("alarm", false) && intent.getSerializableExtra("planDO") != null)
+            processAlarmOpen((PlanDO) intent.getSerializableExtra("planDO"));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -63,20 +78,64 @@ public class PlanService extends Service {
         return super.onUnbind(intent);
     }
 
-    private void sendNotification(){
+    //设置闹钟&通知栏
+    private void setAlarmForPlan() {
+        PlanDataSource planDataSource = new PlanDataSource();
+        List<PlanDO> list = planDataSource.listPlanDOsByOneDay(DateTime.now().withTimeAtStartOfDay().getMillis());
+        for (PlanDO planDO : list) {
+            int cMinute = DateTime.now().minuteOfDay().get();
+            if (planDO.getStartTime() < cMinute && planDO.getEndTime() > cMinute)
+                sendNotification(planDO, false);
+            if (planDO.getStartTime() > cMinute) {
+                if (planDO.getAlarmStatus() == 1)
+                    break;
+                else if (planDO.getAlarmStatus() == 0) {
+                    setAlarm(DateTime.now().withTimeAtStartOfDay().plusMinutes(planDO.getStartTime()), planDO);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void setAlarm(DateTime dateTime, PlanDO planDO) {
+        //Create a new PendingIntent and add it to the AlarmManager
+        planDO.setAlarmStatus(1);
+        PlanDataSource planDataSource = new PlanDataSource();
+        planDataSource.insertOrReplacePlanDO(planDO, null);
+        Intent intent = new Intent(getApplicationContext(), PlanService.class);
+        intent.putExtra("planDO", planDO);
+        intent.putExtra("alarm", true);
+        PendingIntent pendingIntent = PendingIntent.getService(this,
+                12345, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager am =
+                (AlarmManager) getSystemService(Activity.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, dateTime.getMillis(),
+                pendingIntent);
+    }
+
+    //闹钟响起
+    private void processAlarmOpen(PlanDO planDO) {
+        PlanDataSource planDataSource = new PlanDataSource();
+        planDO.setAlarmStatus(2);
+        planDataSource.insertOrReplacePlanDO(planDO, null);
+        Logger.e("TAG sendNotification");
+        sendNotification(planDO, true);
+    }
+
+    private void sendNotification(PlanDO planDO, boolean vibr) {
         //当前版本remoteView 无法自动识别到夜间模式的资源目录
         RemoteViews remoteViewBig;
         RemoteViews remoteViewNormal;
-        if(DayNightModeUtils.isCurrentNight()) {
+        if (DayNightModeUtils.isCurrentNight()) {
             remoteViewBig = new RemoteViews(getPackageName(), R.layout.notice_night_big_plan);
             remoteViewNormal = new RemoteViews(getPackageName(), R.layout.notice_night_normal_plan);
-        }else {
+        } else {
             remoteViewBig = new RemoteViews(getPackageName(), R.layout.notice_day_big_plan);
             remoteViewNormal = new RemoteViews(getPackageName(), R.layout.notice_day_normal_plan);
         }
-        remoteViewNormal.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
+        remoteViewNormal.setTextViewText(R.id.contentTV, planDO.getContent());
 
-        remoteViewBig.setTextViewText(R.id.contentTV, "1、需求v1.1评审；\n2、v1.0 bug处理；");
+        remoteViewBig.setTextViewText(R.id.contentTV, planDO.getContent());
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        int requestCode = (int) SystemClock.uptimeMillis();
@@ -93,11 +152,35 @@ public class PlanService extends Service {
                 .setPriority(2)
 //                .setLargeIcon(ContextCompat.getDrawable(this, R.drawable.icon_launcher))
                 .setSmallIcon(R.drawable.icon_small_notify).build();
-//        NotificationManager notifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if(vibr) {
+            notification.defaults |= Notification.DEFAULT_VIBRATE;
+            notification.defaults |= Notification.DEFAULT_SOUND;
+        }
+        //        NotificationManager notifyMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //第一个状态保证在top位置,第二个状态保证常驻
         notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR | Notification.FLAG_FOREGROUND_SERVICE;
         //        int notificationId = new Random().nextInt();
 //        notifyMgr.notify(notificationId, notification);
         startForeground(110, notification);// 开始前台服务
     }
+
+    @Subscribe
+    public void onEvent(Event.AddPlan addPlanEvent) {
+        if(DateTime.now().withTimeAtStartOfDay().getMillis() == addPlanEvent.plan.getDayTime()){
+            setAlarmForPlan();
+        }
+    }
+
+    @Subscribe
+    public void onEvent(Event.UpdatePlan updatePlanEvent) {
+        if(DateTime.now().withTimeAtStartOfDay().getMillis() == updatePlanEvent.plan.getDayTime())
+            setAlarmForPlan();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeletePlan deletePlanEvent) {
+        if(DateTime.now().withTimeAtStartOfDay().getMillis() == deletePlanEvent.plan.getDayTime())
+            setAlarmForPlan();
+    }
+
 }

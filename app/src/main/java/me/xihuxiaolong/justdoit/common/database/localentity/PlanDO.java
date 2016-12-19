@@ -10,13 +10,17 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.Transient;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaolong
  * Date: 16/8/8.
  */
 @Entity
-public class PlanDO implements MultiItemEntity{
+public class PlanDO implements MultiItemEntity, Serializable{
+
+    static final long serialVersionUID = -1L;
 
     public final static int TYPE_PLAN = 0;
     public final static int TYPE_ALERT = 1;
@@ -47,14 +51,16 @@ public class PlanDO implements MultiItemEntity{
 
     private long dayTime;
 
+    private int alarmStatus;    //0:未设置；1:已设置；2:已完成
+
     @Transient
     private int tempRepeatmode;
 
-    @Generated(hash = 804775670)
+    @Generated(hash = 831710539)
     public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, String title,
             String content, String tags, String linkAppName, String linkAppPackageName,
             int startTime, int startHour, int startMinute, int endTime, int endHour,
-            int endMinute, long dayTime) {
+            int endMinute, long dayTime, int alarmStatus) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -71,6 +77,7 @@ public class PlanDO implements MultiItemEntity{
         this.endHour = endHour;
         this.endMinute = endMinute;
         this.dayTime = dayTime;
+        this.alarmStatus = alarmStatus;
     }
 
     @Generated(hash = 1345978329)
@@ -217,5 +224,13 @@ public class PlanDO implements MultiItemEntity{
 
     public Long getModifiedTime() {
         return this.modifiedTime;
+    }
+
+    public int getAlarmStatus() {
+        return this.alarmStatus;
+    }
+
+    public void setAlarmStatus(int alarmStatus) {
+        this.alarmStatus = alarmStatus;
     }
 }

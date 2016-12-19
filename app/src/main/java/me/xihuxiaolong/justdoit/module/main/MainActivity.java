@@ -1,9 +1,6 @@
 package me.xihuxiaolong.justdoit.module.main;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -21,8 +18,6 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -135,24 +130,24 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 //
 //        };
 
-//        Intent intent = new Intent(MainActivity.this,
-//                PlanService.class);
-//        startService(intent);
+        Intent intent = new Intent(MainActivity.this,
+                PlanService.class);
+        startService(intent);
 
 //        bindService(intent, sc, Context.BIND_AUTO_CREATE);
 
         //Create an offset from the current time in which the alarm will go off.
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.SECOND, 150);
-
-        //Create a new PendingIntent and add it to the AlarmManager
-        Intent intent1 = new Intent(getApplicationContext(), PlanService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(this,
-                12345, intent1, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager am =
-                (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-                pendingIntent);
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.SECOND, 150);
+//
+//        //Create a new PendingIntent and add it to the AlarmManager
+//        Intent intent1 = new Intent(getApplicationContext(), PlanService.class);
+//        PendingIntent pendingIntent = PendingIntent.getService(this,
+//                12345, intent1, PendingIntent.FLAG_CANCEL_CURRENT);
+//        AlarmManager am =
+//                (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
+//        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+//                pendingIntent);
     }
 
     private void invalidateFragmentMenus(int position) {
