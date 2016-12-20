@@ -34,6 +34,7 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
@@ -54,7 +55,6 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
@@ -83,8 +83,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     Toolbar toolbar;
     @BindView(R.id.recycler_background)
     View recyclerBackground;
-//    @BindView(R.id.day_night_background_view)
-//    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.signatureTV)
     AutofitTextView signatureTV;
     @BindView(R.id.calendar_rl)
@@ -95,6 +93,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     ImageView headerIV;
     @BindView(R.id.shadowFrame)
     FrameLayout shadowFrame;
+    @BindView(R.id.arc_progress)
+    ArcProgress arcProgress;
 
     private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
             mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
@@ -202,14 +202,14 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
                 TargetDO targetDO = ((TargetDO) adapter.getItem(position));
                 Intent intent = new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName());
-                if (!TextUtils.isEmpty(targetDO.getHeaderImageUri()) && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                if (!TextUtils.isEmpty(targetDO.getHeaderImageUri()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     View view1 = view.findViewById(R.id.bgIV);
 //                    View view2 = view.findViewById(R.id.title);
                     Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
 //                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1);
                     startActivity(intent, options.toBundle());
-                }else {
+                } else {
                     startActivity(intent);
                 }
             }
@@ -244,13 +244,13 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             int redoSize = CollectionUtils.isEmpty(targetDO.getRedoPlanDOList()) ? 0 : targetDO.getRedoPlanDOList().size();
             for (int i = 0; i < showRedoPlanCount; i++) {
                 BaseViewHolder redoPlanViewHolder = holder.redoPlanItems.get(i);
-                if(i < redoSize){
+                if (i < redoSize) {
                     redoPlanViewHolder.setVisible(R.id.redoLL, true);
                     RedoPlanDO redoPlanDO = targetDO.getRedoPlanDOList().get(i);
                     redoPlanViewHolder.setText(R.id.redoTitleTV, redoPlanDO.getContent());
                     redoPlanViewHolder.setText(R.id.redoModeTV, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
-                    redoPlanViewHolder.setText(R.id.lastTimeTV, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays()  + " 天") ;
-                }else{
+                    redoPlanViewHolder.setText(R.id.lastTimeTV, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays() + " 天");
+                } else {
                     redoPlanViewHolder.setVisible(R.id.redoLL, false);
                 }
             }
@@ -269,7 +269,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 super(view);
             }
 
-            public void addRedoPlanItem(BaseViewHolder redoPlanViewHolder){
+            public void addRedoPlanItem(BaseViewHolder redoPlanViewHolder) {
                 redoPlanItems.add(redoPlanViewHolder);
             }
 
@@ -468,12 +468,19 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
+        if(!CollectionUtils.isEmpty(targets))
+            updateArcProgress(targets.size());
         targetAdapter.setNewData(targets);
     }
 
     @Override
     public void createTargetSuccess(TargetDO targetDO) {
         targetAdapter.addData(0, targetDO);
+        updateArcProgress(targetAdapter.getData().size());
         startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
+    }
+
+    private void updateArcProgress(int count){
+        arcProgress.setBottomText(count + " 目标 ");
     }
 }

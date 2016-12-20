@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.service;
+package me.xihuxiaolong.justdoit.common.service;
 
 import android.app.Activity;
 import android.app.AlarmManager;

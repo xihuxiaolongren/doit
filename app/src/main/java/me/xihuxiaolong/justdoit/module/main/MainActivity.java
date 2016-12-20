@@ -26,7 +26,7 @@ import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
-import me.xihuxiaolong.justdoit.module.service.PlanService;
+import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 import me.xihuxiaolong.library.utils.ActivityUtils;
@@ -49,7 +49,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-
+        if(savedInstanceState != null) {
+            dayNightBackgroundView.setAnimationDuration(0);
+            bottomBar.post(new Runnable() {
+                @Override
+                public void run() {
+                    showBottom(0);
+                }
+            });
+        }
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
         viewPager.setOffscreenPageLimit(3);
@@ -77,27 +85,27 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         if (getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
             bottomBar.setDefaultTabPosition(2);
-            ActivityUtils.delay(0, new ActivityUtils.DelayCallback() {
+            dayNightBackgroundView.setAnimationDuration(0);
+            bottomBar.post(new Runnable() {
                 @Override
-                public void afterDelay() {
-                    showBottom(600);
+                public void run() {
+                    showBottom(0);
                 }
             });
         } else {
-            ActivityUtils.delay(3500, new ActivityUtils.DelayCallback() {
+            bottomBar.postDelayed(new Runnable() {
                 @Override
-                public void afterDelay() {
+                public void run() {
                     showBottom(600);
                 }
-            });
-            viewPager.setCurrentItem(0);
+            }, 3500);
         }
-        viewPager.postDelayed(new Runnable() {
+        viewPager.post(new Runnable() {
             @Override
             public void run() {
                 invalidateFragmentMenus(0);
             }
-        }, 0);
+        });
 
         Intent intent = new Intent(MainActivity.this,
                 PlanService.class);
@@ -136,7 +144,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void showBottom(int duration) {
-        bottomBar.setVisibility(View.VISIBLE);
         ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", -bottomBar.getHeight());
         animator.setDuration(duration);
         animator.start();

@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.receiver;
+package me.xihuxiaolong.justdoit.common.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

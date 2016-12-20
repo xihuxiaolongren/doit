@@ -55,9 +55,9 @@
             android:name="com.soundcloud.android.crop.CropImageActivity"
             android:theme="@style/CropTheme" />
 
-        <service android:name=".module.service.PlanService"></service>
+        <service android:name=".common.service.PlanService"></service>
 
-        <receiver android:name=".module.receiver.MyReceiver">
+        <receiver android:name=".common.receiver.MyReceiver">
             <intent-filter>
 
                 <!-- 手机开机 -->

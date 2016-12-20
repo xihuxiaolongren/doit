@@ -50,6 +50,16 @@ public class ActivityUtils {
         void afterDelay();
     }
 
+    /**
+     *
+     * 对于类似获取view高度等操作，尽量避免使用handler，而是直接通过view.post(),因为这样无需延迟xx毫秒，
+     * 可以直接获取view的高度，通过handler无法保证,因为并发过程中，无法预知view何时初始化成功；
+     *
+     * @param delayMillis
+     * @param delayCallback
+     */
+
+    @Deprecated
     public static void delay(long delayMillis, final DelayCallback delayCallback){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
