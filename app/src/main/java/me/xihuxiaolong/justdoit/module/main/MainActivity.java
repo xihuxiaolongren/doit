@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.event.Event;
+import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.service.PlanService;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
@@ -34,9 +35,9 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
-//    private ServiceConnection sc;
-//    private PlanService planService;
 
+    @BindView(R.id.day_night_background_view)
+    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.bottomBar)
     BottomBar bottomBar;
 
@@ -76,14 +77,13 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         if (getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
             bottomBar.setDefaultTabPosition(2);
-            bottomBar.setVisibility(View.VISIBLE);
-        } else {
-            ActivityUtils.delay(200, new ActivityUtils.DelayCallback() {
+            ActivityUtils.delay(0, new ActivityUtils.DelayCallback() {
                 @Override
                 public void afterDelay() {
-                    hideBottom(0);
+                    showBottom(600);
                 }
             });
+        } else {
             ActivityUtils.delay(3500, new ActivityUtils.DelayCallback() {
                 @Override
                 public void afterDelay() {
@@ -99,62 +99,16 @@ public class MainActivity extends BaseActivity implements ScrollListener {
             }
         }, 0);
 
-//        sc = new ServiceConnection() {
-//            /*
-//             * 只有在MyService中的onBind方法中返回一个IBinder实例才会在Bind的时候
-//             * 调用onServiceConnection回调方法
-//             * 第二个参数service就是MyService中onBind方法return的那个IBinder实例，可以利用这个来传递数据
-//             */
-//            @Override
-//            public void onServiceConnected(ComponentName name, IBinder service) {
-//                // TODO Auto-generated method stub
-//                planService = ((PlanService.LocalBinder) service).getService();
-////                planService.sendNotification();
-//                String recStr = ((PlanService.LocalBinder) service).stringToSend;
-//                //利用IBinder对象传递过来的字符串数据（其他数据也可以啦，哪怕是一个对象也OK~~）
-//                Log.i("TAG", "The String is : " + recStr);
-//                Log.i("TAG", "onServiceConnected : myService ---> " + planService);
-//            }
-//
-//            @Override
-//            public void onServiceDisconnected(ComponentName name) {
-//                /* SDK上是这么说的：
-//                 * This is called when the connection with the service has been unexpectedly disconnected
-//                 * that is, its process crashed. Because it is running in our same process, we should never see this happen.
-//                 * 所以说，只有在service因异常而断开连接的时候，这个方法才会用到*/
-//                // TODO Auto-generated method stub
-//                sc = null;
-//                Log.i("TAG", "onServiceDisconnected : ServiceConnection --->"
-//                        + sc);
-//            }
-//
-//        };
-
         Intent intent = new Intent(MainActivity.this,
                 PlanService.class);
         startService(intent);
 
-//        bindService(intent, sc, Context.BIND_AUTO_CREATE);
-
-        //Create an offset from the current time in which the alarm will go off.
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.SECOND, 150);
-//
-//        //Create a new PendingIntent and add it to the AlarmManager
-//        Intent intent1 = new Intent(getApplicationContext(), PlanService.class);
-//        PendingIntent pendingIntent = PendingIntent.getService(this,
-//                12345, intent1, PendingIntent.FLAG_CANCEL_CURRENT);
-//        AlarmManager am =
-//                (AlarmManager)getSystemService(Activity.ALARM_SERVICE);
-//        am.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
-//                pendingIntent);
     }
 
     private void invalidateFragmentMenus(int position) {
         Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
             if (mainFragmentPageAdapter.getRegisteredFragment(i) != null) {
-//                mainFragmentPageAdapter.getRegisteredFragment(i).setHasOptionsMenu(i == position);
                 if(i == position)
                     ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
             }
@@ -175,7 +129,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void hideBottom(int duration) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", bottomBar.getHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", 0);
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = false;
@@ -183,7 +137,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
     private void showBottom(int duration) {
         bottomBar.setVisibility(View.VISIBLE);
-        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", 0);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", -bottomBar.getHeight());
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = true;
@@ -240,5 +194,11 @@ public class MainActivity extends BaseActivity implements ScrollListener {
             return registeredFragments.get(position);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+    }
+
 
 }

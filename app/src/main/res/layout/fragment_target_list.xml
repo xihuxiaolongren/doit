@@ -11,14 +11,13 @@
         android:id="@+id/headerIV"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop"
-        android:src="@drawable/example" />
+        android:scaleType="centerCrop" />
 
-    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
-        android:id="@+id/day_night_background_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:animationDuration="0" />
+    <!--<me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView-->
+        <!--android:id="@+id/day_night_background_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:animationDuration="0" />-->
 
     <View
         android:id="@+id/recycler_background"

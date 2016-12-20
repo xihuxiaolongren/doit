@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
+        android:id="@+id/day_night_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:animationDuration="2000" />
+
     <me.xihuxiaolong.library.widget.NonSwipeableViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
@@ -19,6 +25,7 @@
         app:bb_titleTextAppearance="@style/MyTextAppearance.Bottom"
         app:bb_behavior="shifting|underNavbar"
         app:bb_inActiveTabColor="@color/titleTextColor"
-        app:bb_activeTabColor="@color/titleTextColor"/>
+        app:bb_activeTabColor="@color/titleTextColor"
+        android:layout_marginBottom="-56dp"/>
 
 </RelativeLayout>

@@ -11,8 +11,7 @@
         android:id="@+id/backgroundIV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/example_1" />
+        android:scaleType="fitXY" />
 
     <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
         android:id="@+id/day_night_background_view"

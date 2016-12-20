@@ -27,8 +27,9 @@
         <!--<item name="windowNoTitle">true</item>-->
     <!--</style>-->
 
-    <style name="AppTheme.TransNav" parent="AppTheme" />
-
+    <style name="AppTheme.TransNav" parent="AppTheme">
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">@dimen/title_size</item>
     </style>

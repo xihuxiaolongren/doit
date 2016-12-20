@@ -83,8 +83,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     Toolbar toolbar;
     @BindView(R.id.recycler_background)
     View recyclerBackground;
-    @BindView(R.id.day_night_background_view)
-    DayNightBackgroundView dayNightBackgroundView;
+//    @BindView(R.id.day_night_background_view)
+//    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.signatureTV)
     AutofitTextView signatureTV;
     @BindView(R.id.calendar_rl)

@@ -83,8 +83,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     TextView calendarMonthYearTv;
     @BindView(R.id.recycler_background)
     View recyclerBackground;
-    @BindView(R.id.day_night_background_view)
-    DayNightBackgroundView dayNightBackgroundView;
+//    @BindView(R.id.day_night_background_view)
+//    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.signatureTV)
     AutofitTextView signatureTV;
     @BindView(R.id.avatarIV)
@@ -168,8 +168,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         Logger.d(toolbar);
         initToolbar(toolbar, false);
         setHasOptionsMenu(true);
-        if (dayTime != -1L)
-            dayNightBackgroundView.setAnimationDuration(0);
+//        if (dayTime != -1L)
+//            dayNightBackgroundView.setAnimationDuration(0);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
@@ -365,7 +365,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void showEmptyView() {
-        fab.open(true);
+//        fab.open(true);
     }
 
     @Override
@@ -383,7 +383,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     public void showOtherDayUI() {
         isTodayDay = false;
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset_other);
-//        setToolbar(toolbar, true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("明日计划");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().invalidateOptionsMenu();
@@ -417,8 +416,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
         // Scale calendarRl
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-//        ViewHelper.setPivotX(calendarRl, 0);
-//        ViewHelper.setPivotY(calendarRl, 0);
         ViewHelper.setScaleX(calendarRl, scale);
         ViewHelper.setScaleY(calendarRl, scale);
         if (avatarIV.getVisibility() == View.VISIBLE) {
@@ -521,16 +518,11 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onPause() {
         super.onPause();
-//        dayNightBackgroundView.cancel();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        if (hasChangeDayNight) {
-//            ((MainActivity) getActivity()).restart();
-//            hasChangeDayNight = false;
-//        }
     }
 
     @Override

@@ -12,14 +12,13 @@
         android:id="@+id/headerIV"
         android:layout_width="match_parent"
         android:layout_height="@dimen/flexible_space_image_height"
-        android:scaleType="centerCrop"
-        android:src="@drawable/example" />
+        android:scaleType="centerCrop" />
 
-    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
-        android:id="@+id/day_night_background_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:animationDuration="2000" />
+    <!--<me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView-->
+        <!--android:id="@+id/day_night_background_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:animationDuration="2000" />-->
 
     <View
         android:id="@+id/recycler_background"
@@ -82,9 +81,9 @@
             android:id="@+id/avatarIV"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:src="@drawable/avatar"
+            android:visibility="gone"
             app:civ_border_color="@color/titleTextColor"
             app:civ_border_width="2dp" />
 
