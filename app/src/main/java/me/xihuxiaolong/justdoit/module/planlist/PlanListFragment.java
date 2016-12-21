@@ -317,6 +317,12 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void showSignature(final String signature, final String preSignature) {
+        signatureTV.post(new Runnable() {
+            @Override
+            public void run() {
+                updateSignature(mScollY);
+            }
+        });
         if (preSignature == null)
             signatureTV.setText(signature);
         else {
@@ -425,11 +431,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 mFlexibleSpaceCalendarLeftOffset));
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
-        int signatureTranslationY = maxSignatureTranslationY - scrollY;
-        ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-        ViewHelper.setAlpha(signatureTV, alpha);
+        updateSignature(scrollY);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
@@ -441,6 +443,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         else
             shadowFrame.setForeground(null);
 
+    }
+
+    private void updateSignature(int scrollY){
+        int signatureTVHeight = signatureTV.getHeight() == 0 ? signatureTV.getMeasuredHeight() : signatureTV.getHeight();
+        int maxSignatureTranslationY = (mFlexibleSpaceImageHeight + mFlexibleSpaceSignatureBottomOffset - signatureTVHeight) / 2;
+        int signatureTranslationY = maxSignatureTranslationY - scrollY;
+        ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
+        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
+        ViewHelper.setAlpha(signatureTV, alpha);
     }
 
     @Override
