@@ -194,23 +194,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
-//        calendarRl.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-//                float scale = 1 + ScrollUtils.getFloat((flexibleRange - mScollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-//                ViewHelper.setPivotX(calendarRl, 0);
-//                ViewHelper.setPivotY(calendarRl, 0);
-//                ViewHelper.setScaleX(calendarRl, scale);
-//                ViewHelper.setScaleY(calendarRl, scale);
-//                int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
-//                int titleTranslationY = maxTitleTranslationY - mScollY;
-//                ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
-//                        maxTitleTranslationY));
-//                ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(mScollY, 0,
-//                        mActionBarSize));
-//            }
-//        });
         ObjectAnimator signatureAnimator = ObjectAnimator
                 .ofFloat(signatureTV, "alpha", 0, 1.0f)
                 .setDuration(1000);

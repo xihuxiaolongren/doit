@@ -19,6 +19,7 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
+import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
@@ -43,7 +44,7 @@ public class PlanHistoryFragment extends BaseMvpFragment<PlanHistoryContract.IVi
 //    EmptyWrapper mEmptyWrapper;
 //    HeaderAndFooterWrapper mHeaderAndFooterWrapper;
 
-    PlanListWrapper planListWrapper;
+    NewPlanListWrapper planListWrapper;
 
     public static PlanHistoryFragment newInstance(long dayTime) {
         PlanHistoryFragment fragment = new PlanHistoryFragment();
@@ -81,26 +82,12 @@ public class PlanHistoryFragment extends BaseMvpFragment<PlanHistoryContract.IVi
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_plan_history, container, false);
         ButterKnife.bind(this, view);
-        setHasOptionsMenu(true);
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView, null);
-
+        planListWrapper = new NewPlanListWrapper(getContext(), recyclerView, null);
+        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_history_header, recyclerView, false);
+        planListWrapper.addHeaderView(headerView);
+        planListWrapper.setEmptyView(LayoutInflater.from(getContext()).inflate(R.layout.empty_view_plan_history_list, (ViewGroup) recyclerView.getParent(), false), true, true);
         return view;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_frament_plan_history, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                getActivity().finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

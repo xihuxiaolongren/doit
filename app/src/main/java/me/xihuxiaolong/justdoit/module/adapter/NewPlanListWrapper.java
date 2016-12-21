@@ -49,7 +49,7 @@ public class NewPlanListWrapper {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         adapter = new PlanListAdapter(context, new ArrayList<PlanDO>(), planListOnClickListener);
-        adapter.setEmptyView(LayoutInflater.from(context).inflate(R.layout.recycler_empty, (ViewGroup) mRecyclerView.getParent(), false));
+        adapter.setEmptyView(LayoutInflater.from(context).inflate(R.layout.empty_view_planlist, (ViewGroup) mRecyclerView.getParent(), false));
         adapter.setHeaderFooterEmpty(true, true);
         final View footView = LayoutInflater.from(context).inflate(R.layout.item_plan_bottom, mRecyclerView, false);
         adapter.addFooterView(footView);
@@ -58,6 +58,11 @@ public class NewPlanListWrapper {
 
     public void addHeaderView(View headerView){
         adapter.addHeaderView(headerView);
+    }
+
+    public void setEmptyView(View emptyView, boolean isHeadAndEmpty, boolean isFootAndEmpty){
+        adapter.setEmptyView(emptyView);
+        adapter.setHeaderFooterEmpty(isHeadAndEmpty, isFootAndEmpty);
     }
 
     public void setItems(List<PlanDO> items) {

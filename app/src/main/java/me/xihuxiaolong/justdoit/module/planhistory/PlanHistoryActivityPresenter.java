@@ -30,11 +30,11 @@ public class PlanHistoryActivityPresenter extends MvpBasePresenter<PlanHistoryAc
 
     @Override
     public void loadHistorys() {
-        DateTime startTime = DateTime.now().withDate(2016, 10, 1).withTimeAtStartOfDay();
+        DateTime startTime = DateTime.now().withDate(2016, 11, 1).withTimeAtStartOfDay();
         DateTime endTime = DateTime.now().withTimeAtStartOfDay();
         dayTimes = new ArrayList<>();
-        for(; startTime.isBefore(endTime); startTime = startTime.plusDays(1)){
-            dayTimes.add(startTime);
+        for(; endTime.isAfter(startTime); endTime = endTime.minusDays(1)){
+            dayTimes.add(endTime);
         }
         if(isViewAttached())
             getView().showHistorys(dayTimes);

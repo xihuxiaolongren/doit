@@ -54,7 +54,7 @@ public class PlanListWrapper {
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new PlanListAdapter(context, new ArrayList<PlanDO>(), planListOnClickListener);
         mEmptyWrapper = new EmptyWrapper(adapter);
-        mEmptyWrapper.setEmptyView(LayoutInflater.from(context).inflate(R.layout.recycler_empty, recyclerView, false));
+        mEmptyWrapper.setEmptyView(LayoutInflater.from(context).inflate(R.layout.empty_view_planlist, recyclerView, false));
         mHeaderAndFooterWrapper = new HeaderAndFooterWrapper(mEmptyWrapper);
         final View footView = LayoutInflater.from(context).inflate(R.layout.item_plan_bottom, recyclerView, false);
         mHeaderAndFooterWrapper.addFootView(footView);

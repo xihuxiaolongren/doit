@@ -1,20 +1,15 @@
 package me.xihuxiaolong.justdoit.module.planhistory;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -27,7 +22,7 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 
-public class PlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityContract.IView, PlanHistoryActivityContract.IPresenter> implements PlanHistoryActivityContract.IView, ViewPager.OnPageChangeListener {
+public class OldPlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityContract.IView, PlanHistoryActivityContract.IPresenter> implements PlanHistoryActivityContract.IView, ViewPager.OnPageChangeListener {
 
     PlanHistoryActivityComponent planHistoryComponent;
 
@@ -42,14 +37,13 @@ public class PlanHistoryActivity extends BaseMvpActivity<PlanHistoryActivityCont
     @BindView(R.id.calendar_month_year_tv)
     TextView calendarMonthYearTv;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         injectDependencies();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plan_history);
         ButterKnife.bind(this);
+
         setToolbar(toolbar, true);
 
         viewpager.addOnPageChangeListener(this);

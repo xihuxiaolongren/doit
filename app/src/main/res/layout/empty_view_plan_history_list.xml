@@ -12,7 +12,7 @@
 
     <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:scaleType="fitXY"
         android:src="@drawable/line"
         android:tint="@color/titleTextColor"
@@ -27,6 +27,6 @@
         android:layout_weight="1"
         android:paddingLeft="22dp"
         android:paddingRight="15dp"
-        android:text="@string/empty"
+        android:text="@string/empty_plan_history"
         android:textColor="@color/titleTextColor" />
 </LinearLayout>
