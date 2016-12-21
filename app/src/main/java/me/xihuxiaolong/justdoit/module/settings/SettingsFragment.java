@@ -71,8 +71,6 @@ public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, Se
     UserSettings userSettings;
 
 
-//    @BindView(R.id.day_night_background_view)
-//    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.hpButtonTriangle)
     View hpButtonTriangle;
     @BindView(R.id.hpButton)

@@ -25,8 +25,9 @@
         app:showAsAction="always">
     </item>
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="5"
-        android:title="@string/action_settings"
+        android:id="@+id/action_delete"
+        android:orderInCategory="2"
+        android:icon="@drawable/menu_delete"
+        android:title="@string/menu_delete"
         app:showAsAction="never" />
 </menu>

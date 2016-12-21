@@ -31,6 +31,7 @@
     <string name="modify_alert">更改提醒</string>
     <string name="delete_alert">删除提醒</string>
     <string name="delete_plan">删除计划</string>
+    <string name="delete_target">删除目标</string>
     <string name="use_today_template">使用今日模板</string>
     <string name="empty_template">重新添加</string>
     <string name="tomorrow_plan">明日计划</string>

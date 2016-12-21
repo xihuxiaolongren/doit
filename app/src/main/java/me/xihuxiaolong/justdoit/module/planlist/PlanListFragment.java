@@ -2,6 +2,7 @@ package me.xihuxiaolong.justdoit.module.planlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -193,31 +194,36 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
-        calendarRl.post(new Runnable() {
-            @Override
-            public void run() {
-                float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-                float scale = 1 + ScrollUtils.getFloat((flexibleRange - mScollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
-                ViewHelper.setPivotX(calendarRl, 0);
-                ViewHelper.setPivotY(calendarRl, 0);
-                ViewHelper.setScaleX(calendarRl, scale);
-                ViewHelper.setScaleY(calendarRl, scale);
-                int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
-                int titleTranslationY = maxTitleTranslationY - mScollY;
-                ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
-                        maxTitleTranslationY));
-                ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(mScollY, 0,
-                        mActionBarSize));
-            }
-        });
-        signatureTV.post(new Runnable() {
-            @Override
-            public void run() {
-                // Translate title text
-                int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
-                ViewHelper.setTranslationY(signatureTV, maxSignatureTranslationY);
-            }
-        });
+//        calendarRl.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
+//                float scale = 1 + ScrollUtils.getFloat((flexibleRange - mScollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
+//                ViewHelper.setPivotX(calendarRl, 0);
+//                ViewHelper.setPivotY(calendarRl, 0);
+//                ViewHelper.setScaleX(calendarRl, scale);
+//                ViewHelper.setScaleY(calendarRl, scale);
+//                int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+//                int titleTranslationY = maxTitleTranslationY - mScollY;
+//                ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
+//                        maxTitleTranslationY));
+//                ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(mScollY, 0,
+//                        mActionBarSize));
+//            }
+//        });
+        ObjectAnimator signatureAnimator = ObjectAnimator
+                .ofFloat(signatureTV, "alpha", 0, 1.0f)
+                .setDuration(1000);
+        signatureAnimator.start();
+//        signatureTV.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                // Translate title text
+//                int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
+//                ViewHelper.setTranslationY(signatureTV, maxSignatureTranslationY);
+//                ViewHelper.setAlpha(signatureTV, maxSignatureTranslationY);
+//            }
+//        });
 
         planListWrapper = new NewPlanListWrapper(getContext(), recyclerView, this);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
@@ -383,6 +389,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     public void showOtherDayUI() {
         isTodayDay = false;
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset_other);
+//        setToolbar(toolbar, true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("明日计划");
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getActivity().invalidateOptionsMenu();
@@ -416,6 +423,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
         // Scale calendarRl
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
+        ViewHelper.setPivotX(calendarRl, 0);
+        ViewHelper.setPivotY(calendarRl, 0);
         ViewHelper.setScaleX(calendarRl, scale);
         ViewHelper.setScaleY(calendarRl, scale);
         if (avatarIV.getVisibility() == View.VISIBLE) {
@@ -425,15 +434,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
 
         // Translate calendarRl
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getMeasuredHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
         int titleTranslationY = maxTitleTranslationY - scrollY;
-        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
+        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getMeasuredHeight()) / 2 + mStatusBarSize,
                 maxTitleTranslationY));
         ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
+        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
         ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
         float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
@@ -518,11 +527,16 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onPause() {
         super.onPause();
+//        dayNightBackgroundView.cancel();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+//        if (hasChangeDayNight) {
+//            ((MainActivity) getActivity()).restart();
+//            hasChangeDayNight = false;
+//        }
     }
 
     @Override

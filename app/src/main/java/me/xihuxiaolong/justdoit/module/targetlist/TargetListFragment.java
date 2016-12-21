@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -176,26 +178,20 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
         darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
-        calendarRl.post(new Runnable() {
-            @Override
-            public void run() {
-                animateCanlendarRl(mScollY);
-            }
-        });
-        signatureTV.post(new Runnable() {
-            @Override
-            public void run() {
-                // Translate title text
-                int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
-                ViewHelper.setTranslationY(signatureTV, maxSignatureTranslationY);
-            }
-        });
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
         targetAdapter = new TargetAdapter(R.layout.item_target, new ArrayList<TargetDO>());
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
         targetAdapter.addHeaderView(headerView);
+        final View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_target, (ViewGroup) recyclerView.getParent(), false);
+//        emptyView.findViewById(R.id.createTargetFB).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                fabListener.onClick(v);
+//            }
+//        });
+        targetAdapter.setEmptyView(emptyView);
+        targetAdapter.setHeaderAndEmpty(true);
         recyclerView.setAdapter(targetAdapter);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
@@ -345,7 +341,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         animateCanlendarRl(scrollY);
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getHeight() - mFlexibleSpaceSignatureBottomOffset;
+        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
         ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
         float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
@@ -373,9 +369,9 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         ViewHelper.setScaleY(calendarRl, scale);
 
         // Translate calendarRl
-        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
+        int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getMeasuredHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
         int titleTranslationY = maxTitleTranslationY - scrollY;
-        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getHeight()) / 2 + mStatusBarSize,
+        ViewHelper.setTranslationY(calendarRl, ScrollUtils.getFloat(titleTranslationY, (mActionBarSize - calendarRl.getMeasuredHeight()) / 2 + mStatusBarSize,
                 maxTitleTranslationY));
         ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
@@ -468,15 +464,23 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
-        if(!CollectionUtils.isEmpty(targets))
-            updateArcProgress(targets.size());
+        if(CollectionUtils.isEmpty(targets)) {
+//            fab.setVisibility(View.INVISIBLE);
+            calendarRl.setVisibility(View.INVISIBLE);
+            signatureTV.setVisibility(View.INVISIBLE);
+        }else{
+//            fab.setVisibility(View.VISIBLE);
+            calendarRl.setVisibility(View.VISIBLE);
+            signatureTV.setVisibility(View.VISIBLE);
+        }
+        updateArcProgress(targets.size());
         targetAdapter.setNewData(targets);
     }
 
     @Override
     public void createTargetSuccess(TargetDO targetDO) {
-        targetAdapter.addData(0, targetDO);
-        updateArcProgress(targetAdapter.getData().size());
+//        targetAdapter.addData(0, targetDO);
+//        updateArcProgress(targetAdapter.getData().size());
         startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
     }
 

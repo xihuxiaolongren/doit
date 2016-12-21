@@ -4,28 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<ImageView-->
-    <!--android:id="@+id/backgroundIV"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:scaleType="fitXY"-->
-    <!--android:src="@drawable/example_1" />-->
-
-    <!--<me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView-->
-        <!--android:id="@+id/day_night_background_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:animationDuration="0" />-->
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:fitsSystemWindows="true"
-        app:contentInsetStartWithNavigation="0dp"
-        app:title="@string/action_settings"
-        app:titleTextAppearance="@style/Toolbar.TitleText" />
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
     <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
         android:id="@+id/scrollView"

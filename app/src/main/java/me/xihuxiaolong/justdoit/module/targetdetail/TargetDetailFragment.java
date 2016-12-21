@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +27,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -64,6 +67,7 @@ import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.ColorUtils;
+import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
 
@@ -300,7 +304,13 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
                         .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
                 return true;
-            case R.id.action_settings:
+            case R.id.action_delete:
+                DialogUtils.showDialog(getContext(), getResources().getString(R.string.delete_target), "确定要删除该目标吗？", new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.deleteTarget();
+                    }
+                });
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -506,6 +516,11 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     @Override
     public void updateTargetSuccess() {
 
+    }
+
+    @Override
+    public void deleteTargetSuccess() {
+        getActivity().finish();
     }
 
 }

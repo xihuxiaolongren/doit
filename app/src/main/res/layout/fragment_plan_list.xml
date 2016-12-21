@@ -14,12 +14,6 @@
         android:layout_height="@dimen/flexible_space_image_height"
         android:scaleType="centerCrop" />
 
-    <!--<me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView-->
-        <!--android:id="@+id/day_night_background_view"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--app:animationDuration="2000" />-->
-
     <View
         android:id="@+id/recycler_background"
         android:layout_width="match_parent"
@@ -73,7 +67,7 @@
     <LinearLayout
         android:id="@+id/calendar_rl"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="18dp"
         android:gravity="center_vertical">
 

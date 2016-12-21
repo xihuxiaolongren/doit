@@ -56,6 +56,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         TargetDO targetDO = new TargetDO();
         targetDO.setName(name);
         redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+        loadTargets();
         if (isViewAttached()) {
             getView().createTargetSuccess(targetDO);
         }

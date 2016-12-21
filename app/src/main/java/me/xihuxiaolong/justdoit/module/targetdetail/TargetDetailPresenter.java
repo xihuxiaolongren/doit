@@ -51,6 +51,16 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
         }
     }
 
+    @Override
+    public void deleteTarget() {
+        if (targetName != null) {
+            redoPlanDataSource.deleteTargetByName(targetName);
+            EventBus.getDefault().post(new Event.DeleteTarget(targetName));
+            if (isViewAttached())
+                getView().deleteTargetSuccess();
+        }
+    }
+
     @Subscribe
     public void onEvent(Event.UpdateTarget updateTargetEvent) {
         loadTarget();

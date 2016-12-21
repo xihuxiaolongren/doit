@@ -24,6 +24,8 @@ public class TargetDetailContract {
 
         void updateTargetSuccess();
 
+        void deleteTargetSuccess();
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
@@ -31,6 +33,8 @@ public class TargetDetailContract {
         void loadTarget();
 
         void updateTarget(String headerImageUri);
+
+        void deleteTarget();
 
     }
 }
