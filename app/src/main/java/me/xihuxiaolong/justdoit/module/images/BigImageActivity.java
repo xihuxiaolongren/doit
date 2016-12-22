@@ -2,23 +2,28 @@ package me.xihuxiaolong.justdoit.module.images;
 
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class BigImageActivity extends BaseActivity {
 
     @BindView(R.id.showSingleImage)
     ImageView showSingleImage;
+
+    PhotoViewAttacher mAttacher;
+    @BindView(R.id.rootView)
+    RelativeLayout rootView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,26 @@ public class BigImageActivity extends BaseActivity {
                 return false;
             }
         });
+        mAttacher = new PhotoViewAttacher(showSingleImage);
+        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                supportFinishAfterTransition();
+            }
+        });
+        mAttacher.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return false;
+            }
+        });
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                supportFinishAfterTransition();
+            }
+        });
+
 //        showSingleImage.setSingleTapListener(new ImageViewTouch.OnImageViewTouchSingleTapListener() {
 //            @Override
 //            public void onSingleTapConfirmed() {
