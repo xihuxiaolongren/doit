@@ -5,10 +5,12 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.bumptech.glide.request.target.ViewTarget;
 import com.orhanobut.logger.Logger;
 import com.squareup.leakcanary.LeakCanary;
 
 import me.xihuxiaolong.justdoit.BuildConfig;
+import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.cache.CacheService;
 import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.dagger.component.AppComponent;
@@ -53,6 +55,8 @@ public class MyApplication extends Application {
         super.onCreate();
         //内存泄露
         LeakCanary.install(this);
+
+        ViewTarget.setTagId(R.id.glide_tag);
 
         //acra初始化
 //        ACRA.init(this);

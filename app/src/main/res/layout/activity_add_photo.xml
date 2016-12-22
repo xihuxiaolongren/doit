@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+
+    <ImageView
+        android:id="@+id/backgroundIV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
+
+    <me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView
+        android:id="@+id/day_night_background_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:animationDuration="0" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:fitsSystemWindows="true"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/photo"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:clickable="true"
+        android:fitsSystemWindows="true"
+        android:focusableInTouchMode="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/contentET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:hint="写下此刻的想法 . . ."
+                android:textCursorDrawable="@drawable/color_cursor"
+                android:textSize="14sp"
+                app:met_baseColor="@color/titleTextColor"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/titleTextColor"
+                app:met_textColor="@color/titleTextColor"
+                app:met_textColorHint="@color/titleTextColor" />
+
+            <ImageView
+                android:id="@+id/picIV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_margin="20dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -30,12 +30,12 @@
         <activity
             android:name=".module.main.MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.TransNav">
+            android:theme="@style/AppTheme.TransNav"
+            android:windowSoftInputMode="adjustPan">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
         <activity
@@ -44,10 +44,16 @@
         <activity
             android:name=".module.editalert.EditAlertActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
+            android:name=".module.editphoto.EditPhotoActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+
         <activity android:name=".module.planhistory.PlanHistoryActivity" />
         <activity android:name=".module.planlist.OtherDayActivity" />
         <activity android:name=".module.adddayplan.AddDayPlanActivity" />
         <activity android:name=".module.targetdetail.TargetDetailActivity" />
+        <activity
+            android:name=".module.images.BigImageActivity"/>
         <activity
             android:name=".module.settings.SettingsActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
@@ -55,7 +61,7 @@
             android:name="com.soundcloud.android.crop.CropImageActivity"
             android:theme="@style/CropTheme" />
 
-        <service android:name=".common.service.PlanService"></service>
+        <service android:name=".common.service.PlanService" />
 
         <receiver android:name=".common.receiver.MyReceiver">
             <intent-filter>
@@ -75,7 +81,9 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".module.redoplandetail.RedoPlanDetailActivity" android:theme="@style/MyDialogStyle"/>
+        <activity
+            android:name=".module.redoplandetail.RedoPlanDetailActivity"
+            android:theme="@style/MyDialogStyle" />
     </application>
 
 </manifest>

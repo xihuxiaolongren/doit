@@ -41,6 +41,8 @@ public class PlanDO implements MultiItemEntity, Serializable{
     private String linkAppName;
     private String linkAppPackageName;
 
+    private String picUrls;
+
     private int startTime;
     private int startHour;
     private int startMinute;
@@ -56,11 +58,11 @@ public class PlanDO implements MultiItemEntity, Serializable{
     @Transient
     private int tempRepeatmode;
 
-    @Generated(hash = 831710539)
+    @Generated(hash = 72247389)
     public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, String title,
             String content, String tags, String linkAppName, String linkAppPackageName,
-            int startTime, int startHour, int startMinute, int endTime, int endHour,
-            int endMinute, long dayTime, int alarmStatus) {
+            String picUrls, int startTime, int startHour, int startMinute, int endTime,
+            int endHour, int endMinute, long dayTime, int alarmStatus) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -70,6 +72,7 @@ public class PlanDO implements MultiItemEntity, Serializable{
         this.tags = tags;
         this.linkAppName = linkAppName;
         this.linkAppPackageName = linkAppPackageName;
+        this.picUrls = picUrls;
         this.startTime = startTime;
         this.startHour = startHour;
         this.startMinute = startMinute;
@@ -232,5 +235,13 @@ public class PlanDO implements MultiItemEntity, Serializable{
 
     public void setAlarmStatus(int alarmStatus) {
         this.alarmStatus = alarmStatus;
+    }
+
+    public String getPicUrls() {
+        return this.picUrls;
+    }
+
+    public void setPicUrls(String picUrls) {
+        this.picUrls = picUrls;
     }
 }

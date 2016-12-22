@@ -157,6 +157,15 @@
             fab:fab_label="@string/alert"
             fab:fab_size="mini" />
 
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/photoFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_photo"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/photo"
+            fab:fab_size="mini" />
+
     </com.github.clans.fab.FloatingActionMenu>
 
 </RelativeLayout>

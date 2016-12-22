@@ -1,7 +1,16 @@
 package me.xihuxiaolong.justdoit.module.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.percent.PercentLayoutHelper;
+import android.support.percent.PercentRelativeLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,8 +22,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.ViewTarget;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.joda.time.DateTime;
@@ -29,7 +41,10 @@ import java.util.List;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
+import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
+import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import mehdi.sakout.fancybuttons.FancyButton;
 
@@ -44,7 +59,7 @@ public class NewPlanListWrapper {
     private RecyclerView mRecyclerView;
     private PlanListAdapter adapter;
 
-    public NewPlanListWrapper(Context context, RecyclerView recyclerView, PlanListOnClickListener planListOnClickListener){
+    public NewPlanListWrapper(Context context, RecyclerView recyclerView, PlanListOnClickListener planListOnClickListener) {
         this.mRecyclerView = recyclerView;
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -56,11 +71,11 @@ public class NewPlanListWrapper {
         mRecyclerView.setAdapter(adapter);
     }
 
-    public void addHeaderView(View headerView){
+    public void addHeaderView(View headerView) {
         adapter.addHeaderView(headerView);
     }
 
-    public void setEmptyView(View emptyView, boolean isHeadAndEmpty, boolean isFootAndEmpty){
+    public void setEmptyView(View emptyView, boolean isHeadAndEmpty, boolean isFootAndEmpty) {
         adapter.setEmptyView(emptyView);
         adapter.setHeaderFooterEmpty(isHeadAndEmpty, isFootAndEmpty);
     }
@@ -80,6 +95,7 @@ public class NewPlanListWrapper {
             scale = context.getResources().getDisplayMetrics().density;
             addItemType(PlanDO.TYPE_ALERT, R.layout.item_alert);
             addItemType(PlanDO.TYPE_PLAN, R.layout.item_plan);
+            addItemType(PlanDO.TYPE_PHOTO, R.layout.item_photo);
             this.planListOnClickListener = planListOnClickListener;
         }
 
@@ -87,7 +103,7 @@ public class NewPlanListWrapper {
             @Override
             public void onClick(View v) {
                 PlanDO planDO = (PlanDO) v.getTag();
-                if(planListOnClickListener != null)
+                if (planListOnClickListener != null)
                     planListOnClickListener.planListenr(planDO);
             }
         };
@@ -96,8 +112,21 @@ public class NewPlanListWrapper {
             @Override
             public void onClick(View v) {
                 PlanDO planDO = (PlanDO) v.getTag();
-                if(planListOnClickListener != null)
+                if (planListOnClickListener != null)
                     planListOnClickListener.alertListenr(planDO);
+            }
+        };
+
+        private View.OnClickListener photoListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlanDO planDO = (PlanDO) v.getTag();
+                if (!TextUtils.isEmpty(planDO.getPicUrls()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mContext instanceof Activity) {
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) mContext, v, v.getTransitionName());
+                    mContext.startActivity(new Intent(mContext, BigImageActivity.class).putExtra("imageUrl", planDO.getPicUrls()), options.toBundle());
+                } else {
+                    mContext.startActivity(new Intent(mContext, BigImageActivity.class).putExtra("imageUrl", planDO.getPicUrls()));
+                }
             }
         };
 
@@ -110,20 +139,23 @@ public class NewPlanListWrapper {
                 case PlanDO.TYPE_PLAN:
                     convertPlan(holder, planDO);
                     break;
+                case PlanDO.TYPE_PHOTO:
+                    convertPhoto(holder, planDO);
+                    break;
             }
         }
 
-        private void convertAlert(BaseViewHolder holder, PlanDO planDO){
-            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
+        private void convertAlert(BaseViewHolder holder, PlanDO planDO) {
+            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(600 / getItemCount()));
             DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
 //                DateTime dateTime = DateTime.now().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
             DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
             holder.setText(R.id.startTimeTV, dateTime.toString(builder));
             holder.setText(R.id.contentTV, planDO.getContent());
-            if(dateTime.isBeforeNow()){
+            if (dateTime.isBeforeNow()) {
                 holder.setText(R.id.doTV, "已完成");
                 holder.setVisible(R.id.doTV, true);
-            }else{
+            } else {
                 holder.setText(R.id.doTV, "未开始");
                 holder.setVisible(R.id.doTV, true);
             }
@@ -132,8 +164,44 @@ public class NewPlanListWrapper {
             holder.setOnClickListener(R.id.rootView, alertListener);
         }
 
-        private void convertPlan(BaseViewHolder holder, PlanDO planDO){
-            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(400 / getItemCount()));
+        private void convertPhoto(BaseViewHolder holder, PlanDO planDO) {
+            final ImageView picIV = holder.getView(R.id.picIV);
+            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(600 / getItemCount()));
+            DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+            DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
+            holder.setText(R.id.startTimeTV, dateTime.toString(builder));
+            holder.setText(R.id.contentTV, planDO.getContent());
+            holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
+            int dp = DeviceUtil.getDensity();
+            int mWidth = 0, mHeight = 0;
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(planDO.getPicUrls(), options);
+                mWidth = options.outWidth;
+                mHeight = options.outHeight;
+            } catch (Exception e) {
+
+            }
+            PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) picIV.getLayoutParams();
+            PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
+            if (mWidth > mHeight) {
+                info.widthPercent = 0.6f;
+                info.aspectRatio = 1.5f;
+            } else {
+                info.widthPercent = 0.5f;
+                info.aspectRatio = 0.66f;
+            }
+            info.aspectRatio = ((float) mWidth) / mHeight;
+            picIV.setLayoutParams(params);
+            ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
+            //            ImageUtils.loadImageFromFile(mContext, new PhotoTarget(picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
+            holder.setTag(R.id.picIV, planDO);
+            holder.setOnClickListener(R.id.picIV, photoListener);
+        }
+
+        private void convertPlan(BaseViewHolder holder, PlanDO planDO) {
+            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(600 / getItemCount()));
             DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
             DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
 //                DateTime startTime = new DateTime().withTimeAtStartOfDay().withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
@@ -153,20 +221,20 @@ public class NewPlanListWrapper {
 
             TextView contentTV = holder.getView(R.id.contentTV);
             ImageView timelineIV = holder.getView(R.id.timelineIV);
-            if(endTime.isBeforeNow()){
+            if (endTime.isBeforeNow()) {
                 contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
                 holder.setText(R.id.doTV, "已完成");
                 holder.setVisible(R.id.doTV, true);
                 timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
 //                    ViewHelper.setAlpha(contentTV, 0.3f);
-            }else if(startTime.isAfterNow()){
+            } else if (startTime.isAfterNow()) {
                 holder.setText(R.id.doTV, "未开始");
                 holder.setVisible(R.id.doTV, true);
                 contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
 //                    timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
                 timelineIV.setImageResource(R.drawable.timeline_plan_other);
 //                    ViewHelper.setAlpha(contentTV, 0.3f);
-            }else{
+            } else {
                 holder.setText(R.id.doTV, "进行中");
                 holder.setVisible(R.id.doTV, true);
                 contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
@@ -177,24 +245,24 @@ public class NewPlanListWrapper {
             FancyButton linkAppFB = holder.getView(R.id.linkAppFB);
             linkAppFB.setTag(planDO);
             linkAppFB.setOnClickListener(linkAppClickListener);
-            if(planDO.getLinkAppName() != null) {
+            if (planDO.getLinkAppName() != null) {
                 linkAppFB.setIconResource(ThirdAppUtils.getIcon(mContext, planDO.getLinkAppPackageName()));
-                linkAppFB.getIconImageObject().setLayoutParams(new LinearLayout.LayoutParams((int)(28 * scale + 0.5f), (int)(28 * scale + 0.5f)));
+                linkAppFB.getIconImageObject().setLayoutParams(new LinearLayout.LayoutParams((int) (28 * scale + 0.5f), (int) (28 * scale + 0.5f)));
                 linkAppFB.setText(planDO.getLinkAppName());
                 linkAppFB.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 linkAppFB.setVisibility(View.GONE);
             }
             FlexboxLayout flexboxLayout = holder.getView(R.id.tags_fl);
-            if(!TextUtils.isEmpty(planDO.getTags())){
+            if (!TextUtils.isEmpty(planDO.getTags())) {
                 flexboxLayout.removeAllViews();
                 flexboxLayout.setVisibility(View.VISIBLE);
-                for(String tag : planDO.getTags().split(",")){
+                for (String tag : planDO.getTags().split(",")) {
                     TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
                     textView.setText("# " + tag);
                     flexboxLayout.addView(textView);
                 }
-            }else{
+            } else {
                 flexboxLayout.setVisibility(View.GONE);
             }
 
@@ -209,10 +277,23 @@ public class NewPlanListWrapper {
                 ThirdAppUtils.launchapp(mContext, planDO.getLinkAppPackageName());
             }
         };
+
+        private class PhotoTarget extends ViewTarget<PorterShapeImageView, Bitmap> {
+
+            public PhotoTarget(PorterShapeImageView view) {
+                super(view);
+            }
+
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                this.view.setImageBitmap(resource);
+            }
+        }
     }
 
-    public interface PlanListOnClickListener{
+    public interface PlanListOnClickListener {
         void planListenr(PlanDO planDO);
+
         void alertListenr(PlanDO planDO);
     }
 

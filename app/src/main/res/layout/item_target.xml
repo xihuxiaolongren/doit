@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +11,8 @@
     card_view:cardBackgroundColor="@color/sky"
     card_view:cardCornerRadius="5dp"
     card_view:cardElevation="2dp"
-    card_view:cardUseCompatPadding="true">
+    card_view:cardUseCompatPadding="true"
+    card_view:cardPreventCornerOverlap="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,7 +26,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/bg_target" />
 
-        <ImageView
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/bgIV"
             android:transitionName="targetIV"
             android:layout_width="wrap_content"
@@ -34,7 +36,8 @@
             android:layout_alignRight="@+id/contentRL"
             android:layout_alignTop="@+id/contentRL"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            app:riv_corner_radius="2dp"/>
 
         <RelativeLayout
             android:id="@+id/contentRL"

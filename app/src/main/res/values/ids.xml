@@ -4,5 +4,6 @@
     <item type="id" name="tag_first"/>
     <item type="id" name="tag_second"/>
     <item type="id" name="tag_third"/>
-    
+    <item name="glide_tag" type="id"/>
+
 </resources>

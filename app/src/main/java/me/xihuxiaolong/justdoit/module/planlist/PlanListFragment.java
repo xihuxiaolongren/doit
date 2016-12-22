@@ -50,6 +50,7 @@ import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
+import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
@@ -96,6 +97,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     FloatingActionButton planFab;
     @BindView(R.id.alertFab)
     FloatingActionButton alertFab;
+    @BindView(R.id.photoFab)
+    FloatingActionButton photoFab;
     @BindView(R.id.fab)
     FloatingActionMenu fab;
     @BindView(R.id.headerIV)
@@ -189,6 +192,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
         planFab.setOnClickListener(fabListener);
         alertFab.setOnClickListener(fabListener);
+        photoFab.setOnClickListener(fabListener);
         fab.setClosedOnTouchOutside(true);
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -251,6 +255,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 return true;
             case R.id.action_add_plan:
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+                return true;
+            case R.id.action_add_photo:
+                startActivity(new Intent(getActivity(), EditPhotoActivity.class));
                 return true;
             case R.id.action_add_tomorrow_plan:
                 startActivity(new Intent(getActivity(), OtherDayActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
@@ -493,6 +500,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                     break;
                 case R.id.alertFab:
                     startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+                    break;
+                case R.id.photoFab:
+                    startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                     break;
 //                case R.id.tomorrowPlanFab:
 //                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));

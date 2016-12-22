@@ -4,13 +4,13 @@
     tools:context=".module.main.MainActivity">
     <item
         android:id="@+id/action_delete"
-        android:title="@string/menu_delete"
         android:icon="@drawable/menu_delete"
+        android:title="@string/menu_delete"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_confirm"
+        android:icon="@drawable/menu_confirm"
         android:orderInCategory="1"
         android:title="@string/action_confirm"
-        android:icon="@drawable/menu_confirm"
         app:showAsAction="always" />
 </menu>

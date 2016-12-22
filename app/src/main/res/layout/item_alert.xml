@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="7:30 am"
-                android:textColor="@color/titleTextColor" />
+                android:textAppearance="@style/MyTextAppearance.BodyNormal" />
 
         </LinearLayout>
     </FrameLayout>

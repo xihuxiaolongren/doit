@@ -10,6 +10,7 @@
     <string name="sleep">休息</string>
     <string name="plan">计划</string>
     <string name="alert">提醒</string>
+    <string name="photo">此刻</string>
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
     <string name="add_tag">添加标签</string>
@@ -40,4 +41,5 @@
     <string name="action_day">白天模式</string>
     <string name="action_night">夜间模式</string>
     <string name="select_template">选择模板</string>
+    <string name="add_photo">拍照</string>
 </resources>
