@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.orhanobut.logger.Logger;
@@ -24,12 +23,11 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.event.Event;
+import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
-import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
-import me.xihuxiaolong.library.utils.ActivityUtils;
 
 public class MainActivity extends BaseActivity implements ScrollListener {
 
@@ -51,12 +49,12 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         EventBus.getDefault().register(this);
         if(savedInstanceState != null) {
             dayNightBackgroundView.setAnimationDuration(0);
-            bottomBar.post(new Runnable() {
-                @Override
-                public void run() {
-                    showBottom(0);
-                }
-            });
+//            bottomBar.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    showBottom(0);
+//                }
+//            });
         }
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);

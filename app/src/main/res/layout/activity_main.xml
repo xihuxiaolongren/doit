@@ -23,7 +23,7 @@
         android:background="@color/sky"
         app:bb_tabXmlResource="@xml/bottombar_tabs_color_changing"
         app:bb_titleTextAppearance="@style/MyTextAppearance.Bottom"
-        app:bb_behavior="shifting|underNavbar"
+        app:bb_behavior="shifting"
         app:bb_inActiveTabColor="@color/titleTextColor"
         app:bb_activeTabColor="@color/titleTextColor"
         android:layout_marginBottom="-56dp"/>
