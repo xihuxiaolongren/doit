@@ -59,12 +59,20 @@
                 app:met_textColor="@color/titleTextColor"
                 app:met_textColorHint="@color/titleTextColor" />
 
-            <ImageView
-                android:id="@+id/picIV"
+            <android.support.percent.PercentRelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:layout_margin="20dp"/>
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp">
+
+                <ImageView
+                    android:id="@+id/picIV"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitCenter"
+                    android:transitionName="bigImageView" />
+            </android.support.percent.PercentRelativeLayout>
 
         </LinearLayout>
 

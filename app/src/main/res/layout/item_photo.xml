@@ -4,29 +4,41 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="horizontal">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="80dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingRight="10dp"
         android:paddingBottom="50dp">
 
-            <TextView
-                android:id="@+id/startTimeTV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:paddingRight="10dp"
-                android:layout_marginTop="-3dp"
-                android:textAppearance="@style/MyTextAppearance.BodyNormal"/>
+        <TextView
+            android:id="@+id/startTimeTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-3dp"
+            android:gravity="right"
+            android:textAppearance="@style/MyTextAppearance.BodyNormal" />
 
-    </FrameLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:paddingRight="2dp"
+            android:src="@drawable/more"
+            android:tint="@color/titleTextColor" />
+    </LinearLayout>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginBottom="-2dp"
         android:scaleType="fitXY"
-        android:src="@drawable/timeline_todo"
+        android:src="@drawable/timeline_photo"
         android:tint="@color/titleTextColor" />
 
     <LinearLayout
@@ -40,25 +52,25 @@
             android:id="@+id/contentTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:textColor="@color/titleTextColor"
-            android:textSize="16sp"
-            android:layout_marginBottom="15dp"/>
+            android:textSize="16sp" />
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp">
+            android:layout_marginRight="15dp">
 
             <ImageView
                 android:id="@+id/picIV"
-                android:transitionName="bigImageView"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:scaleType="fitCenter" />
+                android:scaleType="fitCenter"
+                android:transitionName="bigImageView" />
         </android.support.percent.PercentRelativeLayout>
 
         <!--<com.github.siyamed.shapeimageview.mask.PorterShapeImageView-->

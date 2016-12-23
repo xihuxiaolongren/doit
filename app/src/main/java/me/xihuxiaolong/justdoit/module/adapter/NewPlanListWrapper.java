@@ -193,6 +193,7 @@ public class NewPlanListWrapper {
                 info.aspectRatio = 0.66f;
             }
             info.aspectRatio = ((float) mWidth) / mHeight;
+            info.widthPercent = Math.min(0.8f, Math.max(0.2f, ((float) mWidth) / mHeight * 0.6f));
             picIV.setLayoutParams(params);
             ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
             //            ImageUtils.loadImageFromFile(mContext, new PhotoTarget(picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);

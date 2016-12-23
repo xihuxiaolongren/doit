@@ -26,6 +26,9 @@ public class EditPhotoPresenter extends MvpBasePresenter<EditPhotoContract.IView
     @Inject
     IPlanDataSource planDataSource;
 
+//    @Inject @Nullable
+    String targetName;
+
     @Inject
     public EditPhotoPresenter() {
     }
