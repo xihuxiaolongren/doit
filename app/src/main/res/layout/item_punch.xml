@@ -27,7 +27,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="2dp"
-            android:text="时刻"
+            android:text="@string/punch"
             android:textColor="@color/titleTextColor"
             android:textSize="12sp" />
 
@@ -53,7 +53,7 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="-2dp"
         android:scaleType="fitXY"
-        android:src="@drawable/timeline_photo"
+        android:src="@drawable/timeline_punch"
         android:tint="@color/titleTextColor" />
 
     <LinearLayout

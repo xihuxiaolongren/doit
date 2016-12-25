@@ -38,6 +38,8 @@ public class PlanListContract {
 
         void showOtherDayUI();
 
+        void savePunchSuccess();
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
@@ -47,6 +49,8 @@ public class PlanListContract {
         void loadDayInfo();
 
         void loadUserSettings();
+
+        void savePunch(String content, String pictures);
 
     }
 }

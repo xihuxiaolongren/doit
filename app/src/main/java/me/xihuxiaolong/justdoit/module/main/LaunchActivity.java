@@ -10,7 +10,7 @@ import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 
 public class LaunchActivity extends BaseActivity {
 
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
+    private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -46,7 +46,8 @@
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
             android:name=".module.editphoto.EditPhotoActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan" />
+            android:windowSoftInputMode="stateVisible|adjustPan"
+            android:screenOrientation="portrait" />
 
         <activity android:name=".module.planhistory.PlanHistoryActivity" />
         <activity android:name=".module.planlist.OtherDayActivity" />

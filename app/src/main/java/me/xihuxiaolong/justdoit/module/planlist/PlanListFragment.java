@@ -9,10 +9,12 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
@@ -99,6 +103,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     FloatingActionButton alertFab;
     @BindView(R.id.photoFab)
     FloatingActionButton photoFab;
+    @BindView(R.id.punchFab)
+    FloatingActionButton punchFab;
     @BindView(R.id.fab)
     FloatingActionMenu fab;
     @BindView(R.id.headerIV)
@@ -193,6 +199,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         planFab.setOnClickListener(fabListener);
         alertFab.setOnClickListener(fabListener);
         photoFab.setOnClickListener(fabListener);
+        punchFab.setOnClickListener(fabListener);
         fab.setClosedOnTouchOutside(true);
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -392,6 +399,11 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
+    public void savePunchSuccess() {
+
+    }
+
+    @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         if(scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
@@ -504,6 +516,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 case R.id.photoFab:
                     startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                     break;
+                case R.id.punchFab:
+                    openPunch();
+                    break;
 //                case R.id.tomorrowPlanFab:
 //                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
 //                    break;
@@ -512,22 +527,28 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     };
 
-    private View.OnClickListener planListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            PlanDO planDO = (PlanDO) v.getTag();
-            startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
-        }
-    };
-
-    private View.OnClickListener alertListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            PlanDO planDO = (PlanDO) v.getTag();
-            startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
-        }
-    };
-
+    private void openPunch(){
+        new MaterialDialog.Builder(getContext())
+                .title(R.string.add_punch_title)
+                .widgetColorRes(R.color.colorAccent)
+//                .inputRange(1, 20)
+                .inputType(InputType.TYPE_CLASS_TEXT)
+                .input(R.string.add_punch_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        // Do something
+                    }
+                })
+                .positiveText(R.string.action_confirm)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.savePunch(dialog.getInputEditText().getText().toString(), null);
+                    }
+                })
+                .negativeText(R.string.action_cancel)
+                .show();
+    }
     @Override
     public void onPause() {
         super.onPause();

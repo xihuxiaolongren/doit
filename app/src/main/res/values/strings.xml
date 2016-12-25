@@ -11,11 +11,14 @@
     <string name="plan">计划</string>
     <string name="alert">提醒</string>
     <string name="photo">此刻</string>
+    <string name="punch">打卡</string>
     <string name="start_time">开始时间</string>
     <string name="end_time">结束时间</string>
     <string name="add_tag">添加标签</string>
     <string name="add_target_title">创建一个目标</string>
+    <string name="add_punch_title">打卡</string>
     <string name="add_target_hint">输入目标名称</string>
+    <string name="add_punch_hint">一句话描述 . . . </string>
     <string name="add_target_prefill"></string>
     <string name="add_alert">新建提醒</string>
     <string name="add_clock">添加提醒</string>

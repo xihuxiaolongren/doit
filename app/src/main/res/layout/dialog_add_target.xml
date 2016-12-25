@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/addTargetET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/add_target_hint"
+        android:inputType="text"
+        android:maxLines="1"
+        android:textSize="14sp"
+        app:met_baseColor="@color/titleTextColor"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/titleTextColor"
+        app:met_textColor="@color/titleTextColor"
+        app:met_textColorHint="@color/titleTextColor" />
+
+    <RelativeLayout
+        android:id="@+id/manualThemeRL"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical">
+
+        <com.rey.material.widget.RadioButton
+            android:id="@+id/normalRB"
+            style="@style/Material.Drawable.RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="普通模式"
+            android:checked="true"/>
+
+        <com.rey.material.widget.RadioButton
+            android:id="@+id/punchRB"
+            style="@style/Material.Drawable.RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="打卡模式" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/explain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textAppearance="@style/MyTextAppearance.BodyNormal"
+        android:text="说明：普通模式可以在该目标下添加重复计划/提醒"/>
+</LinearLayout>

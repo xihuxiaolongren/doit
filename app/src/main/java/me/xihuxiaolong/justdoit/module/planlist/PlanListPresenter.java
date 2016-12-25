@@ -75,6 +75,23 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         }
     }
 
+    @Override
+    public void savePunch(String content, String pictures) {
+        DateTime dateTime = DateTime.now();
+        PlanDO punch = new PlanDO();
+        punch.setType(PlanDO.TYPE_PUNCH);
+        punch.setContent(content);
+        punch.setStartHour(dateTime.getHourOfDay());
+        punch.setStartMinute(dateTime.getMinuteOfHour());
+        punch.setStartTime(dateTime.getMillisOfDay());
+        punch.setPicUrls(pictures);
+
+        punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
+        long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
+        punch.setId(punchId);
+        EventBus.getDefault().post(new Event.AddPlan(punch));
+    }
+
     @Subscribe
     public void onEvent(Event.AddPlan addPlanEvent) {
         if(dayTime == addPlanEvent.plan.getDayTime())

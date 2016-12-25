@@ -2,7 +2,9 @@ package me.xihuxiaolong.justdoit.module.images;
 
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -16,7 +18,7 @@ import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-public class BigImageActivity extends BaseActivity {
+public class BigImageActivity extends AppCompatActivity {
 
     @BindView(R.id.showSingleImage)
     ImageView showSingleImage;
@@ -27,6 +29,7 @@ public class BigImageActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_image);
         ButterKnife.bind(this);
@@ -42,19 +45,19 @@ public class BigImageActivity extends BaseActivity {
             @Override
             public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
                 ActivityCompat.startPostponedEnterTransition(BigImageActivity.this);
-                return false;
-            }
-        });
-        mAttacher = new PhotoViewAttacher(showSingleImage);
-        mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
-            @Override
-            public void onViewTap(View view, float x, float y) {
-                supportFinishAfterTransition();
-            }
-        });
-        mAttacher.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
+                mAttacher = new PhotoViewAttacher(showSingleImage);
+                mAttacher.setOnViewTapListener(new PhotoViewAttacher.OnViewTapListener() {
+                    @Override
+                    public void onViewTap(View view, float x, float y) {
+                        supportFinishAfterTransition();
+                    }
+                });
+                mAttacher.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        return false;
+                    }
+                });
                 return false;
             }
         });

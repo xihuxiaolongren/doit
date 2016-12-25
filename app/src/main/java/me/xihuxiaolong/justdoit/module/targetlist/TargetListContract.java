@@ -26,13 +26,15 @@ public class TargetListContract {
 
         void createTargetSuccess(TargetDO target);
 
+        void showAddTargetDialog();
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
         void loadTargets();
 
-        void createTarget(String name);
+        void createTarget(String name, int type);
 
     }
 }

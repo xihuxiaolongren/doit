@@ -11,20 +11,28 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
+import android.support.v7.graphics.Target;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -40,6 +48,8 @@ import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.RadioButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -57,6 +67,8 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
+import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
+import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
@@ -406,26 +418,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     private View.OnClickListener fabListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new MaterialDialog.Builder(getContext())
-                    .title(R.string.add_target_title)
-                    .widgetColorRes(R.color.colorAccent)
-                    .inputRange(1, 20)
-                    .inputType(InputType.TYPE_CLASS_TEXT)
-                    .input(R.string.add_target_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
-                        @Override
-                        public void onInput(MaterialDialog dialog, CharSequence input) {
-                            // Do something
-                        }
-                    })
-                    .positiveText(R.string.action_confirm)
-                    .onPositive(new MaterialDialog.SingleButtonCallback() {
-                        @Override
-                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            presenter.createTarget(dialog.getInputEditText().getText().toString());
-                        }
-                    })
-                    .negativeText(R.string.action_cancel)
-                    .show();
+            showAddTargetDialog();
         }
     };
 
@@ -482,6 +475,86 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 //        targetAdapter.addData(0, targetDO);
 //        updateArcProgress(targetAdapter.getData().size());
         startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
+    }
+
+    private MaterialDialog addTargetDialog;
+    private MaterialEditText addTargetET;
+    private RadioButton normalRB, punchRB;
+    private TextView explainTV;
+
+    @Override
+    public void showAddTargetDialog() {
+//        new MaterialDialog.Builder(getContext())
+//                .title(R.string.add_target_title)
+//                .widgetColorRes(R.color.colorAccent)
+//                .inputRange(1, 20)
+//                .inputType(InputType.TYPE_CLASS_TEXT)
+//                .input(R.string.add_target_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
+//                    @Override
+//                    public void onInput(MaterialDialog dialog, CharSequence input) {
+//                        // Do something
+//                    }
+//                })
+//                .items(R.array.repeat_week_arr)
+//                .itemsCallbackSingleChoice(0, null)
+//                .positiveText(R.string.action_confirm)
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        presenter.createTarget(dialog.getInputEditText().getText().toString());
+//                    }
+//                })
+//                .negativeText(R.string.action_cancel)
+//                .show();
+        addTargetDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.add_target_title)
+                .customView(R.layout.dialog_add_target, true)
+                .positiveText(R.string.action_confirm)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.createTarget(addTargetET.getText().toString(), normalRB.isChecked() ? TargetDO.TYPE_NORMAL : TargetDO.TYPE_PUNCH);
+                    }
+                })
+                .negativeText(R.string.action_cancel)
+                .show();
+        addTargetDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+        addTargetET = (MaterialEditText) addTargetDialog.findViewById(R.id.addTargetET);
+        addTargetET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addTargetDialog.getActionButton(DialogAction.POSITIVE).setEnabled(!TextUtils.isEmpty(s.toString().trim()));
+            }
+        });
+        normalRB = (RadioButton) addTargetDialog.findViewById(R.id.normalRB);
+        punchRB = (RadioButton) addTargetDialog.findViewById(R.id.punchRB);
+        explainTV = (TextView) addTargetDialog.findViewById(R.id.explain);
+        normalRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                punchRB.setChecked(!isChecked);
+                if(isChecked)
+                    explainTV.setText("说明：在该目标模式下可添加重复计划/提醒");
+            }
+        });
+        punchRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                normalRB.setChecked(!isChecked);
+                if(isChecked)
+                    explainTV.setText("说明：在该目标模式下可进行打卡操作");
+            }
+        });
     }
 
     private void updateArcProgress(int count){

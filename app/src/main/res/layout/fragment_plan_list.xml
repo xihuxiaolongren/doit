@@ -149,6 +149,15 @@
             fab:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/punchFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_punch_1"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_label="@string/punch"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/alertFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

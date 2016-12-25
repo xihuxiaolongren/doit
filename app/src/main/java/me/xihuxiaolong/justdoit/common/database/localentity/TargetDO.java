@@ -15,8 +15,13 @@ import java.util.List;
 @Entity
 public class TargetDO {
 
+    public final static int TYPE_NORMAL = 0;
+    public final static int TYPE_PUNCH = 1;
+
     @Id
     private String name;
+
+    private int type;
 
     private Long createdTime;
     private Long modifiedTime;
@@ -28,10 +33,11 @@ public class TargetDO {
     @Transient
     private List<RedoPlanDO> redoPlanDOList;
 
-    @Generated(hash = 1388450240)
-    public TargetDO(String name, Long createdTime, Long modifiedTime,
+    @Generated(hash = 2044626568)
+    public TargetDO(String name, int type, Long createdTime, Long modifiedTime,
             String headerImageUri, int count) {
         this.name = name;
+        this.type = type;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
         this.headerImageUri = headerImageUri;
@@ -88,5 +94,13 @@ public class TargetDO {
 
     public Long getModifiedTime() {
         return this.modifiedTime;
+    }
+
+    public int getType() {
+        return this.type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

@@ -1,9 +1,12 @@
 package me.xihuxiaolong.justdoit.module.editphoto;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.percent.PercentLayoutHelper;
+import android.support.percent.PercentRelativeLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -19,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
+import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
@@ -48,12 +52,14 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
 
         setToolbar(toolbar, true);
 
-        Intent intent = new Intent(this, MediaChoseActivity.class);
-        //chose_mode选择模式 0单选 1多选
-        intent.putExtra("chose_mode", 0);
-        //是否显示需要第一个是图片相机按钮
-        intent.putExtra("isNeedfcamera", true);
-        startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
+        if(savedInstanceState == null) {
+            Intent intent = new Intent(this, MediaChoseActivity.class);
+            //chose_mode选择模式 0单选 1多选
+            intent.putExtra("chose_mode", 0);
+            //是否显示需要第一个是图片相机按钮
+            intent.putExtra("isNeedfcamera", true);
+            startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
+        }
     }
 
     @Override
@@ -61,11 +67,39 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
         if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
             if (result != null && !CollectionUtils.isEmpty(result.getStringArrayListExtra("data"))) {
                 ArrayList<String> uris = result.getStringArrayListExtra("data");
-                picIV.setImageURI(null);
-                picIV.setImageURI(Uri.parse(uris.get(0)));
+//                picIV.setImageURI(null);
+//                picIV.setImageURI(Uri.parse(uris.get(0)));
                 picUri = uris.get(0);
+                setSingleImage(picUri, picIV);
+
             }
         }
+    }
+
+    private void setSingleImage(String filepath, ImageView imageView){
+        int mWidth = 0, mHeight = 0;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filepath, options);
+            mWidth = options.outWidth;
+            mHeight = options.outHeight;
+        } catch (Exception e) {
+
+        }
+        PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) imageView.getLayoutParams();
+        PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
+        if (mWidth > mHeight) {
+            info.widthPercent = 0.6f;
+            info.aspectRatio = 1.5f;
+        } else {
+            info.widthPercent = 0.5f;
+            info.aspectRatio = 0.66f;
+        }
+        info.aspectRatio = ((float) mWidth) / mHeight;
+        info.widthPercent = Math.min(0.8f, Math.max(0.2f, ((float) mWidth) / mHeight * 0.6f));
+        imageView.setLayoutParams(params);
+        ImageUtils.loadImageFromFile(this, picIV, picUri, ImageView.ScaleType.FIT_CENTER);
     }
 
     @Override

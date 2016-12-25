@@ -52,9 +52,10 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     }
 
     @Override
-    public void createTarget(String name) {
+    public void createTarget(String name, int type) {
         TargetDO targetDO = new TargetDO();
         targetDO.setName(name);
+        targetDO.setType(type);
         redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
         if (isViewAttached()) {
             getView().createTargetSuccess(targetDO);

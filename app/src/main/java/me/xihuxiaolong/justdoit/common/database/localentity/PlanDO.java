@@ -25,6 +25,7 @@ public class PlanDO implements MultiItemEntity, Serializable{
     public final static int TYPE_PLAN = 0;
     public final static int TYPE_ALERT = 1;
     public final static int TYPE_PHOTO = 2;
+    public final static int TYPE_PUNCH = 3;
 
     @Id(autoincrement = true)
     private Long id;

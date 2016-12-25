@@ -5,16 +5,16 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clipToPadding="false"
     android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="horizontal">
 
     <FrameLayout
         android:layout_width="80.5dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="30dp"
+        android:clipChildren="false"
         android:clipToPadding="false"
-        android:clipChildren="false">
+        android:paddingBottom="30dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                 android:paddingTop="2dp"
                 android:text="Done"
                 android:textAppearance="@style/MyTextAppearance.BodyNormal"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/startTimeTV"
@@ -73,7 +73,7 @@
         android:layout_marginBottom="-2dp"
         android:scaleType="fitXY"
         android:src="@drawable/timeline_plan_other"
-        android:tint="@color/titleTextColor"/>
+        android:tint="@color/titleTextColor" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -89,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="20dp"
+            android:layout_marginTop="-3dp"
             android:gravity="center_vertical"
             android:paddingRight="15dp"
             android:textAppearance="@style/MyTextAppearance.BodyNormal" />

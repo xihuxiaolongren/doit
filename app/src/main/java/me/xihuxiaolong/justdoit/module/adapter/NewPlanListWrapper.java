@@ -96,6 +96,7 @@ public class NewPlanListWrapper {
             addItemType(PlanDO.TYPE_ALERT, R.layout.item_alert);
             addItemType(PlanDO.TYPE_PLAN, R.layout.item_plan);
             addItemType(PlanDO.TYPE_PHOTO, R.layout.item_photo);
+            addItemType(PlanDO.TYPE_PUNCH, R.layout.item_punch);
             this.planListOnClickListener = planListOnClickListener;
         }
 
@@ -142,6 +143,9 @@ public class NewPlanListWrapper {
                 case PlanDO.TYPE_PHOTO:
                     convertPhoto(holder, planDO);
                     break;
+                case PlanDO.TYPE_PUNCH:
+                    convertPunch(holder, planDO);
+                    break;
             }
         }
 
@@ -172,18 +176,40 @@ public class NewPlanListWrapper {
             holder.setText(R.id.startTimeTV, dateTime.toString(builder));
             holder.setText(R.id.contentTV, planDO.getContent());
             holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
-            int dp = DeviceUtil.getDensity();
+            setSingleImage(planDO.getPicUrls(), picIV);
+            ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
+            //            ImageUtils.loadImageFromFile(mContext, new PhotoTarget(picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
+            holder.setTag(R.id.picIV, planDO);
+            holder.setOnClickListener(R.id.picIV, photoListener);
+        }
+
+        private void convertPunch(BaseViewHolder holder, PlanDO planDO) {
+            final ImageView picIV = holder.getView(R.id.picIV);
+            holder.getView(R.id.rootView).setMinimumHeight(ActivityUtils.dpToPx(600 / getItemCount()));
+            DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+            DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
+            holder.setText(R.id.startTimeTV, dateTime.toString(builder));
+            holder.setText(R.id.contentTV, planDO.getContent());
+            holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
+            setSingleImage(planDO.getPicUrls(), picIV);
+            ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
+            //            ImageUtils.loadImageFromFile(mContext, new PhotoTarget(picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
+            holder.setTag(R.id.picIV, planDO);
+            holder.setOnClickListener(R.id.picIV, photoListener);
+        }
+
+        private void setSingleImage(String filepath, ImageView imageView){
             int mWidth = 0, mHeight = 0;
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(planDO.getPicUrls(), options);
+                BitmapFactory.decodeFile(filepath, options);
                 mWidth = options.outWidth;
                 mHeight = options.outHeight;
             } catch (Exception e) {
 
             }
-            PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) picIV.getLayoutParams();
+            PercentRelativeLayout.LayoutParams params = (PercentRelativeLayout.LayoutParams) imageView.getLayoutParams();
             PercentLayoutHelper.PercentLayoutInfo info = params.getPercentLayoutInfo();
             if (mWidth > mHeight) {
                 info.widthPercent = 0.6f;
@@ -194,11 +220,7 @@ public class NewPlanListWrapper {
             }
             info.aspectRatio = ((float) mWidth) / mHeight;
             info.widthPercent = Math.min(0.8f, Math.max(0.2f, ((float) mWidth) / mHeight * 0.6f));
-            picIV.setLayoutParams(params);
-            ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
-            //            ImageUtils.loadImageFromFile(mContext, new PhotoTarget(picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
-            holder.setTag(R.id.picIV, planDO);
-            holder.setOnClickListener(R.id.picIV, photoListener);
+            imageView.setLayoutParams(params);
         }
 
         private void convertPlan(BaseViewHolder holder, PlanDO planDO) {
