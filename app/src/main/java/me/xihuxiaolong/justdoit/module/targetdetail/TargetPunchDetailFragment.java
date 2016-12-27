@@ -317,9 +317,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         ImageUtils.loadImageFromFile(getActivity(), headerIV, uri, ImageView.ScaleType.CENTER_CROP);
     }
 
-    private void updateTheme(int vibrant, int textColor) {
-        this.textColor = textColor;
-        this.vibrant = vibrant;
+    private void updateTheme() {
         titleTv.setTextColor(textColor);
         titleTv.setShadowLayer(0, 0, 0, vibrant);
         dayNightBackgroundView.setRootBackgroundColor(vibrant);
@@ -341,17 +339,15 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(picUri)));
             Palette palette = Palette.from(bitmap).generate();
-            int skyColor = ContextCompat.getColor(getContext(), R.color.sky);
             Set<Palette.Swatch> colorList = new LinkedHashSet<>();
+            colorList.add(null);
             if (palette.getDominantSwatch() != null) colorList.add(palette.getDominantSwatch());
             if (palette.getMutedSwatch() != null) colorList.add(palette.getMutedSwatch());
             if (palette.getVibrantSwatch() != null) colorList.add(palette.getVibrantSwatch());
             if (palette.getDarkMutedSwatch() != null) colorList.add(palette.getDarkMutedSwatch());
-            if (palette.getDarkVibrantSwatch() != null)
-                colorList.add(palette.getDarkVibrantSwatch());
+            if (palette.getDarkVibrantSwatch() != null) colorList.add(palette.getDarkVibrantSwatch());
             if (palette.getLightMutedSwatch() != null) colorList.add(palette.getLightMutedSwatch());
-            if (palette.getLightVibrantSwatch() != null)
-                colorList.add(palette.getLightVibrantSwatch());
+            if (palette.getLightVibrantSwatch() != null) colorList.add(palette.getLightVibrantSwatch());
             List<Palette.Swatch> list = new ArrayList<>();
             list.addAll(colorList);
             final ColorAdapter colorAdapter = new ColorAdapter(R.layout.item_color, list);
@@ -363,7 +359,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            presenter.updateTarget(targetDO.getCustomTheme(), targetDO.getThemeColor(), targetDO.getTextColor());
+                            presenter.updateTarget(targetDO.getCustomTheme(), vibrant, textColor);
                         }
                     })
                     .negativeText(R.string.action_cancel)
@@ -376,11 +372,18 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             colorRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
                 @Override
                 public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-                    Palette.Swatch swatch = (Palette.Swatch) baseQuickAdapter.getItem(position);
-                    updateTheme(swatch.getRgb(), swatch.getBodyTextColor());
-                    targetDO.setCustomTheme(true);
-                    targetDO.setThemeColor(swatch.getRgb());
-                    targetDO.setTextColor(swatch.getBodyTextColor());
+                    if(position == 0){
+                        vibrant = ContextCompat.getColor(getContext(), R.color.sky);
+                        textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
+                        updateTheme();
+                        targetDO.setCustomTheme(false);
+                    }else {
+                        Palette.Swatch swatch = (Palette.Swatch) baseQuickAdapter.getItem(position);
+                        vibrant = swatch.getRgb();
+                        textColor = swatch.getBodyTextColor();
+                        updateTheme();
+                        targetDO.setCustomTheme(true);
+                    }
                 }
             });
         } catch (IOException e) {
@@ -398,7 +401,13 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         @Override
         protected void convert(BaseViewHolder holder, Palette.Swatch color) {
             CircleImageView circleImageView = holder.getView(R.id.color);
-            circleImageView.setFillColor(color.getRgb());
+            if(holder.getAdapterPosition() == 0){
+                holder.setVisible(R.id.tips, true);
+                circleImageView.setFillColor(ContextCompat.getColor(getContext(), R.color.sky));
+            }else {
+                holder.setVisible(R.id.tips, false);
+                circleImageView.setFillColor(color.getRgb());
+            }
         }
     }
 
@@ -537,8 +546,11 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             if(!TextUtils.isEmpty(headerPicUri)) {
                 setHeaderIV(targetDO.getHeaderImageUri());
                 getActivity().invalidateOptionsMenu();
-                if (targetDO.getCustomTheme())
-                    updateTheme(targetDO.getThemeColor(), targetDO.getTextColor());
+                if (targetDO.getCustomTheme()) {
+                    vibrant = targetDO.getThemeColor();
+                    textColor = targetDO.getTextColor();
+                }
+                updateTheme();
             }
             punchAdapter.setNewData(targetDO.getPunchList());
         }

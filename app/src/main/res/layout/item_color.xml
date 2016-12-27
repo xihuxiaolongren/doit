@@ -11,6 +11,14 @@
         android:layout_gravity="center"
         android:src="@drawable/transparent"
         app:civ_border_color="@color/titleTextColor"
-        app:civ_border_width="3dp"
-        app:civ_fill_color="@color/accent" />
+        app:civ_border_width="3dp" />
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="默认"
+        android:textColor="@color/titleTextColor"
+        android:layout_gravity="center"
+        android:textSize="10sp"/>
 </FrameLayout>
