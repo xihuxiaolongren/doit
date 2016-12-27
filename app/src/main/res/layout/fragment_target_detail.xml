@@ -44,7 +44,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/test_bg_target"
                 android:transitionName="targetIV" />
         </android.support.v7.widget.CardView>
 
@@ -91,37 +90,14 @@
         android:textSize="@dimen/title_size"
         android:transitionName="targetTitle" />
 
-    <com.github.clans.fab.FloatingActionMenu
+    <com.github.clans.fab.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
-        fab:menu_colorNormal="@color/accent"
-        fab:menu_colorPressed="@color/accent"
-        fab:menu_fab_size="normal"
-        fab:menu_labels_ellipsize="end"
-        fab:menu_labels_singleLine="true"
-        fab:menu_openDirection="down">
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/planFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_plan"
-            fab:fab_colorNormal="@android:color/white"
-            fab:fab_label="@string/plan"
-            fab:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/alertFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu_clock"
-            fab:fab_colorNormal="@android:color/white"
-            fab:fab_label="@string/alert"
-            fab:fab_size="mini" />
-
-    </com.github.clans.fab.FloatingActionMenu>
+        android:src="@drawable/menu_target_1"
+        fab:fab_colorNormal="@color/accent"
+        fab:fab_size="normal" />
 
 </RelativeLayout>

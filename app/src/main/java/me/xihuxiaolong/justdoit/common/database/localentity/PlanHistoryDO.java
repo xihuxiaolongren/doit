@@ -4,13 +4,17 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaolong
  * Date: 16/10/12.
  */
 @Entity
-public class PlanHistoryDO {
+public class PlanHistoryDO implements Serializable{
+
+    static final long serialVersionUID = -1L;
 
     @Id(autoincrement = true)
     private Long id;

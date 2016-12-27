@@ -18,15 +18,22 @@
         </menu>
     </item>
     <item
+        android:id="@+id/action_set_color"
+        android:icon="@drawable/menu_color"
+        android:orderInCategory="1"
+        android:title="@string/action_color"
+        app:showAsAction="always">
+    </item>
+    <item
         android:id="@+id/action_set_image"
         android:icon="@drawable/menu_target_bg"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="@string/action_add"
         app:showAsAction="always">
     </item>
     <item
         android:id="@+id/action_delete"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:icon="@drawable/menu_delete"
         android:title="@string/menu_delete"
         app:showAsAction="never" />

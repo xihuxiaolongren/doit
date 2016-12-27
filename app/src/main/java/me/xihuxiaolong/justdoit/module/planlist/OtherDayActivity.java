@@ -13,7 +13,7 @@ public class OtherDayActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        dayTime = getIntent().getLongExtra("dayTime", -1L);
-        setContentView(R.layout.activity_other_day_plan_list);
+        setContentView(R.layout.activity_single_fragment);
             ButterKnife.bind(this);
 //        setToolbar(toolbar, false);
 //        if(dayTime != -1L)

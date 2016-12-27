@@ -4,7 +4,9 @@ import android.support.annotation.Nullable;
 
 import dagger.Module;
 import dagger.Provides;
+import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.RedoPlanDataSource;
 
 /**
@@ -29,6 +31,11 @@ public class TargetDetailModule {
     @Provides
     IRedoPlanDataSource provideRedoPlanDataSource() {
         return new RedoPlanDataSource();
+    }
+
+    @Provides
+    IPlanDataSource providePlanDataSource() {
+        return new PlanDataSource();
     }
 
 }

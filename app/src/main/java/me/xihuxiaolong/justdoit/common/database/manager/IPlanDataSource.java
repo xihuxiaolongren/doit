@@ -28,6 +28,8 @@ public interface IPlanDataSource {
 
     List<PlanDO> listPlanDOsByOneDay(Long dayTime);
 
+    List<PlanDO> listPlanDOsByTargetName(String targetName);
+
     int createOneDayPlanDOs(Long dayTime);
 
     PlanDO getPlanByLastEndTime();

@@ -549,6 +549,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 .negativeText(R.string.action_cancel)
                 .show();
     }
+
     @Override
     public void onPause() {
         super.onPause();

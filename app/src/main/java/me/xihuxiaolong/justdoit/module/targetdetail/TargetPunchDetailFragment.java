@@ -1,7 +1,9 @@
 package me.xihuxiaolong.justdoit.module.targetdetail;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -14,15 +16,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +49,8 @@ import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.RadioButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -47,17 +58,23 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
+import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
@@ -78,13 +95,12 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, NewPlanListWrapper.PlanListOnClickListener{
+public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, NewPlanListWrapper.PlanListOnClickListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
-    public static final String ARG_TARGET_NAME = "targetName";
-
-    private String targetName;
+    public static final int REQUEST_BG = 1;
+    public static final int REQUEST_PUNCH = 2;
 
     TargetDetailComponent targetDetailComponent;
 
@@ -108,12 +124,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     FrameLayout shadowFrame;
     @BindView(R.id.title_tv)
     TextView titleTv;
-    @BindView(R.id.planFab)
-    FloatingActionButton planFab;
-    @BindView(R.id.alertFab)
-    FloatingActionButton alertFab;
     @BindView(R.id.fab)
-    FloatingActionMenu fab;
+    FloatingActionButton fab;
 
     private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset, mFabSizeNormal;
     private int mActionBarSize, mStatusBarSize;
@@ -122,20 +134,24 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     Menu menu;
 
-    MenuItem addMenuItem;
+    MenuItem addMenuItem, colorMenuItem;
 
     Drawable shadow;
 
-    int vibrant, titleColor, textColor;
+    int vibrant, textColor;
 
-    RedoPlanAdapter redoPlanAdapter;
+    PunchAdapter punchAdapter;
 
     ScrollListener scrollListener;
 
     int mSCrollY;
 
-    public static TargetDetailFragment newInstance() {
-        TargetDetailFragment fragment = new TargetDetailFragment();
+    String headerPicUri;
+
+    TargetDO targetDO;
+
+    public static TargetPunchDetailFragment newInstance() {
+        TargetPunchDetailFragment fragment = new TargetPunchDetailFragment();
         return fragment;
     }
 
@@ -148,7 +164,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     protected void injectDependencies() {
         targetDetailComponent = DaggerTargetDetailComponent.builder()
                 .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
-                .targetDetailModule(new TargetDetailModule(targetName))
+                .targetDetailModule(new TargetDetailModule(targetDO.getName()))
                 .build();
     }
 
@@ -162,8 +178,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        TargetDO targetDO = (TargetDO) getActivity().getIntent().getSerializableExtra(ARG_TARGET);
-        targetName = targetDO.getName();
+        targetDO = (TargetDO) getActivity().getIntent().getSerializableExtra(ARG_TARGET);
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_target_detail, container, false);
         ButterKnife.bind(this, view);
@@ -178,9 +193,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
-        planFab.setOnClickListener(fabListener);
-        alertFab.setOnClickListener(fabListener);
-        fab.setClosedOnTouchOutside(true);
+        fab.setOnClickListener(fabListener);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -189,10 +202,9 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-//        titleColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
-        titleTv.setText(targetName);
+        titleTv.setText(targetDO.getName());
         titleTv.post(new Runnable() {
             @Override
             public void run() {
@@ -202,66 +214,41 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        redoPlanAdapter = new RedoPlanAdapter(R.layout.item_redo_plan_detail, new ArrayList<RedoPlanDO>());
+        punchAdapter = new PunchAdapter(R.layout.item_punch_target, new ArrayList<PlanDO>());
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_detail_header, recyclerView, false);
-        redoPlanAdapter.addHeaderView(headerView);
-        recyclerView.setAdapter(redoPlanAdapter);
+        punchAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(punchAdapter);
         recyclerView.setScrollViewCallbacks(this);
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-                RedoPlanDO redoPlanDO = ((RedoPlanDO) adapter.getItem(position));
-                Intent intent = new Intent(getActivity(), RedoPlanDetailActivity.class).putExtra(RedoPlanDetailActivity.ARG_REDO_PLAN, redoPlanDO)
-                        .putExtra("vibrant", vibrant).putExtra("textColor", textColor);
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    View view1 = view.findViewById(R.id.rootView);
-                    View view2 = view.findViewById(R.id.title_tv);
-                    View view3 = view.findViewById(R.id.persist_tv);
-                    View view4 = view.findViewById(R.id.redo_tv);
-                    View view5 = view.findViewById(R.id.time_tv);
-                    View view6 = view.findViewById(R.id.typeIV);
-                    Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
-                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
-                    Pair<View, String> p3 = Pair.create(view3, view3.getTransitionName());
-                    Pair<View, String> p4 = Pair.create(view4, view4.getTransitionName());
-                    Pair<View, String> p5 = Pair.create(view5, view5.getTransitionName());
-                    Pair<View, String> p6 = Pair.create(view6, view6.getTransitionName());
-                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1, p2, p3, p4, p5, p6);
-                    startActivity(intent, options.toBundle());
-                }else {
-                    startActivity(intent);
-                }
+
             }
         });
         return view;
     }
 
-    class RedoPlanAdapter extends BaseQuickAdapter<RedoPlanDO, BaseViewHolder> {
+    class PunchAdapter extends BaseQuickAdapter<PlanDO, BaseViewHolder> {
 
-        public RedoPlanAdapter(int layoutId, List<RedoPlanDO> datas) {
+        public PunchAdapter(int layoutId, List<PlanDO> datas) {
             super(layoutId, datas);
         }
 
         @Override
-        protected void convert(BaseViewHolder holder, RedoPlanDO redoPlanDO) {
+        protected void convert(BaseViewHolder holder, PlanDO punch) {
             DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-            DateTime startTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getStartHour(), redoPlanDO.getStartMinute(), 0, 0);
-            DateTime endTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getEndHour(), redoPlanDO.getEndMinute(), 0, 0);
+            DateTime startTime = new DateTime(punch.getDayTime()).withTime(punch.getStartHour(), punch.getStartMinute(), 0, 0);
             holder.setBackgroundColor(R.id.rootView, vibrant)
-                    .setTextColor(R.id.title_tv, textColor)
-                    .setTextColor(R.id.persist_tv, textColor)
-                    .setTextColor(R.id.redo_tv, textColor)
-                    .setTextColor(R.id.time_tv, textColor)
-                    .setText(R.id.title_tv, redoPlanDO.getContent())
-                    .setText(R.id.persist_tv, "已持续 " + Days.daysBetween(new DateTime(redoPlanDO.getCreatedTime()), DateTime.now()).getDays()  + " 天")
-                    .setText(R.id.redo_tv, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
-            if(PlanDO.TYPE_PLAN == redoPlanDO.getPlanType()){
-                holder.setText(R.id.time_tv, startTime.toString(builder) + " - " + endTime.toString(builder));
-                holder.setImageResource(R.id.typeIV, R.drawable.icon_plan);
-            }else if(PlanDO.TYPE_ALERT == redoPlanDO.getPlanType()){
-                holder.setText(R.id.time_tv, startTime.toString(builder));
-                holder.setImageResource(R.id.typeIV, R.drawable.icon_alert);
-            }
+                    .setTextColor(R.id.timeTV, textColor)
+                    .setTextColor(R.id.dateTV, textColor)
+                    .setTextColor(R.id.contentTV, textColor)
+                    .setText(R.id.timeTV, startTime.toString(builder))
+                    .setText(R.id.contentTV, punch.getContent())
+                    .setVisible(R.id.picIV, !TextUtils.isEmpty(punch.getPicUrls()));
+            ImageView okIV = holder.getView(R.id.okIV);
+            okIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+            okIV.setAlpha(0.75f);
+            ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.picIV), punch.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
         }
     }
 
@@ -275,7 +262,9 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_frament_targetdetail, menu);
         addMenuItem = menu.findItem(R.id.action_add);
+        colorMenuItem = menu.findItem(R.id.action_set_color);
         addMenuItem.setVisible(!mFabIsShown);
+        colorMenuItem.setVisible(!TextUtils.isEmpty(headerPicUri));
         this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -287,6 +276,9 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 //                getActivity().supportFinishAfterTransition();
                 getActivity().onBackPressed();
                 return true;
+            case R.id.action_set_color:
+                openColorDialog(headerPicUri);
+                break;
             case R.id.action_set_image:
                 Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
                 //chose_mode选择模式 0单选 1多选
@@ -297,15 +289,15 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
                 intent.putExtra("crop", true);
                 intent.putExtra("crop_image_w", headerEmptyShadowFL.getWidth());
                 intent.putExtra("crop_image_h", headerEmptyShadowFL.getHeight());
-                startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
+                startActivityForResult(intent, REQUEST_BG);
                 return true;
             case R.id.action_add_alert:
                 startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                        .putExtra(EditAlertActivity.ARGUMENT_TARGET_NAME, targetName));
+                        .putExtra(EditAlertActivity.ARGUMENT_TARGET_NAME, targetDO.getName()));
                 return true;
             case R.id.action_add_plan:
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
+                        .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetDO.getName()));
                 return true;
             case R.id.action_delete:
                 DialogUtils.showDialog(getContext(), getResources().getString(R.string.delete_target), "确定要删除该目标吗？", new MaterialDialog.SingleButtonCallback() {
@@ -319,56 +311,95 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
-            if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
-                ArrayList<String> uris = data.getStringArrayListExtra("data");
-                setHeaderIV(uris.get(0));
-                presenter.updateTarget(uris.get(0));
-            }
-        }
+    private void setHeaderIV(String uri) {
+        headerCV.setVisibility(View.VISIBLE);
+        headerEmptyShadowFL.setVisibility(View.GONE);
+        ImageUtils.loadImageFromFile(getActivity(), headerIV, uri, ImageView.ScaleType.CENTER_CROP);
     }
 
-    private void setHeaderIV(String uri){
-        if(TextUtils.isEmpty(uri))
-            return;
+    private void updateTheme(int vibrant, int textColor) {
+        this.textColor = textColor;
+        this.vibrant = vibrant;
+        titleTv.setTextColor(textColor);
+        titleTv.setShadowLayer(0, 0, 0, vibrant);
+        dayNightBackgroundView.setRootBackgroundColor(vibrant);
+        float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+        fab.setColorNormal(vibrant);
+        fab.setColorPressed(vibrant);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_target_1);
+        drawable = drawable.mutate();
+        drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        fab.setImageDrawable(drawable);
+        punchAdapter.notifyDataSetChanged();
+        setAllMenuColor(menu, toolbar, textColor);
+    }
+
+    private MaterialDialog colorDialog;
+
+    private void openColorDialog(String picUri) {
         try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(uri)));
-            headerCV.setVisibility(View.VISIBLE);
-            headerEmptyShadowFL.setVisibility(View.GONE);
-            headerIV.setImageBitmap(bitmap);
-
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(new File(picUri)));
             Palette palette = Palette.from(bitmap).generate();
-            Palette.Swatch swatch = palette.getDominantSwatch();
-//                    Palette.Swatch swatch = palette.getVibrantSwatch();
-            //rgb颜色值
-            vibrant = swatch.getRgb();
-            //对应的标题字体颜色
-//            titleColor = swatch.getTitleTextColor();
-            //对应的正文字体颜色
-            textColor = swatch.getBodyTextColor();
-
-            int imageTextColor = ColorUtils.contrastColor(vibrant);
-
-            titleTv.setTextColor(imageTextColor);
-            titleTv.setShadowLayer(1, 1, 1, vibrant);
-            dayNightBackgroundView.setRootBackgroundColor(vibrant);
-            float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
-            toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
-            fab.setMenuButtonColorNormal(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
-            fab.setMenuButtonColorPressed(palette.getVibrantColor(fab.getMenuButtonColorNormal()));
-            redoPlanAdapter.notifyDataSetChanged();
-
-            setAllMenuColor(menu, toolbar, imageTextColor);
-        } catch (Exception e) {
+            int skyColor = ContextCompat.getColor(getContext(), R.color.sky);
+            Set<Palette.Swatch> colorList = new LinkedHashSet<>();
+            if (palette.getDominantSwatch() != null) colorList.add(palette.getDominantSwatch());
+            if (palette.getMutedSwatch() != null) colorList.add(palette.getMutedSwatch());
+            if (palette.getVibrantSwatch() != null) colorList.add(palette.getVibrantSwatch());
+            if (palette.getDarkMutedSwatch() != null) colorList.add(palette.getDarkMutedSwatch());
+            if (palette.getDarkVibrantSwatch() != null)
+                colorList.add(palette.getDarkVibrantSwatch());
+            if (palette.getLightMutedSwatch() != null) colorList.add(palette.getLightMutedSwatch());
+            if (palette.getLightVibrantSwatch() != null)
+                colorList.add(palette.getLightVibrantSwatch());
+            List<Palette.Swatch> list = new ArrayList<>();
+            list.addAll(colorList);
+            final ColorAdapter colorAdapter = new ColorAdapter(R.layout.item_color, list);
+            colorDialog = new MaterialDialog.Builder(getActivity())
+                    .title(R.string.color_dialog_title)
+//                .customView(R.layout.dialog_color_select, true)
+                    .positiveText(R.string.action_confirm)
+                    .adapter(colorAdapter, new GridLayoutManager(getContext(), 4))
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            presenter.updateTarget(targetDO.getCustomTheme(), targetDO.getThemeColor(), targetDO.getTextColor());
+                        }
+                    })
+                    .negativeText(R.string.action_cancel)
+                    .show();
+            WindowManager.LayoutParams lp = colorDialog.getWindow().getAttributes();
+            lp.dimAmount = 0.1f;
+            colorDialog.getWindow().setAttributes(lp);
+            colorDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            RecyclerView colorRecyclerView = colorDialog.getRecyclerView();
+            colorRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
+                @Override
+                public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
+                    Palette.Swatch swatch = (Palette.Swatch) baseQuickAdapter.getItem(position);
+                    updateTheme(swatch.getRgb(), swatch.getBodyTextColor());
+                    targetDO.setCustomTheme(true);
+                    targetDO.setThemeColor(swatch.getRgb());
+                    targetDO.setTextColor(swatch.getBodyTextColor());
+                }
+            });
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    private void openColorDialog(Palette palette){
+    class ColorAdapter extends BaseQuickAdapter<Palette.Swatch, BaseViewHolder> {
 
+        public ColorAdapter(int layoutId, List<Palette.Swatch> datas) {
+            super(layoutId, datas);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder holder, Palette.Swatch color) {
+            CircleImageView circleImageView = holder.getView(R.id.color);
+            circleImageView.setFillColor(color.getRgb());
+        }
     }
 
     @Override
@@ -432,10 +463,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     private void showFab() {
         if (!mFabIsShown) {
-            for (int i = 0; i < fab.getChildCount(); ++i) {
-                ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
-                ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(1).scaleY(1).setDuration(200).start();
-            }
+            ViewPropertyAnimator.animate(fab).cancel();
+            ViewPropertyAnimator.animate(fab).scaleX(1).scaleY(1).setDuration(200).start();
             getActivity().invalidateOptionsMenu();
             mFabIsShown = true;
         }
@@ -443,10 +472,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     private void hideFab() {
         if (mFabIsShown) {
-            for (int i = 0; i < fab.getChildCount(); ++i) {
-                ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
-                ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(0).scaleY(0).setDuration(200).start();
-            }
+            ViewPropertyAnimator.animate(fab).cancel();
+            ViewPropertyAnimator.animate(fab).scaleX(0).scaleY(0).setDuration(200).start();
             getActivity().invalidateOptionsMenu();
             mFabIsShown = false;
         }
@@ -455,17 +482,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     private View.OnClickListener fabListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.planFab:
-                    startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
-                    break;
-                case R.id.alertFab:
-                    startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis())
-                            .putExtra(EditPlanActivity.ARGUMENT_TARGET_NAME, targetName));
-                    break;
-            }
-            fab.close(true);
+            openPunch();
         }
     };
 
@@ -488,13 +505,13 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     }
 
     @Override
-    public void planListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
+    public void planListenr(PlanDO punch) {
+        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, punch.getId()));
     }
 
     @Override
-    public void alertListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
+    public void alertListenr(PlanDO punch) {
+        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, punch.getId()));
     }
 
     @Override
@@ -515,8 +532,15 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     @Override
     public void showTarget(final TargetDO targetDO) {
         if (targetDO != null) {
-            setHeaderIV(targetDO.getHeaderImageUri());
-            redoPlanAdapter.setNewData(targetDO.getRedoPlanDOList());
+            this.targetDO = targetDO;
+            headerPicUri = targetDO.getHeaderImageUri();
+            if(!TextUtils.isEmpty(headerPicUri)) {
+                setHeaderIV(targetDO.getHeaderImageUri());
+                getActivity().invalidateOptionsMenu();
+                if (targetDO.getCustomTheme())
+                    updateTheme(targetDO.getThemeColor(), targetDO.getTextColor());
+            }
+            punchAdapter.setNewData(targetDO.getPunchList());
         }
     }
 
@@ -530,4 +554,56 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
         getActivity().finish();
     }
 
+    private MaterialDialog addPunchDialog;
+    private MaterialEditText addPunchET;
+    private ImageView picIV;
+    String picUri;
+
+    private void openPunch() {
+        addPunchDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.add_punch_title)
+                .widgetColorRes(R.color.colorAccent)
+                .customView(R.layout.dialog_add_punch, true)
+                .positiveText(R.string.action_confirm)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.savePunch(addPunchET.getText().toString(), picUri);
+                    }
+                })
+                .negativeText(R.string.action_cancel)
+                .show();
+        addPunchET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
+        picIV = (ImageView) addPunchDialog.findViewById(R.id.picIV);
+        picIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
+                //chose_mode选择模式 0单选 1多选
+                intent.putExtra("chose_mode", 0);
+                //是否显示需要第一个是图片相机按钮
+                intent.putExtra("isNeedfcamera", true);
+                startActivityForResult(intent, REQUEST_PUNCH);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
+            ArrayList<String> uris = data.getStringArrayListExtra("data");
+            if (requestCode == REQUEST_BG) {
+                headerPicUri = uris.get(0);
+                if (TextUtils.isEmpty(headerPicUri))
+                    return;
+                setHeaderIV(headerPicUri);
+                getActivity().invalidateOptionsMenu();
+                openColorDialog(headerPicUri);
+                presenter.updateTarget(headerPicUri);
+            } else if (requestCode == REQUEST_PUNCH) {
+                picUri = uris.get(0);
+                ImageUtils.loadImageFromFile(getActivity(), picIV, picUri, ImageView.ScaleType.CENTER_CROP);
+            }
+        }
+    }
 }

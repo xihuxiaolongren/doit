@@ -135,6 +135,17 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
     }
 
     @Override
+    public List<PlanDO> listPlanDOsByTargetName(String targetName) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+
+        List<PlanDO> planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.TargetName.eq(targetName)).orderAsc(PlanDODao.Properties.StartTime).list();
+
+        clear(daoSession, database);
+        return planDOs;
+    }
+
+    @Override
     public int createOneDayPlanDOs(Long dayTime) {
         List<RedoPlanDO> redoPlanDOs = redoPlanDataSource.listRedoPlanDOs();
         List<PlanDO> planDOs = new ArrayList<>();

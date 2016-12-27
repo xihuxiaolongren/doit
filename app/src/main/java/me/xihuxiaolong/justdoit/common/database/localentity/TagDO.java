@@ -5,13 +5,17 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Unique;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaolong
  * Date: 16/10/27.
  */
 @Entity
-public class TagDO {
+public class TagDO implements Serializable{
+
+    static final long serialVersionUID = -1L;
 
     @Id
     private String name;

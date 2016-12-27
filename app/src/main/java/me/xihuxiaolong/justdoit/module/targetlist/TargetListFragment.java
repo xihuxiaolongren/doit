@@ -67,15 +67,13 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
-import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 
-import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailFragment.ARG_TARGET_NAME;
+import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.ARG_TARGET;
 
 
 /**
@@ -209,7 +207,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
                 TargetDO targetDO = ((TargetDO) adapter.getItem(position));
-                Intent intent = new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName());
+                Intent intent = new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET, targetDO);
                 if (!TextUtils.isEmpty(targetDO.getHeaderImageUri()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     View view1 = view.findViewById(R.id.bgIV);
 //                    View view2 = view.findViewById(R.id.title);
@@ -240,6 +238,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         @Override
         protected void convert(TargetViewHolder holder, final TargetDO targetDO) {
             holder.setText(R.id.title, targetDO.getName());
+            ImageView targetIconIV = holder.getView(R.id.targetIconIV);
+            targetIconIV.setAlpha(0.65f);
             ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.bgIV), targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
             LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
             if (linearLayout.getChildCount() <= 0) {
@@ -474,7 +474,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void createTargetSuccess(TargetDO targetDO) {
 //        targetAdapter.addData(0, targetDO);
 //        updateArcProgress(targetAdapter.getData().size());
-        startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET_NAME, targetDO.getName()));
+        startActivity(new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET, targetDO));
     }
 
     private MaterialDialog addTargetDialog;
@@ -484,28 +484,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showAddTargetDialog() {
-//        new MaterialDialog.Builder(getContext())
-//                .title(R.string.add_target_title)
-//                .widgetColorRes(R.color.colorAccent)
-//                .inputRange(1, 20)
-//                .inputType(InputType.TYPE_CLASS_TEXT)
-//                .input(R.string.add_target_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
-//                    @Override
-//                    public void onInput(MaterialDialog dialog, CharSequence input) {
-//                        // Do something
-//                    }
-//                })
-//                .items(R.array.repeat_week_arr)
-//                .itemsCallbackSingleChoice(0, null)
-//                .positiveText(R.string.action_confirm)
-//                .onPositive(new MaterialDialog.SingleButtonCallback() {
-//                    @Override
-//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-//                        presenter.createTarget(dialog.getInputEditText().getText().toString());
-//                    }
-//                })
-//                .negativeText(R.string.action_cancel)
-//                .show();
         addTargetDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_target_title)
                 .customView(R.layout.dialog_add_target, true)

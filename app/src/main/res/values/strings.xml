@@ -3,6 +3,7 @@
     <string name="action_settings">设置</string>
     <string name="action_history">历史</string>
     <string name="history">回顾</string>
+    <string name="action_color">主题色</string>
     <string name="action_add">添加</string>
     <string name="action_done">完成</string>
     <string name="action_next">下一步</string>
@@ -17,6 +18,7 @@
     <string name="add_tag">添加标签</string>
     <string name="add_target_title">创建一个目标</string>
     <string name="add_punch_title">打卡</string>
+    <string name="color_dialog_title">目标主题色</string>
     <string name="add_target_hint">输入目标名称</string>
     <string name="add_punch_hint">一句话描述 . . . </string>
     <string name="add_target_prefill"></string>

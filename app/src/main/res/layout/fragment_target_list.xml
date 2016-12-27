@@ -101,7 +101,6 @@
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/menu_target_1"
         fab:fab_colorNormal="@color/accent"
-        fab:fab_label="@string/plan"
         fab:fab_size="normal" />
 
 </RelativeLayout>

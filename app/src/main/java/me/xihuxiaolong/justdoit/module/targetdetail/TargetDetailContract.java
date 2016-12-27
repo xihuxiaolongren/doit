@@ -34,7 +34,11 @@ public class TargetDetailContract {
 
         void updateTarget(String headerImageUri);
 
+        void updateTarget(boolean customTheme, int themeColor, int textColor);
+
         void deleteTarget();
+
+        void savePunch(String content, String pictures);
 
     }
 }

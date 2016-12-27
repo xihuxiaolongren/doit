@@ -20,6 +20,11 @@ import me.xihuxiaolong.library.utils.CollectionUtils;
 
 public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataSource {
 
+
+    public RedoPlanDataSource(){
+        super();
+    }
+
     @Override
     public void deleteRedoPlanById(Long id) {
         SQLiteDatabase database = helper.getWritableDatabase();
@@ -47,8 +52,14 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
 
         TargetDO targetDO = daoSession.getTargetDODao().queryBuilder()
                 .where(TargetDODao.Properties.Name.eq(targetName)).unique();
-        if(targetDO != null && withRedoPlanList)
-            targetDO.setRedoPlanDOList(listRedoPlanDOsByTarget(targetName));
+        if(targetDO != null && withRedoPlanList) {
+            if(targetDO.getType() == TargetDO.TYPE_NORMAL)
+                targetDO.setRedoPlanDOList(listRedoPlanDOsByTarget(targetName));
+            else if(targetDO.getType() == TargetDO.TYPE_PUNCH) {
+                PlanDataSource planDataSource = new PlanDataSource();
+                targetDO.setPunchList(planDataSource.listPlanDOsByTargetName(targetName));
+            }
+        }
         clear(daoSession, database);
         return targetDO;
     }

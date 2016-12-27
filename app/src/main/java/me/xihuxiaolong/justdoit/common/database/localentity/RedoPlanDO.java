@@ -14,7 +14,7 @@ import java.io.Serializable;
 @Entity
 public class RedoPlanDO implements Serializable{
 
-    static final long serialVersionUID = 42L;
+    static final long serialVersionUID = -1L;
 
     @Id(autoincrement = true)
     private Long id;

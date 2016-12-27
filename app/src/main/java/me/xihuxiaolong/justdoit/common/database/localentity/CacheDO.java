@@ -4,13 +4,17 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Index;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: xiaolong
  * Date: 16/8/6.
  */
 @Entity
-public class CacheDO {
+public class CacheDO implements Serializable{
+
+    static final long serialVersionUID = -1L;
 
     @Index(unique = true)
     private String key;
