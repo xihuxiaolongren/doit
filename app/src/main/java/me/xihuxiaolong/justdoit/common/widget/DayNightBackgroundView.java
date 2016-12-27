@@ -38,7 +38,6 @@ public class DayNightBackgroundView extends FrameLayout{
     private View mSkyView;
     private WaveView waveView;
     private ObjectAnimator mSunAnim, mSunXAnim, mSunAlphaAnim;
-    private ObjectAnimator mSkyAnim;
 
     private View mCloud1View;
     private View mCloud2View;
@@ -51,11 +50,6 @@ public class DayNightBackgroundView extends FrameLayout{
     private ObjectAnimator mStarR1Anim, mStarR2Anim, mStarR3Anim, mStarR4Anim, mStarR5Anim;
 
     private AnimatorSet mSunriseAnimSet;
-
-    private int mBlueSkyColor;
-    private int mSunsetSkyColor;
-//    private int mWaveBehindColor;
-//    private int mWaveFrontColor;
 
     private WaveHelper mWaveHelper;
 
@@ -86,10 +80,6 @@ public class DayNightBackgroundView extends FrameLayout{
             animationDuration = a.getInt(R.styleable.DayNightBackgroundView_animationDuration, 2000);
             a.recycle();
         }
-        mBlueSkyColor = ContextCompat.getColor(context, R.color.sky);
-        mSunsetSkyColor = ContextCompat.getColor(context, R.color.sunset_sky);
-//        mWaveBehindColor = ContextCompat.getColor(context, R.color.wave_behind);
-//        mWaveFrontColor = ContextCompat.getColor(context, R.color.wave_front);
         if(DayNightModeUtils.isCurrentNight()){
             initNight(context);
         }else{
@@ -106,12 +96,10 @@ public class DayNightBackgroundView extends FrameLayout{
 
     public void setRootBackgroundColor(@ColorInt int color){
         rootView.setBackgroundColor(color);
-        mBlueSkyColor = color;
     }
 
     public void setRootBackgroundResource(@ColorRes int resid) {
         rootView.setBackgroundResource(resid);
-        mBlueSkyColor = ContextCompat.getColor(this.getContext(), resid);
     }
 
     private void initDay(final Context context) {
@@ -159,12 +147,10 @@ public class DayNightBackgroundView extends FrameLayout{
      * 太阳升起
      */
     private void sunrise() {
-//        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
         mWaveHelper.start();
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);
-//        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mCloud1Anim = getCloud1Animator(0, mCloud1View.getLeft());
         mCloud2Anim = getCloud2Animator(0, mCloud2View.getRight());
         mSunriseAnimSet = new AnimatorSet();
@@ -178,9 +164,7 @@ public class DayNightBackgroundView extends FrameLayout{
      * 月亮升起
      */
     private void moonrise() {
-//        waveView.setWaveColor(mWaveBehindColor, mWaveFrontColor);
         mWaveHelper.start();
-//        mSkyAnim = getSkyAnimator(mSunsetSkyColor, mBlueSkyColor);
         mSunAnim = getSunYAnimator(mSkyView.getHeight(), getContext().getResources().getDimensionPixelSize(R.dimen.sun_top));
         mSunXAnim = getSunXAnimator(0, mSunView.getLeft());
         mSunAlphaAnim = getSunAlphaAnimator(0.0f, 1.0f);

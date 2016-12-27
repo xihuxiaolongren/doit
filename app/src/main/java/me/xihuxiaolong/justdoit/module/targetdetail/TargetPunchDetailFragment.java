@@ -180,7 +180,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                              @Nullable Bundle savedInstanceState) {
         targetDO = (TargetDO) getActivity().getIntent().getSerializableExtra(ARG_TARGET);
         injectDependencies();
-        View view = inflater.inflate(R.layout.fragment_target_detail, container, false);
+        View view = inflater.inflate(R.layout.fragment_target_punch_detail, container, false);
         ButterKnife.bind(this, view);
         initToolbar(toolbar, true, false);
         setHasOptionsMenu(true);
