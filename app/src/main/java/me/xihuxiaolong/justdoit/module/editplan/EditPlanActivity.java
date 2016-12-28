@@ -199,75 +199,76 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
 
     LinkedHashSet<String> mSelectedTags, mAllTags;
 
+    MaterialDialog tagDialog;
+
     @Override
     public void showTagDialog(LinkedHashSet<String> selectedTags, LinkedHashSet<String> allTags) {
         mSelectedTags = selectedTags;
         mAllTags = allTags;
-        MaterialDialog tagDialog = new MaterialDialog.Builder(EditPlanActivity.this)
-                .title("标签")
-                .customView(R.layout.dialog_tag, true)
-                .positiveText(getResources().getString(R.string.action_confirm))
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        saveTagSuccess();
+        if(tagDialog != null){
+            tagDialog.show();
+        }else {
+            tagDialog = new MaterialDialog.Builder(EditPlanActivity.this)
+                    .title("标签")
+                    .customView(R.layout.dialog_tag, true)
+                    .positiveText(getResources().getString(R.string.action_confirm))
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            saveTagSuccess();
+                        }
+                    })
+                    .negativeText(getResources().getString(R.string.action_cancel))
+                    .dismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            ActivityUtils.hideSoftKeyboard(EditPlanActivity.this);
+                        }
+                    })
+                    .show();
+            tagPositive = tagDialog.getActionButton(DialogAction.POSITIVE);
+            tagPositive.setEnabled(false);
+            selectTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.select_tags_fl);
+            allTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.all_tags_fl);
+            tagET = (MaterialEditText) tagDialog.findViewById(R.id.tagET);
+            addTagIV = tagDialog.findViewById(R.id.addTagIV);
+            addTagIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(tagET.getText())) {
+                        addTagSuccess(tagET.getText().toString());
                     }
-                })
-                .negativeText(getResources().getString(R.string.action_cancel))
-                .dismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        ActivityUtils.hideSoftKeyboard(EditPlanActivity.this);
+                }
+            });
+            tagET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    addTagIV.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+
+                }
+            });
+            tagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_NEXT && !TextUtils.isEmpty(v.getText())) {
+                        addTagSuccess(v.getText().toString());
+                        return true;
                     }
-                })
-                .show();
-        tagPositive = tagDialog.getActionButton(DialogAction.POSITIVE);
-        tagPositive.setEnabled(false);
-        selectTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.select_tags_fl);
-        allTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.all_tags_fl);
-        tagET = (MaterialEditText) tagDialog.findViewById(R.id.tagET);
-        addTagIV = tagDialog.findViewById(R.id.addTagIV);
-        addTagIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!TextUtils.isEmpty(tagET.getText())) {
-                    addTagSuccess(tagET.getText().toString());
+                    return false;
                 }
-            }
-        });
-        tagET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                addTagIV.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
-
-            }
-        });
-        tagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && !TextUtils.isEmpty(v.getText())) {
-                    addTagSuccess(v.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
-        for (String tag : selectedTags) {
-            addTagToSelectView(tag);
+            });
         }
-        for (String tag : allTags) {
-            addTagToUnselectView(tag);
-        }
+
     }
 
     private void addTagToSelectView(String tag) {

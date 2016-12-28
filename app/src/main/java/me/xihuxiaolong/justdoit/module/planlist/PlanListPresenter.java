@@ -13,7 +13,9 @@ import javax.inject.Inject;
 import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 
@@ -30,6 +32,9 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Inject
     IPlanDataSource planDataSource;
+
+    @Inject
+    IRedoPlanDataSource redoPlanDataSource;
 
     @Inject
     ICacheService cacheService;
@@ -76,7 +81,14 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     }
 
     @Override
-    public void savePunch(String content, String pictures) {
+    public void loadTargets() {
+        List<TargetDO> targetDOs = redoPlanDataSource.listAllPunchTarget(false);
+        if(isViewAttached())
+            getView().showPunchDialog(targetDOs);
+    }
+
+    @Override
+    public void savePunch(String content, String pictures, String targetName) {
         DateTime dateTime = DateTime.now();
         PlanDO punch = new PlanDO();
         punch.setType(PlanDO.TYPE_PUNCH);
@@ -85,6 +97,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         punch.setStartMinute(dateTime.getMinuteOfHour());
         punch.setStartTime(dateTime.getMillisOfDay());
         punch.setPicUrls(pictures);
+        punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
         long punchId = planDataSource.insertOrReplacePlanDO(punch, null);

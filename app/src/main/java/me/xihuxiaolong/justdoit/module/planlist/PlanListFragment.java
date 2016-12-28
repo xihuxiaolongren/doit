@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -14,7 +16,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,13 +39,16 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
+import com.google.android.flexbox.FlexboxLayout;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +58,8 @@ import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
+import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
@@ -60,6 +70,10 @@ import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
+import me.xihuxiaolong.library.utils.ActivityUtils;
+import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolongren.photoga.MediaChoseActivity;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 
 /**
@@ -71,6 +85,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int SELECT_TEMPLATE_REQUEST = 1;
+    private static final int REQUEST_PUNCH = 1;
 
     PlanListComponent planListComponent;
 
@@ -379,11 +394,17 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == SELECT_TEMPLATE_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == Activity.RESULT_OK) {
-
+        if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
+            ArrayList<String> uris = data.getStringArrayListExtra("data");
+            if (requestCode == REQUEST_PUNCH) {
+                picUri = uris.get(0);
+                if(picIV != null) {
+                    picIV.setVisibility(View.VISIBLE);
+                    ImageUtils.loadImageFromFile(getActivity(), picIV, picUri, ImageView.ScaleType.CENTER_CROP);
+                }
+                if(operIV != null){
+                    operIV.setImageResource(R.drawable.icon_delete);
+                }
             }
         }
     }
@@ -517,7 +538,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                     startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                     break;
                 case R.id.punchFab:
-                    openPunch();
+                    presenter.loadTargets();
+//                    openPunch();
                     break;
 //                case R.id.tomorrowPlanFab:
 //                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
@@ -527,28 +549,123 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     };
 
-    private void openPunch(){
-        new MaterialDialog.Builder(getContext())
+    private  MaterialDialog targetDialog;
+    FlexboxLayout allTagsFl;
+    MaterialEditText tagET;
+    private ImageView picIV;
+    private ImageView operIV;
+    String picUri;
+    View tagPositive;
+    String selectTarget;
+
+    @Override
+    public void showPunchDialog(List<TargetDO> targetList){
+//        new MaterialDialog.Builder(getContext())
+//                .title(R.string.add_punch_title)
+//                .widgetColorRes(R.color.colorAccent)
+////                .inputRange(1, 20)
+//                .inputType(InputType.TYPE_CLASS_TEXT)
+//                .input(R.string.add_punch_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
+//                    @Override
+//                    public void onInput(MaterialDialog dialog, CharSequence input) {
+//                        // Do something
+//                    }
+//                })
+//                .positiveText(R.string.action_confirm)
+//                .onPositive(new MaterialDialog.SingleButtonCallback() {
+//                    @Override
+//                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+//                        presenter.savePunch(dialog.getInputEditText().getText().toString(), null);
+//                    }
+//                })
+//                .negativeText(R.string.action_cancel)
+//                .show();
+        picUri = null;
+        selectTarget = null;
+        targetDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_punch_title)
-                .widgetColorRes(R.color.colorAccent)
-//                .inputRange(1, 20)
-                .inputType(InputType.TYPE_CLASS_TEXT)
-                .input(R.string.add_punch_hint, R.string.add_target_prefill, new MaterialDialog.InputCallback() {
-                    @Override
-                    public void onInput(MaterialDialog dialog, CharSequence input) {
-                        // Do something
-                    }
-                })
-                .positiveText(R.string.action_confirm)
+                .customView(R.layout.dialog_add_punch_planlist, true)
+                .positiveText(getResources().getString(R.string.action_confirm))
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        presenter.savePunch(dialog.getInputEditText().getText().toString(), null);
+                        presenter.savePunch(tagET.getText().toString(), picUri, selectTarget);
                     }
                 })
-                .negativeText(R.string.action_cancel)
+                .negativeText(getResources().getString(R.string.action_cancel))
+                .dismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ActivityUtils.hideSoftKeyboard(getActivity());
+                    }
+                })
                 .show();
+        tagPositive = targetDialog.getActionButton(DialogAction.POSITIVE);
+        tagPositive.setEnabled(false);
+        allTagsFl = (FlexboxLayout) targetDialog.findViewById(R.id.all_target_fl);
+        tagET = (MaterialEditText) targetDialog.findViewById(R.id.addPunchET);
+        tagET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                tagPositive.setEnabled(s.length() > 0 ? true : false);
+            }
+        });
+        picIV = (ImageView) targetDialog.findViewById(R.id.picIV);
+        operIV = (ImageView) targetDialog.findViewById(R.id.operIV);
+        operIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(picUri == null) {
+                    Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
+                    //chose_mode选择模式 0单选 1多选
+                    intent.putExtra("chose_mode", 0);
+                    //是否显示需要第一个是图片相机按钮
+                    intent.putExtra("isNeedfcamera", true);
+                    startActivityForResult(intent, REQUEST_PUNCH);
+                }else{
+                    picUri = null;
+                    picIV.setVisibility(View.GONE);
+                    operIV.setImageResource(R.drawable.menu_target_bg);
+                }
+            }
+        });
+        for(TargetDO target : targetList)
+            addTagToUnselectView(target);
     }
+
+    private void addTagToUnselectView(TargetDO target) {
+        FancyButton fancyButton = (FancyButton) LayoutInflater.from(getActivity()).inflate(R.layout.item_unselected_tag, allTagsFl, false);
+        fancyButton.setText(target.getName());
+        fancyButton.setTag(target.getName());
+        fancyButton.setOnClickListener(unselectedTagClickListener);
+        allTagsFl.addView(fancyButton);
+    }
+
+    private View.OnClickListener unselectedTagClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(selectTarget != null && allTagsFl.findViewWithTag(selectTarget) != null){
+                FancyButton fancyButton = (FancyButton) allTagsFl.findViewWithTag(selectTarget);
+                fancyButton.setBackgroundColor(Color.TRANSPARENT);
+                fancyButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.titleTextColor));
+
+            }
+            FancyButton fancyButton = (FancyButton) v;
+            fancyButton.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.titleTextColor));
+            fancyButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
+            selectTarget = (String) fancyButton.getTag();
+        }
+    };
 
     @Override
     public void onPause() {

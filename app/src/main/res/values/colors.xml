@@ -10,7 +10,7 @@
     <color name="notificationNightTitleTextColor">#FFFFFF</color>
     <color name="shadowColor">#FFFFFF</color>
     <color name="sky">#DDEFF9</color>
-    <color name="notificationNightSky">#3A3A3A</color>
+    <color name="notificationNightSky">#222222</color>
     <color name="dark_sky">#86c7e9</color>
     <color name="sunset_sky">#1E7AC7</color>
     <color name="wave_behind">#281E7AC7</color>

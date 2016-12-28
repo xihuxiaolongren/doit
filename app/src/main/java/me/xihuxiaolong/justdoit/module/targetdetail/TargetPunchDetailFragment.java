@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.module.targetdetail;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -11,19 +10,14 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,7 +35,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
@@ -50,17 +42,14 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.rey.material.widget.RadioButton;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -71,9 +60,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
@@ -81,9 +68,7 @@ import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
-import me.xihuxiaolong.library.utils.ColorUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
@@ -352,6 +337,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             list.addAll(colorList);
             final ColorAdapter colorAdapter = new ColorAdapter(R.layout.item_color, list);
             colorDialog = new MaterialDialog.Builder(getActivity())
+                    .iconRes(R.drawable.icon_color_1)
                     .title(R.string.color_dialog_title)
 //                .customView(R.layout.dialog_color_select, true)
                     .positiveText(R.string.action_confirm)
@@ -575,7 +561,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         addPunchDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_punch_title)
                 .widgetColorRes(R.color.colorAccent)
-                .customView(R.layout.dialog_add_punch, true)
+                .customView(R.layout.dialog_add_punch_targetdetail, true)
                 .positiveText(R.string.action_confirm)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override

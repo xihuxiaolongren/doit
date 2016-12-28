@@ -392,6 +392,7 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
             list.addAll(colorList);
             final ColorAdapter colorAdapter = new ColorAdapter(R.layout.item_color, list);
             colorDialog = new MaterialDialog.Builder(getActivity())
+                    .iconRes(R.drawable.icon_color_1)
                     .title(R.string.color_dialog_title)
 //                .customView(R.layout.dialog_color_select, true)
                     .positiveText(R.string.action_confirm)

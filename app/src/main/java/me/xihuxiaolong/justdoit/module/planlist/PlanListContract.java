@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,6 +41,8 @@ public class PlanListContract {
 
         void savePunchSuccess();
 
+        void showPunchDialog(List<TargetDO> targetList);
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
@@ -50,7 +53,9 @@ public class PlanListContract {
 
         void loadUserSettings();
 
-        void savePunch(String content, String pictures);
+        void loadTargets();
+
+        void savePunch(String content, String pictures, String targetName);
 
     }
 }
