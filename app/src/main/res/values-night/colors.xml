@@ -8,8 +8,8 @@
     <color name="titleTextColor">#FFFFFF</color>
     <color name="unselectedTitleTextColor">#80FFFFFF</color>
     <color name="shadowColor">#333333</color>
-    <color name="sky">#4A4A4A</color>
-    <color name="dark_sky">#4A4A4A</color>
+    <color name="sky">#3A3A3A</color>
+    <color name="dark_sky">#3A3A3A</color>
     <color name="sunset_sky">#dceff9</color>
     <color name="wave_behind">#28333333</color>
     <color name="wave_front">#3C333333</color>

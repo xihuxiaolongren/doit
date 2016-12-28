@@ -17,6 +17,7 @@ import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import icepick.Icepick;
 import me.xihuxiaolong.justdoit.R;
 
 /**
@@ -30,9 +31,16 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Icepick.restoreInstanceState(this, savedInstanceState);
         initWindow();
 
     }
+
+    @Override public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Icepick.saveInstanceState(this, outState);
+    }
+
 
     abstract protected void injectDependencies();
 

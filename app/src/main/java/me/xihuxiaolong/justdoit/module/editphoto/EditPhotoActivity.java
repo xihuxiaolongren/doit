@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.Icepick;
+import icepick.State;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpActivity;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
@@ -32,6 +34,7 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
 
     EditPhotoComponent editPhotoComponent;
 
+    @State
     String picUri;
 
     @BindView(R.id.toolbar)
@@ -59,6 +62,8 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
             //是否显示需要第一个是图片相机按钮
             intent.putExtra("isNeedfcamera", true);
             startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
+        }else{
+            setSingleImage(picUri, picIV);
         }
     }
 
