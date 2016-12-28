@@ -2,6 +2,7 @@ package me.xihuxiaolong.justdoit.common.base;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -32,6 +33,7 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Icepick.restoreInstanceState(this, savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         initWindow();
 
     }
