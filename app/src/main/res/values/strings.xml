@@ -47,4 +47,5 @@
     <string name="action_night">夜间模式</string>
     <string name="select_template">选择模板</string>
     <string name="add_photo">拍照</string>
+    <string name="rationale_camera_and_read_storage"><![CDATA[应用需要读取您的相册&使用相机功能]]></string>
 </resources>

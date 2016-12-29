@@ -1,5 +1,6 @@
 package me.xihuxiaolongren.photoga;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -32,20 +33,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
+
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 调用媒体选择库
- * 需要在inten中传递2个参数
+ * 需要在intent中传递2个参数
  * 1. 选择模式 chose_mode  0  //单选 1多选
  * 2. 选择张数 max_chose_count  多选模式默认 9 张
  */
-public class MediaChoseActivity extends AppCompatActivity {
+public class MediaChoseActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks{
+
+    private static final String TAG = "MediaChoseActivity";
 
     public static final int REQUEST_CODE_CAMERA = 2001;
     public static final int REQUEST_CODE_CROP = 2002;
     public static final int CHOSE_MODE_SINGLE = 0;
     public static final int CHOSE_MODE_MULTIPLE = 1;
+
+    private static final int RC_CAMERA = 123;
+    private static final int RC_SETTINGS_SCREEN = 124;
 
     Toolbar toolbar;
 
@@ -301,8 +312,14 @@ public class MediaChoseActivity extends AppCompatActivity {
         }
     }
 
-
+    @AfterPermissionGranted(RC_CAMERA)
     public void sendStartCamera() {
+        String perm = Manifest.permission.CAMERA;
+        if (!EasyPermissions.hasPermissions(this, perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_camera),
+                    RC_CAMERA, perm);
+            return;
+        }
         currentUri = getTempFile();
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -310,6 +327,14 @@ public class MediaChoseActivity extends AppCompatActivity {
         intent.putExtra("return-data", false);
 //        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         startActivityForResult(intent, REQUEST_CODE_CAMERA);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
     private void beginCrop(Uri source) {
@@ -349,7 +374,27 @@ public class MediaChoseActivity extends AppCompatActivity {
         return  getDir("post_temp", Context.MODE_PRIVATE).getAbsolutePath();
     }
 
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Log.d(TAG, "onPermissionsGranted:" + requestCode + ":" + perms.size());
+    }
 
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d(TAG, "onPermissionsDenied:" + requestCode + ":" + perms.size());
+
+        // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+        // This will display a dialog directing them to enable the permission in app settings.
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this, getString(R.string.rationale_camera_ask_again))
+                    .setTitle(getString(R.string.title_settings_dialog))
+                    .setPositiveButton(getString(R.string.setting))
+                    .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                    .setRequestCode(RC_SETTINGS_SCREEN)
+                    .build()
+                    .show();
+        }
+    }
 
 
 }

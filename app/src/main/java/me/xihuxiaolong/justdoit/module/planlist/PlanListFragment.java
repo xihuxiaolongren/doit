@@ -1,5 +1,6 @@
 package me.xihuxiaolong.justdoit.module.planlist;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -72,6 +73,8 @@ import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 import mehdi.sakout.fancybuttons.FancyButton;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 
 /**
@@ -80,6 +83,8 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * Date: 16/7/5.
  */
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener {
+
+    private static final int RC_CAMERA_AND_STORTAGE = 123;
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int REQUEST_PUNCH = 1;
@@ -275,6 +280,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
                 return true;
             case R.id.action_add_photo:
+                startPhoto();
                 return true;
             case R.id.action_add_tomorrow_plan:
                 startActivity(new Intent(getActivity(), OtherDayActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
@@ -515,7 +521,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     };
 
-    private  MaterialDialog targetDialog;
+    private  MaterialDialog addPunchDialog;
     FlexboxLayout allTagsFl;
     MaterialEditText tagET;
     private ImageView picIV;
@@ -528,7 +534,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     public void showPunchDialog(List<TargetDO> targetList){
         picUri = null;
         selectTarget = null;
-        targetDialog = new MaterialDialog.Builder(getActivity())
+        addPunchDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_punch_title)
                 .customView(R.layout.dialog_add_punch_planlist, true)
                 .positiveText(getResources().getString(R.string.action_confirm))
@@ -546,10 +552,10 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                     }
                 })
                 .show();
-        tagPositive = targetDialog.getActionButton(DialogAction.POSITIVE);
+        tagPositive = addPunchDialog.getActionButton(DialogAction.POSITIVE);
         tagPositive.setEnabled(false);
-        allTagsFl = (FlexboxLayout) targetDialog.findViewById(R.id.all_target_fl);
-        tagET = (MaterialEditText) targetDialog.findViewById(R.id.addPunchET);
+        allTagsFl = (FlexboxLayout) addPunchDialog.findViewById(R.id.all_target_fl);
+        tagET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
         tagET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -566,8 +572,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 tagPositive.setEnabled(s.length() > 0 ? true : false);
             }
         });
-        picIV = (ImageView) targetDialog.findViewById(R.id.picIV);
-        operIV = (ImageView) targetDialog.findViewById(R.id.operIV);
+        picIV = (ImageView) addPunchDialog.findViewById(R.id.picIV);
+        operIV = (ImageView) addPunchDialog.findViewById(R.id.operIV);
         operIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

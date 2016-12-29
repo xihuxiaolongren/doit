@@ -2,6 +2,7 @@ package me.xihuxiaolongren.photoga;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,14 +31,19 @@ import java.util.List;
 
 import me.xihuxiaolong.library.utils.GridSpacingItemDecoration;
 import me.xihuxiaolongren.photoga.mode.ImageFolder;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
 
 /**
  * Created by wangqiong on 15/3/27.
  * Updated by yxl on 12/5 2015.
  */
-public class PhotoGalleryFragment extends Fragment {
+public class PhotoGalleryFragment extends Fragment implements EasyPermissions.PermissionCallbacks{
 
+    private static final int RC_STORTAGE = 123;
+    private static final int RC_SETTINGS_SCREEN = 125;
     public int maxChoseCount = 9;
     public boolean isNeedCamera = false;
     public boolean isNeedCrop = false;
@@ -129,7 +137,14 @@ public class PhotoGalleryFragment extends Fragment {
         }
     }
 
+    @AfterPermissionGranted(RC_STORTAGE)
     public void loadAllImages() {
+        String perm = Manifest.permission.READ_EXTERNAL_STORAGE;
+        if (!EasyPermissions.hasPermissions(getContext(), perm)) {
+            EasyPermissions.requestPermissions(this, getString(R.string.rationale_read_storage),
+                    RC_STORTAGE, perm);
+            return;
+        }
         if (!Environment.getExternalStorageState().equals(
                 Environment.MEDIA_MOUNTED)) {
             Toast.makeText(getActivity(), "暂无外部存储", Toast.LENGTH_SHORT).show();
@@ -182,6 +197,14 @@ public class PhotoGalleryFragment extends Fragment {
             cursor.close();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
     private void initFolderPop() {
         popupWindow = new ListPopupWindow(getActivity());
         popupWindow.setAnimationStyle(R.style.popup_animation_bottom);
@@ -218,6 +241,24 @@ public class PhotoGalleryFragment extends Fragment {
         maxChoseCount = bundle.getInt("max_chose_count");
         isNeedCamera = (boolean) bundle.get("need_camera");
         isNeedCrop = (boolean) bundle.get("crop");
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this, getString(R.string.rationale_read_storage_ask_again))
+                    .setTitle(getString(R.string.title_settings_dialog))
+                    .setPositiveButton(getString(R.string.setting))
+                    .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                    .setRequestCode(RC_SETTINGS_SCREEN)
+                    .build()
+                    .show();
+        }
     }
 
 }

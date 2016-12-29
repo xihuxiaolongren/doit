@@ -96,8 +96,6 @@ dependencies {
     provided 'javax.annotation:jsr250-api:1.0'
     //事件驱动
     compile 'org.greenrobot:eventbus:3.0.0'
-    //权限配置
-    compile 'pub.devrel:easypermissions:0.2.1'
     //日志
     compile 'com.orhanobut:logger:1.15'
     compile 'com.jakewharton.timber:timber:4.2.0'
