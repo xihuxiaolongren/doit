@@ -27,6 +27,7 @@
         android:layout_weight="1"
         android:paddingLeft="22dp"
         android:paddingRight="15dp"
+        android:paddingBottom="160dp"
         android:text="@string/empty_plan"
         android:textColor="@color/titleTextColor" />
 </LinearLayout>

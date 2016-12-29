@@ -69,13 +69,11 @@ import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.adapter.NewPlanListWrapper;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
-import me.xihuxiaolong.library.utils.ColorUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
@@ -87,7 +85,7 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks, NewPlanListWrapper.PlanListOnClickListener{
+public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks{
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
@@ -566,16 +564,6 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void planListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
-    }
-
-    @Override
-    public void alertListenr(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
     }
 
     @Override

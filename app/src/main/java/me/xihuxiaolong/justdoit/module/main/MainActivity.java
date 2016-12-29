@@ -1,5 +1,6 @@
 package me.xihuxiaolong.justdoit.module.main;
 
+import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,8 +9,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -17,6 +20,8 @@ import com.roughike.bottombar.OnTabSelectListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +33,8 @@ import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseActivity implements ScrollListener {
 
@@ -47,14 +54,8 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         EventBus.getDefault().register(this);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             dayNightBackgroundView.setAnimationDuration(0);
-//            bottomBar.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    showBottom(0);
-//                }
-//            });
         }
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
@@ -108,14 +109,13 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         Intent intent = new Intent(MainActivity.this,
                 PlanService.class);
         startService(intent);
-
     }
 
-    private void invalidateFragmentMenus(int position) {
+    void invalidateFragmentMenus(int position) {
         Logger.d("position%d", position);
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
             if (mainFragmentPageAdapter.getRegisteredFragment(i) != null) {
-                if(i == position)
+                if (i == position)
                     ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
             }
         }
@@ -204,6 +204,5 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     public void onBackPressed() {
         moveTaskToBack(true);
     }
-
 
 }

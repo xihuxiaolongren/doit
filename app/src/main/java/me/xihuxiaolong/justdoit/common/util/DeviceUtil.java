@@ -9,6 +9,8 @@ import me.xihuxiaolong.justdoit.common.MyApplication;
 public class DeviceUtil extends Activity {
 
 	static int d = 0;
+	static int screenWidth = 0;
+	static int screenHeight = 0;
 
 	static DisplayMetrics displayMetric;
 	
@@ -25,6 +27,18 @@ public class DeviceUtil extends Activity {
 		if (d <= 0)
 			d = (int) context.getResources().getDisplayMetrics().density;
 		return d;
+	}
+
+	public static int getScreenHeight() {
+		if (screenHeight <= 0)
+			screenHeight = context.getResources().getDisplayMetrics().heightPixels;
+		return screenHeight;
+	}
+
+	public static int getScreenWidth() {
+		if (screenWidth <= 0)
+			screenWidth = context.getResources().getDisplayMetrics().widthPixels;
+		return screenWidth;
 	}
 
 }

@@ -30,7 +30,7 @@
     <string name="action_confirm">确认</string>
     <string name="action_cancel">取消</string>
     <string name="add_plan">新建计划</string>
-    <string name="empty_plan">尚未添加计划或提醒</string>
+    <string name="empty_plan">今日暂无安排 . . .</string>
     <string name="empty_plan_history">当日未设定计划</string>
     <string name="menu_delete">删除</string>
     <string name="alert_time">提醒时刻</string>

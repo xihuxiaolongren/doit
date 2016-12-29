@@ -1,10 +1,12 @@
 package me.xihuxiaolongren.photoga;
 
+import android.Manifest;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,7 +34,6 @@ import me.xihuxiaolongren.photoga.mode.ImageFolder;
  * Created by wangqiong on 15/3/27.
  * Updated by yxl on 12/5 2015.
  */
-
 public class PhotoGalleryFragment extends Fragment {
 
     public int maxChoseCount = 9;
@@ -218,4 +219,5 @@ public class PhotoGalleryFragment extends Fragment {
         isNeedCamera = (boolean) bundle.get("need_camera");
         isNeedCrop = (boolean) bundle.get("crop");
     }
+
 }

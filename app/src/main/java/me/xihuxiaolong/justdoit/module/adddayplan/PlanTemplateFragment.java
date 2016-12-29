@@ -3,11 +3,13 @@ package me.xihuxiaolong.justdoit.module.adddayplan;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -16,7 +18,7 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListWrapper;
+import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 
@@ -35,8 +37,7 @@ public class PlanTemplateFragment extends BaseMvpFragment<PlanTemplateContract.I
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
 
-
-    PlanListWrapper planListWrapper;
+    PlanListAdapter adapter;
 
     public static PlanTemplateFragment newInstance(long dayTime) {
         PlanTemplateFragment fragment = new PlanTemplateFragment();
@@ -76,16 +77,24 @@ public class PlanTemplateFragment extends BaseMvpFragment<PlanTemplateContract.I
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
-        planListWrapper = new PlanListWrapper(getContext(), recyclerView, null);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new PlanListAdapter(getActivity(), new ArrayList<PlanDO>(), null);
+        adapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_planlist, (ViewGroup) recyclerView.getParent(), false));
+        adapter.setHeaderFooterEmpty(true, true);
+        final View footView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_bottom, recyclerView, false);
+        adapter.addFooterView(footView);
+        recyclerView.setAdapter(adapter);
+
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_template_header, recyclerView, false);
-        planListWrapper.addHeaderView(headerView);
+        adapter.addHeaderView(headerView);
 
         return view;
     }
 
     @Override
     public void showPlans(final List<PlanDO> plans) {
-        planListWrapper.setItems(plans);
+        adapter.setNewData(plans);
     }
 
     @Override

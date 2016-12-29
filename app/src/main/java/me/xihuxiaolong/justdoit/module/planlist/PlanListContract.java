@@ -31,12 +31,6 @@ public class PlanListContract {
 
         void showSignature(String signature, String preSignature);
 
-//        void changeDayNight();
-
-        void gotoTemplates();
-
-        void showEmptyView();
-
         void showOtherDayUI();
 
         void savePunchSuccess();

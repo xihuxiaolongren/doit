@@ -43,7 +43,6 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
     @Override
     public void addPlan(long dayTime) {
         PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
-
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
         if(planHistoryDO != null){
@@ -58,9 +57,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void deletePlan(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPlanCount() - 1);
             if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)
@@ -74,9 +73,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void addAlert(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getAlertCount() + 1);
         }else {
@@ -89,9 +88,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void deleteAlert(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setAlertCount(planHistoryDO.getAlertCount() - 1);
             if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)
@@ -105,9 +104,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void addPhoto(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPhotoCount() + 1);
         }else {
@@ -120,9 +119,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
 
     @Override
     public void deletePhoto(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
         if(planHistoryDO != null){
             planHistoryDO.setPhotoCount(planHistoryDO.getPhotoCount() - 1);
             if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)

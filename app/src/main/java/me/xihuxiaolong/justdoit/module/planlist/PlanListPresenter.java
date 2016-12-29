@@ -54,8 +54,6 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         }
         if (isViewAttached()) {
             getView().showPlans(planDOs);
-            if(CollectionUtils.isEmpty(planDOs))
-                getView().showEmptyView();
         }
     }
 

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'com.jakewharton.butterknife'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
@@ -38,6 +38,7 @@ android {
             keyAlias "justdoit-alias"
             keyPassword "3230861"
         }
+
     }
 
     buildTypes {
@@ -46,6 +47,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
@@ -74,8 +76,8 @@ dependencies {
     compile 'ch.acra:acra:4.9.0'
     //json解析库
     //view注入
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
-    compile 'com.jakewharton:butterknife:8.1.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     //数据库orm
     compile 'org.greenrobot:greendao:3.1.1'
     //rx
@@ -89,11 +91,13 @@ dependencies {
     //mvp框架
     compile 'com.hannesdorfmann.mosby:mvp:2.0.1'
     //dagger依赖注入
-    apt 'com.google.dagger:dagger-compiler:2.5'
-    compile 'com.google.dagger:dagger:2.5'
+    compile 'com.google.dagger:dagger:2.8'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.8'
     provided 'javax.annotation:jsr250-api:1.0'
     //事件驱动
     compile 'org.greenrobot:eventbus:3.0.0'
+    //权限配置
+    compile 'pub.devrel:easypermissions:0.2.1'
     //日志
     compile 'com.orhanobut:logger:1.15'
     compile 'com.jakewharton.timber:timber:4.2.0'

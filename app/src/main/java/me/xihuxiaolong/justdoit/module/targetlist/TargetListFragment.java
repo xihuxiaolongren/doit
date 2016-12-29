@@ -194,12 +194,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
         targetAdapter.addHeaderView(headerView);
         final View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_target, (ViewGroup) recyclerView.getParent(), false);
-//        emptyView.findViewById(R.id.createTargetFB).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                fabListener.onClick(v);
-//            }
-//        });
         targetAdapter.setEmptyView(emptyView);
         targetAdapter.setHeaderAndEmpty(true);
         recyclerView.setAdapter(targetAdapter);
@@ -210,9 +204,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 Intent intent = new Intent(getActivity(), TargetDetailActivity.class).putExtra(ARG_TARGET, targetDO);
                 if (!TextUtils.isEmpty(targetDO.getHeaderImageUri()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     View view1 = view.findViewById(R.id.bgIV);
-//                    View view2 = view.findViewById(R.id.title);
                     Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
-//                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1);
                     startActivity(intent, options.toBundle());
                 } else {

@@ -1,29 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/empty_target_1"
         android:layout_gravity="right"
-        android:layout_marginTop="30dp"
         android:layout_marginRight="35dp"
-        android:tint="@color/titleTextColor"/>
-    <!--<mehdi.sakout.fancybuttons.FancyButton-->
-        <!--android:id="@+id/createTargetFB"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:paddingBottom="10dp"-->
-        <!--android:paddingLeft="20dp"-->
-        <!--android:paddingRight="20dp"-->
-        <!--android:paddingTop="10dp"-->
-        <!--fancy:fb_borderColor="@color/titleTextColor"-->
-        <!--fancy:fb_borderWidth="1dp"-->
-        <!--fancy:fb_defaultColor="@android:color/transparent"-->
-        <!--fancy:fb_text="创建目标"-->
-        <!--fancy:fb_textColor="@color/titleTextColor" />-->
+        android:layout_marginTop="30dp"
+        android:src="@drawable/empty_target_1"
+        android:tint="@color/titleTextColor" />
 </FrameLayout>
