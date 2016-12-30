@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -205,9 +206,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
     public void showTagDialog(LinkedHashSet<String> selectedTags, LinkedHashSet<String> allTags) {
         mSelectedTags = selectedTags;
         mAllTags = allTags;
-        if(tagDialog != null){
-            tagDialog.show();
-        }else {
+        if(tagDialog == null){
             tagDialog = new MaterialDialog.Builder(EditPlanActivity.this)
                     .title("标签")
                     .customView(R.layout.dialog_tag, true)
@@ -225,12 +224,14 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                             ActivityUtils.hideSoftKeyboard(EditPlanActivity.this);
                         }
                     })
-                    .show();
+                    .build();
             tagPositive = tagDialog.getActionButton(DialogAction.POSITIVE);
             tagPositive.setEnabled(false);
             selectTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.select_tags_fl);
             allTagsFl = (FlexboxLayout) tagDialog.findViewById(R.id.all_tags_fl);
             tagET = (MaterialEditText) tagDialog.findViewById(R.id.tagET);
+            tagET.requestFocus();
+            tagDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             addTagIV = tagDialog.findViewById(R.id.addTagIV);
             addTagIV.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -268,6 +269,7 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
                 }
             });
         }
+        tagDialog.show();
 
     }
 

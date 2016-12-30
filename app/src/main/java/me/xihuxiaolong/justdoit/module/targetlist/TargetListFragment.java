@@ -26,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -487,9 +488,11 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                     }
                 })
                 .negativeText(R.string.action_cancel)
-                .show();
+                .build();
         addTargetDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+        addTargetDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         addTargetET = (MaterialEditText) addTargetDialog.findViewById(R.id.addTargetET);
+        addTargetET.requestFocus();
         addTargetET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -526,6 +529,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                     explainTV.setText("说明：在该目标模式下可进行打卡操作");
             }
         });
+        addTargetDialog.show();
     }
 
     private void updateArcProgress(int count){
