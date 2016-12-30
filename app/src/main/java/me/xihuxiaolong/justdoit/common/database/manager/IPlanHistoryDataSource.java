@@ -21,6 +21,8 @@ public interface IPlanHistoryDataSource {
     void deleteAlert(long dayTime);
     void addPhoto(long dayTime);
     void deletePhoto(long dayTime);
+    void addPunch(long dayTime);
+    void deletePunch(long dayTime);
 
     PlanHistoryDO getPlanHistoryDOById(Long id);
 

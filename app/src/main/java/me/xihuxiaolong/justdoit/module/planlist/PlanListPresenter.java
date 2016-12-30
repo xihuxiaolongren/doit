@@ -79,7 +79,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     }
 
     @Override
-    public void loadTargets() {
+    public void startAddPunch() {
         List<TargetDO> targetDOs = redoPlanDataSource.listAllPunchTarget(false);
         if(isViewAttached())
             getView().showPunchDialog(targetDOs);
@@ -101,6 +101,24 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
+    }
+
+    @Override
+    public void deletePlan(PlanDO planDO) {
+        switch (planDO.getType()) {
+            case PlanDO.TYPE_PHOTO:
+                planDataSource.deletePhotoById(planDO.getId());
+                break;
+            case PlanDO.TYPE_PUNCH:
+                planDataSource.deletePunchById(planDO.getId());
+                break;
+        }
+        EventBus.getDefault().post(new Event.DeletePlan(planDO));
+    }
+
+    @Override
+    public void sharePlan(PlanDO planDO) {
+
     }
 
     @Subscribe

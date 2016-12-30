@@ -37,6 +37,7 @@
     <string name="modify_plan">更改计划</string>
     <string name="modify_alert">更改提醒</string>
     <string name="delete_alert">删除提醒</string>
+    <string name="delete_all_type">删除记录</string>
     <string name="delete_plan">删除计划</string>
     <string name="delete_target">删除目标</string>
     <string name="use_today_template">使用今日模板</string>
@@ -46,6 +47,7 @@
     <string name="action_day">白天模式</string>
     <string name="action_night">夜间模式</string>
     <string name="select_template">选择模板</string>
-    <string name="add_photo">拍照</string>
+    <string name="add_photo">此刻</string>
     <string name="rationale_camera_and_read_storage"><![CDATA[应用需要读取您的相册&使用相机功能]]></string>
+    <string name="share">分享</string>
 </resources>

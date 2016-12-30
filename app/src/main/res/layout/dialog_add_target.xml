@@ -57,6 +57,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textAppearance="@style/MyTextAppearance.BodyNormal"
-        android:text="说明：普通模式可以在该目标下添加重复计划/提醒"/>
+        android:textAppearance="@style/MyTextAppearance.BodyNormal"/>
 </LinearLayout>

@@ -59,21 +59,39 @@
                 app:met_textColor="@color/titleTextColor"
                 app:met_textColorHint="@color/titleTextColor" />
 
-            <android.support.percent.PercentRelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <android.support.percent.PercentRelativeLayout
+                    android:id="@+id/picPRL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginBottom="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp">
+
+                    <ImageView
+                        android:id="@+id/picIV"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:scaleType="fitCenter"
+                        android:transitionName="bigImageView" />
+                </android.support.percent.PercentRelativeLayout>
 
                 <ImageView
-                    android:id="@+id/picIV"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:scaleType="fitCenter"
-                    android:transitionName="bigImageView" />
-            </android.support.percent.PercentRelativeLayout>
-
+                    android:id="@+id/operIV"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="centerInside"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/menu_add_pic"
+                    android:tint="@color/titleTextColor" />
+            </LinearLayout>
         </LinearLayout>
 
     </ScrollView>

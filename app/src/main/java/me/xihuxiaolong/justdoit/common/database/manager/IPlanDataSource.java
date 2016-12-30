@@ -20,6 +20,8 @@ public interface IPlanDataSource {
 
     void deletePhotoById(Long id);
 
+    void deletePunchById(Long id);
+
     PlanDO getPlanDOById(Long id);
 
     long insertOrReplacePlanDO(PlanDO planDO, String targetName);

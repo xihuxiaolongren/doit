@@ -22,14 +22,16 @@ public class PlanHistoryDO implements Serializable{
     private int planCount;
     private int alertCount;
     private int photoCount;
-    @Generated(hash = 1536677951)
+    private int punchCount;
+    @Generated(hash = 1255143889)
     public PlanHistoryDO(Long id, Long dayTime, int planCount, int alertCount,
-            int photoCount) {
+            int photoCount, int punchCount) {
         this.id = id;
         this.dayTime = dayTime;
         this.planCount = planCount;
         this.alertCount = alertCount;
         this.photoCount = photoCount;
+        this.punchCount = punchCount;
     }
     @Generated(hash = 1603826141)
     public PlanHistoryDO() {
@@ -66,6 +68,12 @@ public class PlanHistoryDO implements Serializable{
     }
     public void setDayTime(Long dayTime) {
         this.dayTime = dayTime;
+    }
+    public int getPunchCount() {
+        return this.punchCount;
+    }
+    public void setPunchCount(int punchCount) {
+        this.punchCount = punchCount;
     }
     
 

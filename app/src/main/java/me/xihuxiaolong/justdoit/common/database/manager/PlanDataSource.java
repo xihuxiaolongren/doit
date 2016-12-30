@@ -61,6 +61,15 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         }
     }
 
+    @Override
+    public void deletePunchById(Long id) {
+        PlanDO planDO = getPlanDOById(id);
+        if(planDO != null) {
+            deletePlanDOById(id);
+            planHistoryDataSource.deletePunch(planDO.getDayTime());
+        }
+    }
+
     private void deletePlanDOById(Long id) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();

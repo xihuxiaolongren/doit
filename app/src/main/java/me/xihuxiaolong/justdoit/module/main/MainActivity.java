@@ -1,6 +1,5 @@
 package me.xihuxiaolong.justdoit.module.main;
 
-import android.Manifest;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -21,20 +18,17 @@ import com.roughike.bottombar.OnTabSelectListener;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.service.PlanService;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends BaseActivity implements ScrollListener {
 
@@ -142,7 +136,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     }
 
     private void showBottom(int duration) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", -bottomBar.getHeight());
+        ObjectAnimator animator = ObjectAnimator.ofFloat(bottomBar, "translationY", -bottomBar.getHeight() + DeviceUtil.getDensity());
         animator.setDuration(duration);
         animator.start();
         isBottomVisible = true;
@@ -202,7 +196,13 @@ public class MainActivity extends BaseActivity implements ScrollListener {
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(true);
+        if(viewPager.getCurrentItem() != 0){
+            viewPager.setCurrentItem(0, false);
+            bottomBar.setDefaultTabPosition(0);
+            invalidateFragmentMenus(0);
+        }else {
+            moveTaskToBack(true);
+        }
     }
 
 }

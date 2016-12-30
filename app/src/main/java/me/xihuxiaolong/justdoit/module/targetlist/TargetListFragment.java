@@ -509,6 +509,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         normalRB = (RadioButton) addTargetDialog.findViewById(R.id.normalRB);
         punchRB = (RadioButton) addTargetDialog.findViewById(R.id.punchRB);
         explainTV = (TextView) addTargetDialog.findViewById(R.id.explain);
+        explainTV.setText("说明：在该目标模式下可添加重复计划/提醒");
         normalRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

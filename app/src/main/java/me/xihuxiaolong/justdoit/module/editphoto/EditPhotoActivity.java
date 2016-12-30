@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -45,6 +46,10 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
     RelativeLayout rootView;
     @BindView(R.id.picIV)
     ImageView picIV;
+    @BindView(R.id.operIV)
+    ImageView operIV;
+    @BindView(R.id.picPRL)
+    View picPRL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
 
         setToolbar(toolbar, true);
 
+        picPRL.setVisibility(TextUtils.isEmpty(picUri) ? View.GONE : View.VISIBLE);
         if(savedInstanceState == null) {
             Intent intent = new Intent(this, MediaChoseActivity.class);
             //chose_mode选择模式 0单选 1多选
@@ -65,6 +71,23 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
         }else{
             setSingleImage(picUri, picIV);
         }
+        operIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(picUri == null) {
+                    Intent intent = new Intent(EditPhotoActivity.this, MediaChoseActivity.class);
+                    //chose_mode选择模式 0单选 1多选
+                    intent.putExtra("chose_mode", 0);
+                    //是否显示需要第一个是图片相机按钮
+                    intent.putExtra("isNeedfcamera", true);
+                    startActivityForResult(intent, MediaChoseActivity.REQUEST_CODE_CAMERA);
+                }else{
+                    picUri = null;
+                    picPRL.setVisibility(View.GONE);
+                    operIV.setImageResource(R.drawable.menu_add_pic);
+                }
+            }
+        });
     }
 
     @Override
@@ -72,10 +95,14 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
         if (requestCode == MediaChoseActivity.REQUEST_CODE_CAMERA) {
             if (result != null && !CollectionUtils.isEmpty(result.getStringArrayListExtra("data"))) {
                 ArrayList<String> uris = result.getStringArrayListExtra("data");
-//                picIV.setImageURI(null);
-//                picIV.setImageURI(Uri.parse(uris.get(0)));
                 picUri = uris.get(0);
-                setSingleImage(picUri, picIV);
+                if(picPRL != null) {
+                    picPRL.setVisibility(View.VISIBLE);
+                    setSingleImage(picUri, picIV);
+                }
+                if(operIV != null){
+                    operIV.setImageResource(R.drawable.icon_delete);
+                }
 
             }
         }

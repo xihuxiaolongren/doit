@@ -10,9 +10,11 @@ import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -64,7 +66,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         public void onClick(View v) {
             PlanDO planDO = (PlanDO) v.getTag();
             if (planListOnClickListener != null)
-                planListOnClickListener.planListenr(planDO);
+                planListOnClickListener.planClick(planDO);
         }
     };
 
@@ -73,7 +75,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         public void onClick(View v) {
             PlanDO planDO = (PlanDO) v.getTag();
             if (planListOnClickListener != null)
-                planListOnClickListener.alertListenr(planDO);
+                planListOnClickListener.alertClick(planDO);
         }
     };
 
@@ -137,6 +139,8 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
         holder.setTag(R.id.picIV, planDO);
         holder.setOnClickListener(R.id.picIV, photoListener);
+        holder.setTag(R.id.moreIV, planDO);
+        holder.setOnClickListener(R.id.moreIV, moreClickListener);
     }
 
     private void convertPunch(BaseViewHolder holder, PlanDO planDO) {
@@ -151,6 +155,8 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
         holder.setTag(R.id.picIV, planDO);
         holder.setOnClickListener(R.id.picIV, photoListener);
+        holder.setTag(R.id.moreIV, planDO);
+        holder.setOnClickListener(R.id.moreIV, moreClickListener);
     }
 
     private void setSingleImage(String filepath, ImageView imageView) {
@@ -240,6 +246,34 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         }
     };
 
+    private View.OnClickListener moreClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final PlanDO planDO = (PlanDO) v.getTag();
+            PopupMenu popup = new PopupMenu(mContext, v);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater()
+                    .inflate(R.menu.popup_menu_plan, popup.getMenu());
+
+            //registering popup with OnMenuItemClickListener
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.delete:
+                            planListOnClickListener.deleteClick(planDO);
+                            break;
+                        case R.id.share:
+                            planListOnClickListener.shareClick(planDO);
+                            break;
+                    }
+                    return true;
+                }
+            });
+
+            popup.show(); //s
+        }
+    };
+
     private class PhotoTarget extends ViewTarget<PorterShapeImageView, Bitmap> {
 
         public PhotoTarget(PorterShapeImageView view) {
@@ -253,8 +287,13 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
     }
 
     public interface PlanListOnClickListener {
-        void planListenr(PlanDO planDO);
+        void planClick(PlanDO planDO);
 
-        void alertListenr(PlanDO planDO);
+        void alertClick(PlanDO planDO);
+
+        void deleteClick(PlanDO planDO);
+
+        void shareClick(PlanDO planDO);
+
     }
 }

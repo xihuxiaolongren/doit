@@ -18,6 +18,9 @@
             <item
                 android:id="@+id/action_add_photo"
                 android:title="@string/add_photo" />
+            <item
+                android:id="@+id/action_add_punch"
+                android:title="@string/add_punch_title" />
         </menu>
     </item>
     <item

@@ -47,9 +47,14 @@ public class PlanListContract {
 
         void loadUserSettings();
 
-        void loadTargets();
+        void startAddPunch();
 
         void savePunch(String content, String pictures, String targetName);
+
+        void deletePlan(PlanDO planDO);
+
+        void sharePlan(PlanDO planDO);
+
 
     }
 }

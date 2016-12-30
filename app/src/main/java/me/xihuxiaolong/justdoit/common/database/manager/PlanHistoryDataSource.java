@@ -32,6 +32,9 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
             case PlanDO.TYPE_PLAN:
                 addPlan(dayTime);
                 break;
+            case PlanDO.TYPE_PUNCH:
+                addPlan(dayTime);
+                break;
         }
     }
 
@@ -48,7 +51,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPlanCount() + 1);
         }else {
-            planHistoryDO = new PlanHistoryDO(null, dayTime, 1, 0, 0);
+            planHistoryDO = new PlanHistoryDO(null, dayTime, 1, 0, 0, 0);
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
@@ -62,7 +65,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         DaoSession daoSession = new DaoMaster(database).newSession();
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPlanCount() - 1);
-            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)
+            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0 && planHistoryDO.getPunchCount() <= 0)
                 daoSession.getPlanHistoryDODao().deleteByKey(planHistoryDO.getId());
             else
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);
@@ -79,7 +82,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getAlertCount() + 1);
         }else {
-            planHistoryDO = new PlanHistoryDO(null, dayTime, 0, 1, 0);
+            planHistoryDO = new PlanHistoryDO(null, dayTime, 0, 1, 0, 0);
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
@@ -93,7 +96,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         DaoSession daoSession = new DaoMaster(database).newSession();
         if(planHistoryDO != null){
             planHistoryDO.setAlertCount(planHistoryDO.getAlertCount() - 1);
-            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)
+            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0 && planHistoryDO.getPunchCount() <= 0)
                 daoSession.getPlanHistoryDODao().deleteByKey(planHistoryDO.getId());
             else
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);
@@ -110,7 +113,7 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         if(planHistoryDO != null){
             planHistoryDO.setPlanCount(planHistoryDO.getPhotoCount() + 1);
         }else {
-            planHistoryDO = new PlanHistoryDO(null, dayTime, 0, 0, 1);
+            planHistoryDO = new PlanHistoryDO(null, dayTime, 0, 0, 1, 0);
         }
         daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
 
@@ -124,7 +127,38 @@ public class PlanHistoryDataSource extends BaseDataSource implements IPlanHistor
         DaoSession daoSession = new DaoMaster(database).newSession();
         if(planHistoryDO != null){
             planHistoryDO.setPhotoCount(planHistoryDO.getPhotoCount() - 1);
-            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0)
+            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0 && planHistoryDO.getPunchCount() <= 0)
+                daoSession.getPlanHistoryDODao().deleteByKey(planHistoryDO.getId());
+            else
+                daoSession.getPlanHistoryDODao().update(planHistoryDO);
+        }
+
+        clear(daoSession, database);
+    }
+
+    @Override
+    public void addPunch(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        if(planHistoryDO != null){
+            planHistoryDO.setPlanCount(planHistoryDO.getPunchCount() + 1);
+        }else {
+            planHistoryDO = new PlanHistoryDO(null, dayTime, 0, 0, 0, 1);
+        }
+        daoSession.getPlanHistoryDODao().insertOrReplace(planHistoryDO);
+
+        clear(daoSession, database);
+    }
+
+    @Override
+    public void deletePunch(long dayTime) {
+        PlanHistoryDO planHistoryDO = getPlanHistoryDOByDayTime(dayTime);
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        if(planHistoryDO != null){
+            planHistoryDO.setPunchCount(planHistoryDO.getPunchCount() - 1);
+            if(planHistoryDO.getAlertCount() <= 0 && planHistoryDO.getPhotoCount() <= 0 && planHistoryDO.getPlanCount() <= 0 && planHistoryDO.getPunchCount() <= 0)
                 daoSession.getPlanHistoryDODao().deleteByKey(planHistoryDO.getId());
             else
                 daoSession.getPlanHistoryDODao().update(planHistoryDO);

@@ -1,6 +1,5 @@
 package me.xihuxiaolong.justdoit.module.planlist;
 
-import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -71,10 +70,9 @@ import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 import mehdi.sakout.fancybuttons.FancyButton;
-import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.EasyPermissions;
 
 
 /**
@@ -274,13 +272,16 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 startActivity(new Intent(getActivity(), PlanHistoryActivity.class));
                 return true;
             case R.id.action_add_alert:
-                startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+                startAlert();
                 return true;
             case R.id.action_add_plan:
-                startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+                startPlan();
                 return true;
             case R.id.action_add_photo:
                 startPhoto();
+                return true;
+            case R.id.action_add_punch:
+                startPunch();
                 return true;
             case R.id.action_add_tomorrow_plan:
                 startActivity(new Intent(getActivity(), OtherDayActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
@@ -292,8 +293,43 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         return super.onOptionsItemSelected(item);
     }
 
+    private View.OnClickListener fabListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.planFab:
+                    startPlan();
+                    break;
+                case R.id.alertFab:
+                    startAlert();
+                    break;
+                case R.id.photoFab:
+                    startPhoto();
+                    break;
+                case R.id.punchFab:
+                    startPunch();
+                    break;
+//                case R.id.tomorrowPlanFab:
+//                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
+//                    break;
+            }
+            fab.close(true);
+        }
+    };
+
+    void startPunch(){
+        presenter.startAddPunch();
+    }
     void startPhoto(){
         startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+    }
+
+    void startPlan(){
+        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+    }
+
+    void startAlert(){
+        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
     }
 
     @Override
@@ -496,38 +532,14 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     }
 
-    private View.OnClickListener fabListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.planFab:
-                    startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
-                    break;
-                case R.id.alertFab:
-                    startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
-                    break;
-                case R.id.photoFab:
-                    startPhoto();
-                    break;
-                case R.id.punchFab:
-                    presenter.loadTargets();
-//                    openPunch();
-                    break;
-//                case R.id.tomorrowPlanFab:
-//                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
-//                    break;
-            }
-            fab.close(true);
-        }
-    };
-
     private  MaterialDialog addPunchDialog;
-    FlexboxLayout allTagsFl;
-    MaterialEditText tagET;
+    FlexboxLayout allTargetsFl;
+    MaterialEditText targetET;
+    TextView selectTipTV;
     private ImageView picIV;
     private ImageView operIV;
     String picUri;
-    View tagPositive;
+    View targetPositive;
     String selectTarget;
 
     @Override
@@ -541,7 +553,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        presenter.savePunch(tagET.getText().toString(), picUri, selectTarget);
+                        presenter.savePunch(targetET.getText().toString(), picUri, selectTarget);
                     }
                 })
                 .negativeText(getResources().getString(R.string.action_cancel))
@@ -552,11 +564,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                     }
                 })
                 .show();
-        tagPositive = addPunchDialog.getActionButton(DialogAction.POSITIVE);
-        tagPositive.setEnabled(false);
-        allTagsFl = (FlexboxLayout) addPunchDialog.findViewById(R.id.all_target_fl);
-        tagET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
-        tagET.addTextChangedListener(new TextWatcher() {
+        targetPositive = addPunchDialog.getActionButton(DialogAction.POSITIVE);
+        targetPositive.setEnabled(false);
+        selectTipTV = (TextView) addPunchDialog.findViewById(R.id.selectTipTV);
+        selectTipTV.setVisibility(CollectionUtils.isEmpty(targetList) ? View.GONE : View.VISIBLE);
+        allTargetsFl = (FlexboxLayout) addPunchDialog.findViewById(R.id.all_target_fl);
+        targetET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
+        targetET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -569,7 +583,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
             @Override
             public void afterTextChanged(Editable s) {
-                tagPositive.setEnabled(s.length() > 0 ? true : false);
+                targetPositive.setEnabled(s.length() > 0 ? true : false);
             }
         });
         picIV = (ImageView) addPunchDialog.findViewById(R.id.picIV);
@@ -587,7 +601,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 }else{
                     picUri = null;
                     picIV.setVisibility(View.GONE);
-                    operIV.setImageResource(R.drawable.menu_target_bg);
+                    operIV.setImageResource(R.drawable.menu_add_pic);
                 }
             }
         });
@@ -596,26 +610,26 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     private void addTagToUnselectView(TargetDO target) {
-        FancyButton fancyButton = (FancyButton) LayoutInflater.from(getActivity()).inflate(R.layout.item_unselected_tag, allTagsFl, false);
+        FancyButton fancyButton = (FancyButton) LayoutInflater.from(getActivity()).inflate(R.layout.item_unselected_tag, allTargetsFl, false);
         fancyButton.setText(target.getName());
         fancyButton.setTag(target.getName());
         fancyButton.setOnClickListener(unselectedTagClickListener);
-        allTagsFl.addView(fancyButton);
+        allTargetsFl.addView(fancyButton);
     }
 
     private View.OnClickListener unselectedTagClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(selectTarget != null && allTagsFl.findViewWithTag(selectTarget) != null){
-                FancyButton fancyButton = (FancyButton) allTagsFl.findViewWithTag(selectTarget);
+            if(selectTarget != null && allTargetsFl.findViewWithTag(selectTarget) != null){
+                FancyButton fancyButton = (FancyButton) allTargetsFl.findViewWithTag(selectTarget);
                 fancyButton.setBackgroundColor(Color.TRANSPARENT);
                 fancyButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.titleTextColor));
-
             }
             FancyButton fancyButton = (FancyButton) v;
             fancyButton.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.titleTextColor));
             fancyButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
             selectTarget = (String) fancyButton.getTag();
+            targetPositive.setEnabled(true);
         }
     };
 
@@ -630,13 +644,28 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
-    public void planListenr(PlanDO planDO) {
+    public void planClick(PlanDO planDO) {
         startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
     }
 
     @Override
-    public void alertListenr(PlanDO planDO) {
+    public void alertClick(PlanDO planDO) {
         startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
+    }
+
+    @Override
+    public void deleteClick(final PlanDO planDO) {
+        DialogUtils.showDialog(getContext(), getResources().getString(R.string.delete_all_type), "确定要删除本条记录吗？", new MaterialDialog.SingleButtonCallback() {
+            @Override
+            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                presenter.deletePlan(planDO);
+            }
+        });
+    }
+
+    @Override
+    public void shareClick(PlanDO planDO) {
+        presenter.sharePlan(planDO);
     }
 
     @Override
