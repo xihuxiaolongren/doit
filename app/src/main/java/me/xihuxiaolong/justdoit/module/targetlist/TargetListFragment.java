@@ -46,6 +46,8 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.github.lzyzsd.circleprogress.ArcProgress;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.Entry;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
@@ -68,6 +70,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
+import me.xihuxiaolong.justdoit.common.widget.LineChartManager;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
@@ -96,8 +99,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     Toolbar toolbar;
     @BindView(R.id.recycler_background)
     View recyclerBackground;
-    @BindView(R.id.signatureTV)
-    AutofitTextView signatureTV;
+    @BindView(R.id.lineChart)
+    LineChart lineChart;
     @BindView(R.id.calendar_rl)
     LinearLayout calendarRl;
     @BindView(R.id.fab)
@@ -346,11 +349,11 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         animateCanlendarRl(scrollY);
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - signatureTV.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
+        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
-        ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
+        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
         float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-        ViewHelper.setAlpha(signatureTV, alpha);
+        ViewHelper.setAlpha(lineChart, alpha);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
@@ -450,14 +453,23 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
-        if(CollectionUtils.isEmpty(targets)) {
+        if (CollectionUtils.isEmpty(targets)) {
 //            fab.setVisibility(View.INVISIBLE);
             calendarRl.setVisibility(View.INVISIBLE);
-            signatureTV.setVisibility(View.INVISIBLE);
-        }else{
+            lineChart.setVisibility(View.INVISIBLE);
+        } else {
 //            fab.setVisibility(View.VISIBLE);
             calendarRl.setVisibility(View.VISIBLE);
-            signatureTV.setVisibility(View.VISIBLE);
+            lineChart.setVisibility(View.VISIBLE);
+            List<Entry> xyValues = new ArrayList<>();
+            xyValues.add(new Entry(1, 4));
+            xyValues.add(new Entry(2, 2));
+            xyValues.add(new Entry(3, 3));
+            xyValues.add(new Entry(4, 2));
+            xyValues.add(new Entry(5, 5));
+            xyValues.add(new Entry(6, 5));
+            xyValues.add(new Entry(7, 5));
+            LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
         }
         updateArcProgress(targets.size());
         targetAdapter.setNewData(targets);
@@ -517,7 +529,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 punchRB.setChecked(!isChecked);
-                if(isChecked)
+                if (isChecked)
                     explainTV.setText("说明：在该目标模式下可添加重复计划/提醒");
             }
         });
@@ -525,14 +537,14 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 normalRB.setChecked(!isChecked);
-                if(isChecked)
+                if (isChecked)
                     explainTV.setText("说明：在该目标模式下可进行打卡操作");
             }
         });
         addTargetDialog.show();
     }
 
-    private void updateArcProgress(int count){
+    private void updateArcProgress(int count) {
         arcProgress.setBottomText(count + " 目标 ");
     }
 }
