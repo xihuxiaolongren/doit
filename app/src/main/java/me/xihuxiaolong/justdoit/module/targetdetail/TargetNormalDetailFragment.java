@@ -85,7 +85,7 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks{
+public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks{
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
@@ -145,8 +145,8 @@ public class TargetDetailFragment extends BaseMvpFragment<TargetDetailContract.I
 
     private TargetDO targetDO;
 
-    public static TargetDetailFragment newInstance() {
-        TargetDetailFragment fragment = new TargetDetailFragment();
+    public static TargetNormalDetailFragment newInstance() {
+        TargetNormalDetailFragment fragment = new TargetNormalDetailFragment();
         return fragment;
     }
 

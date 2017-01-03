@@ -249,7 +249,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     .addOnClickListener(R.id.picIV);
             ImageView okIV = holder.getView(R.id.okIV);
             okIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
-            okIV.setAlpha(0.75f);
+            okIV.setAlpha(0.55f);
             ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.picIV), punch.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
 
         }

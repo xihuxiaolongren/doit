@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.module.targetdetail;
 
 import android.os.Bundle;
-import android.support.v7.graphics.Target;
 
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
@@ -24,12 +23,12 @@ public class TargetDetailActivity extends BaseActivity {
         targetDO = (TargetDO) getIntent().getSerializableExtra(ARG_TARGET);
 
         if(targetDO.getType() == TargetDO.TYPE_NORMAL) {
-            TargetDetailFragment targetDetailFragment =
-                    (TargetDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-            if (targetDetailFragment == null) {
-                targetDetailFragment = TargetDetailFragment.newInstance();
+            TargetNormalDetailFragment targetNormalDetailFragment =
+                    (TargetNormalDetailFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            if (targetNormalDetailFragment == null) {
+                targetNormalDetailFragment = TargetNormalDetailFragment.newInstance();
                 ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                        targetDetailFragment, R.id.contentFrame);
+                        targetNormalDetailFragment, R.id.contentFrame);
             }
         }else if(targetDO.getType() == TargetDO.TYPE_PUNCH){
             TargetPunchDetailFragment targetDetailFragment =

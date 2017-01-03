@@ -258,7 +258,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
             holder.setText(R.id.title, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
-            targetIconIV.setAlpha(0.65f);
+            targetIconIV.setAlpha(0.55f);
             FloatingActionButton fab = holder.getView(R.id.fab);
             Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_little_black);
             drawable = drawable.mutate();
@@ -274,7 +274,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
             holder.setText(R.id.title, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
-            targetIconIV.setAlpha(0.65f);
+            targetIconIV.setAlpha(0.55f);
             ImageView bgIV = holder.getView(R.id.bgIV);
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);

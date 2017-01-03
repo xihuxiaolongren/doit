@@ -2,20 +2,20 @@ package me.xihuxiaolong.justdoit.common.widget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
@@ -47,18 +47,18 @@ public class LineChartManager {
                 return "" + ((int) value);
             }
         });
-        dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        dataSet.setDrawFilled(true);
-        dataSet.setDrawHighlightIndicators(true);
+        dataSet.setMode(LineDataSet.Mode.LINEAR);
+//        dataSet.setDrawFilled(true);
+//        dataSet.setDrawHighlightIndicators(true);
 
-        if (Utils.getSDKInt() >= 18) {
-            // fill drawable only supported on api level 18 and above
-            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.fade_red);
-            dataSet.setFillDrawable(drawable);
-        }
-        else {
-            dataSet.setFillColor(Color.parseColor("#80576269"));
-        }
+//        if (Utils.getSDKInt() >= 18) {
+//            // fill drawable only supported on api level 18 and above
+//            Drawable drawable = ContextCompat.getDrawable(context, R.drawable.fade_red);
+//            dataSet.setFillDrawable(drawable);
+//        }
+//        else {
+//            dataSet.setFillColor(Color.parseColor("#80576269"));
+//        }
 //        dataSet.enableDashedLine(10f, 10f, 0f);//将折线设置为曲线
 //        dataSet.setValueFormatter(new PercentFormatter(new DecimalFormat("%").format()));
 
@@ -139,9 +139,18 @@ public class LineChartManager {
         xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.titleTextColor));
         xAxis.setAxisLineWidth(1);
         xAxis.setDrawGridLines(false);
-        xAxis.setLabelCount(5, true);
+        xAxis.setLabelCount(7, true);
+        xAxis.setTextSize(8f);
+//        xAxis.setLabelRotationAngle(300f);
         //设置是否显示x轴
         xAxis.setEnabled(true);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                return "周" + ((int) value);
+            }
+
+        });
 
         //设置左边y轴的样式
         YAxis yAxisLeft = mLineChart.getAxisLeft();
