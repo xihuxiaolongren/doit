@@ -46,27 +46,39 @@
             android:id="@+id/contentRL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
-            android:minHeight="100dp">
+            android:minHeight="100dp"
+            android:padding="20dp">
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                fab:fab_colorNormal="@color/colorPrimary"
+                fab:fab_size="mini" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@id/fab"
                 android:textAppearance="@style/MyTextAppearance.BodyLarge"
                 android:textSize="18sp"
                 android:transitionName="targetTitle" />
 
-            <LinearLayout
-                android:id="@+id/redoPlanLL"
+            <TextView
+                android:id="@+id/countTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
-                android:minHeight="30dp"
-                android:orientation="vertical">
+                android:layout_toRightOf="@id/fab"
+                android:text="今日打卡 0 次   共计打卡 123 次"
+                android:textAppearance="@style/MyTextAppearance.BodyNormal"
+                android:transitionName="targetTitle" />
 
-            </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

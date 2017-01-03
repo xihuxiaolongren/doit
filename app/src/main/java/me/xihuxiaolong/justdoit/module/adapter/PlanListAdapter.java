@@ -94,7 +94,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
 
     @Override
     protected void convert(BaseViewHolder holder, PlanDO planDO) {
-        switch (holder.getItemViewType()) {
+        switch (planDO.getItemType()) {
             case PlanDO.TYPE_ALERT:
                 convertAlert(holder, planDO);
                 break;

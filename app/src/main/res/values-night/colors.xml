@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#333333</color>
+    <color name="colorPrimary">#222222</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorControlActivated">#FF4081</color>
     <color name="colorStatus">#11FFFFFF</color>
     <color name="titleTextColor">#FFFFFF</color>
     <color name="unselectedTitleTextColor">#80FFFFFF</color>
-    <color name="shadowColor">#333333</color>
+    <color name="bgImageColor">#60333333</color>
+    <color name="shadowColor">#222222</color>
     <color name="sky">#222222</color>
     <color name="dark_sky">#222222</color>
-    <color name="sunset_sky">#dceff9</color>
     <color name="wave_behind">#281A1A1A</color>
     <color name="wave_front">#3C1A1A1A</color>
-    <color name="sea">#333333</color>
     <color name="sun">#FCFCB7</color>
 </resources>

@@ -169,6 +169,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         initToolbar(toolbar, true, false);
         setHasOptionsMenu(true);
 
+        headerIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
@@ -302,11 +303,12 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
     }
 
     private void updateTheme() {
-        titleTv.setTextColor(textColor);
-        titleTv.setShadowLayer(0, 0, 0, vibrant);
+//        titleTv.setTextColor(textColor);
+//        titleTv.setShadowLayer(0, 0, 0, vibrant);
+//        float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
+//        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+//        setAllMenuColor(menu, toolbar, textColor);
         dayNightBackgroundView.setRootBackgroundColor(vibrant);
-        float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
-        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
         fab.setColorNormal(vibrant);
         fab.setColorPressed(vibrant);
         Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_target_1);
@@ -314,7 +316,6 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         fab.setImageDrawable(drawable);
         punchAdapter.notifyDataSetChanged();
-        setAllMenuColor(menu, toolbar, textColor);
     }
 
     private MaterialDialog colorDialog;

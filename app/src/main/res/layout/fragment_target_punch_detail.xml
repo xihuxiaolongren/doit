@@ -83,9 +83,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
-        android:shadowColor="@color/shadowColor"
-        android:shadowDy="1"
-        android:shadowRadius="1"
         android:textColor="@color/titleTextColor"
         android:textSize="@dimen/title_size"
         android:transitionName="targetTitle" />
