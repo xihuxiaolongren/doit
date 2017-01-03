@@ -2,23 +2,21 @@ package me.xihuxiaolong.justdoit.common.widget;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.PathEffect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,7 @@ import me.xihuxiaolong.justdoit.R;
 
 public class LineChartManager {
 
-    private static String lineName = null;
+    private static String lineName = "本周打卡统计";
     private static String lineName1 = null;
 
     /**
@@ -42,9 +40,16 @@ public class LineChartManager {
         LineDataSet dataSet = new LineDataSet(xyValue, lineName);
         dataSet.setColor(Color.parseColor("#576269"));
         dataSet.setCircleColor(Color.parseColor("#576269"));
-        dataSet.setDrawValues(false);
+        dataSet.setDrawValues(true);
+        dataSet.setValueFormatter(new IValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return "" + ((int) value);
+            }
+        });
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSet.setDrawFilled(true);
+        dataSet.setDrawHighlightIndicators(true);
 
         if (Utils.getSDKInt() >= 18) {
             // fill drawable only supported on api level 18 and above
@@ -118,23 +123,23 @@ public class LineChartManager {
      */
     private static void initDataStyle(Context context, LineChart mLineChart) {
         //设置图表是否支持触控操作
-        mLineChart.setTouchEnabled(true);
+        mLineChart.setTouchEnabled(false);
         mLineChart.setScaleEnabled(false);
-        mLineChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mLineChart.getDescription().setEnabled(false);
         //设置点击折线点时，显示其数值
 //        MyMakerView mv = new MyMakerView(context, R.layout.item_mark_layout);
 //        mLineChart.setMarkerView(mv);
         //设置折线的描述的样式（默认在图表的左下角）
         Legend title = mLineChart.getLegend();
-        title.setEnabled(false);
+        title.setForm(Legend.LegendForm.LINE);
+//        title.setEnabled(false);
         //设置x轴的样式
         XAxis xAxis = mLineChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.titleTextColor));
         xAxis.setAxisLineWidth(1);
         xAxis.setDrawGridLines(false);
-        xAxis.setLabelCount(7, true);
+        xAxis.setLabelCount(5, true);
         //设置是否显示x轴
         xAxis.setEnabled(true);
 

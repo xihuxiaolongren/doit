@@ -7,19 +7,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
-import android.support.v7.graphics.Target;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,12 +22,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -62,7 +55,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
@@ -349,11 +341,12 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         animateCanlendarRl(scrollY);
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
-        int signatureTranslationY = maxSignatureTranslationY - scrollY;
-        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-        ViewHelper.setAlpha(lineChart, alpha);
+//        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
+//        int signatureTranslationY = maxSignatureTranslationY - scrollY;
+//        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
+//        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
+//        ViewHelper.setAlpha(lineChart, alpha);
+        updateSignature(scrollY);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
@@ -365,6 +358,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         else
             shadowFrame.setForeground(null);
 
+    }
+
+    private void updateSignature(int scrollY){
+        int signatureTVHeight = lineChart.getHeight() == 0 ? lineChart.getMeasuredHeight() : lineChart.getHeight();
+        int maxSignatureTranslationY = (mFlexibleSpaceImageHeight + mFlexibleSpaceSignatureBottomOffset - signatureTVHeight) / 2;
+        int signatureTranslationY = maxSignatureTranslationY - scrollY;
+        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
+        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
+        ViewHelper.setAlpha(lineChart, alpha);
     }
 
     // Scale calendarRl
@@ -467,8 +469,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             xyValues.add(new Entry(3, 3));
             xyValues.add(new Entry(4, 2));
             xyValues.add(new Entry(5, 5));
-            xyValues.add(new Entry(6, 5));
-            xyValues.add(new Entry(7, 5));
+//            xyValues.add(new Entry(6, 0));
+//            xyValues.add(new Entry(7, 0));
             LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
         }
         updateArcProgress(targets.size());
