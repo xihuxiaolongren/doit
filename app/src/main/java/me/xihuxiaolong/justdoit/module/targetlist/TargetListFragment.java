@@ -70,8 +70,10 @@ import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
+import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
 import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.ARG_TARGET;
+import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFragment.REQUEST_PUNCH;
 
 
 /**
@@ -212,6 +214,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                     startActivity(intent);
                 }
             }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                TargetDO targetDO = ((TargetDO) adapter.getItem(position));
+                switch (view.getId()){
+                    case R.id.fab:
+                        openPunch(targetDO.getName());
+                        break;
+                }
+            }
         });
         recyclerView.setScrollViewCallbacks(this);
 
@@ -255,6 +267,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             ImageView bgIV = holder.getView(R.id.bgIV);
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
+            holder.addOnClickListener(R.id.fab);
         }
 
         private void convertNormal(BaseViewHolder baseViewHolder, TargetDO targetDO) {
@@ -339,17 +352,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
-        if (requestCode == SELECT_TEMPLATE_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == Activity.RESULT_OK) {
-
-            }
-        }
-    }
-
-    @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         if (scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
@@ -376,12 +378,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         animateCanlendarRl(scrollY);
 
-        // Translate signature text
-//        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
-//        int signatureTranslationY = maxSignatureTranslationY - scrollY;
-//        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
-//        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-//        ViewHelper.setAlpha(lineChart, alpha);
         updateSignature(scrollY);
 
         // Translate toolbar
@@ -396,7 +392,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     }
 
-    private void updateSignature(int scrollY){
+    private void updateSignature(int scrollY) {
         int signatureTVHeight = lineChart.getHeight() == 0 ? lineChart.getMeasuredHeight() : lineChart.getHeight();
         int maxSignatureTranslationY = (mFlexibleSpaceImageHeight + mFlexibleSpaceSignatureBottomOffset - signatureTVHeight) / 2;
         int signatureTranslationY = maxSignatureTranslationY - scrollY;
@@ -582,7 +578,53 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         addTargetDialog.show();
     }
 
+    private MaterialDialog addPunchDialog;
+    private MaterialEditText addPunchET;
+    private ImageView picIV;
+    String picUri;
+
     private void updateArcProgress(int count) {
         arcProgress.setBottomText(count + " 目标 ");
+    }
+
+    private void openPunch(final String targetName) {
+        addPunchDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.add_punch_title)
+                .widgetColorRes(R.color.colorAccent)
+                .customView(R.layout.dialog_add_punch_targetdetail, true)
+                .positiveText(R.string.action_confirm)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.savePunch(targetName, addPunchET.getText().toString(), picUri);
+                    }
+                })
+                .negativeText(R.string.action_cancel)
+                .build();
+        addPunchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        addPunchET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
+        addPunchET.requestFocus();
+        picIV = (ImageView) addPunchDialog.findViewById(R.id.picIV);
+        picIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MediaChoseActivity.class);
+                //chose_mode选择模式 0单选 1多选
+                intent.putExtra("chose_mode", 0);
+                //是否显示需要第一个是图片相机按钮
+                intent.putExtra("isNeedfcamera", true);
+                startActivityForResult(intent, REQUEST_PUNCH);
+            }
+        });
+        addPunchDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data != null && !CollectionUtils.isEmpty(data.getStringArrayListExtra("data"))) {
+            ArrayList<String> uris = data.getStringArrayListExtra("data");
+            picUri = uris.get(0);
+            ImageUtils.loadImageFromFile(getActivity(), picIV, picUri, ImageView.ScaleType.CENTER_CROP);
+        }
     }
 }

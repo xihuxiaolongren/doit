@@ -3,6 +3,7 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#DDDDDD</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorDarkAccent">#F30053</color>
     <color name="colorControlActivated">#000000</color>
     <color name="colorStatus">#11FFFFFF</color>
     <color name="titleTextColor">#000000</color>
@@ -19,5 +20,8 @@
 
     <color name="targetTitleTextColor">#FFFFFF</color>
     <color name="targetTitleTextShadowColor">#000000</color>
+
+    <color name="lightWhite">#DDDDDD</color>
+
 
 </resources>

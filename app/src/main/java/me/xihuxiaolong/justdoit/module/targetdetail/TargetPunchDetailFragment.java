@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
@@ -66,6 +67,7 @@ import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
@@ -209,6 +211,20 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
 
             }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                PlanDO planDO = ((PlanDO) adapter.getItem(position));
+                switch (view.getId()){
+                    case R.id.picIV:
+                        if (!TextUtils.isEmpty(planDO.getPicUrls()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, view.getTransitionName());
+                            startActivity(new Intent(getActivity(), BigImageActivity.class).putExtra("imageUrl", planDO.getPicUrls()), options.toBundle());
+                        } else {
+                            startActivity(new Intent(getActivity(), BigImageActivity.class).putExtra("imageUrl", planDO.getPicUrls()));
+                        }
+                }
+            }
         });
         return view;
     }
@@ -229,11 +245,13 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     .setTextColor(R.id.contentTV, textColor)
                     .setText(R.id.timeTV, startTime.toString(builder))
                     .setText(R.id.contentTV, punch.getContent())
-                    .setVisible(R.id.picIV, !TextUtils.isEmpty(punch.getPicUrls()));
+                    .setVisible(R.id.picIV, !TextUtils.isEmpty(punch.getPicUrls()))
+                    .addOnClickListener(R.id.picIV);
             ImageView okIV = holder.getView(R.id.okIV);
             okIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
             okIV.setAlpha(0.75f);
             ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.picIV), punch.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
+
         }
     }
 

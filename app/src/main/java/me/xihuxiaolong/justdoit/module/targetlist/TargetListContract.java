@@ -36,5 +36,7 @@ public class TargetListContract {
 
         void createTarget(String name, int type);
 
+        void savePunch(String targetName, String content, String pictures);
+
     }
 }

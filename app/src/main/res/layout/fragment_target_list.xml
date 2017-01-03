@@ -84,8 +84,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
         android:src="@drawable/menu_target_1"
-        fab:fab_colorNormal="@color/accent"
-        fab:fab_colorPressed="@color/accent"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorDarkAccent"
         fab:fab_size="normal" />
 
 </RelativeLayout>

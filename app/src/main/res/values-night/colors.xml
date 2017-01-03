@@ -3,6 +3,7 @@
     <color name="colorPrimary">#222222</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorDarkAccent">#F30053</color>
     <color name="colorControlActivated">#FF4081</color>
     <color name="colorStatus">#11FFFFFF</color>
     <color name="titleTextColor">#FFFFFF</color>
@@ -14,4 +15,7 @@
     <color name="wave_behind">#281A1A1A</color>
     <color name="wave_front">#3C1A1A1A</color>
     <color name="sun">#FCFCB7</color>
+
+    <color name="lightWhite">#DDDDDD</color>
+
 </resources>

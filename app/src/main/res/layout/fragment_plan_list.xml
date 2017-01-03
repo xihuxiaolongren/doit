@@ -133,8 +133,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
-        fab:menu_colorNormal="@color/accent"
-        fab:menu_colorPressed="@color/accent"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorDarkAccent"
         fab:menu_fab_size="normal"
         fab:menu_labels_ellipsize="end"
         fab:menu_labels_singleLine="true"
@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/menu_photo"
             fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
             fab:fab_label="@string/photo"
             fab:fab_size="mini" />
 
@@ -156,7 +156,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/menu_punch_little_black"
             fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
             fab:fab_label="@string/punch"
             fab:fab_size="mini" />
 
@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/menu_clock"
             fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
             fab:fab_label="@string/alert"
             fab:fab_size="mini" />
 
@@ -176,7 +176,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/menu_plan"
             fab:fab_colorNormal="@android:color/white"
-            fab:fab_colorPressed="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
             fab:fab_label="@string/plan"
             fab:fab_size="mini" />
 

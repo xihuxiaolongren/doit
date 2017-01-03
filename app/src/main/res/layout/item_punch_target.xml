@@ -27,7 +27,7 @@
             android:layout_marginTop="-10dp"
             android:scaleType="centerInside"
             android:src="@drawable/punch"
-            android:tint="@color/titleTextColor"/>
+            android:tint="@color/titleTextColor" />
 
         <LinearLayout
             android:id="@+id/headerLL"
@@ -89,6 +89,7 @@
             <ImageView
                 android:id="@+id/picIV"
                 android:scaleType="centerCrop"
+                android:transitionName="bigImageView"
                 app:layout_aspectRatio="170%"
                 app:layout_widthPercent="100%" />
         </android.support.percent.PercentRelativeLayout>
