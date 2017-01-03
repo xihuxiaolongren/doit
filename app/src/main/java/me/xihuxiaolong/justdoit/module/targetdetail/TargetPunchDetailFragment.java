@@ -311,7 +311,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         dayNightBackgroundView.setRootBackgroundColor(vibrant);
         fab.setColorNormal(vibrant);
         fab.setColorPressed(vibrant);
-        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_target_1);
+        Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_normal_white);
         drawable = drawable.mutate();
         drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         fab.setImageDrawable(drawable);
@@ -560,8 +560,10 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     }
                 })
                 .negativeText(R.string.action_cancel)
-                .show();
+                .build();
+        addPunchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         addPunchET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
+        addPunchET.requestFocus();
         picIV = (ImageView) addPunchDialog.findViewById(R.id.picIV);
         picIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -574,6 +576,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                 startActivityForResult(intent, REQUEST_PUNCH);
             }
         });
+        addPunchDialog.show();
     }
 
     @Override

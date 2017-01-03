@@ -93,8 +93,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/menu_target_1"
+        android:src="@drawable/menu_punch_normal_white"
         fab:fab_colorNormal="@color/accent"
+        fab:fab_colorPressed="@color/accent"
         fab:fab_size="normal" />
 
 </RelativeLayout>
