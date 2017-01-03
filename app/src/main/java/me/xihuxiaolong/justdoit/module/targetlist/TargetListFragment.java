@@ -2,6 +2,7 @@ package me.xihuxiaolong.justdoit.module.targetlist;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -65,6 +67,7 @@ import butterknife.ButterKnife;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
@@ -122,13 +125,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     Drawable shadow;
 
-    int vibrant, darkVibrant;
+    int vibrant;
 
     int mScollY;
 
     TargetAdapter targetAdapter;
 
     ScrollListener scrollListener;
+
+    int textColor;
 
     public static TargetListFragment newInstance() {
         TargetListFragment fragment = new TargetListFragment();
@@ -174,6 +179,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         initToolbar(toolbar, false);
         setHasOptionsMenu(true);
 
+        textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
+
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
@@ -190,11 +197,10 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-        darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        targetAdapter = new TargetAdapter(R.layout.item_target, new ArrayList<TargetDO>());
+        targetAdapter = new TargetAdapter(new ArrayList<TargetDO>());
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_header, recyclerView, false);
         targetAdapter.addHeaderView(headerView);
         final View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_target, (ViewGroup) recyclerView.getParent(), false);
@@ -223,20 +229,51 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         return view;
     }
 
-    class TargetAdapter extends BaseQuickAdapter<TargetDO, TargetAdapter.TargetViewHolder> {
+    class TargetAdapter extends BaseMultiItemQuickAdapter<TargetDO, BaseViewHolder> {
 
         int showRedoPlanCount = 3;
 
-        public TargetAdapter(int layoutId, List<TargetDO> datas) {
-            super(layoutId, datas);
+        public TargetAdapter(List<TargetDO> datas) {
+            super(datas);
+            addItemType(TargetDO.TYPE_NORMAL, R.layout.item_target);
+            addItemType(TargetDO.TYPE_PUNCH, R.layout.item_target_punch);
         }
 
         @Override
-        protected void convert(TargetViewHolder holder, final TargetDO targetDO) {
+        protected void convert(BaseViewHolder baseViewHolder, final TargetDO targetDO) {
+            switch (targetDO.getItemType()) {
+                case TargetDO.TYPE_NORMAL:
+                    convertNormal(baseViewHolder, targetDO);
+                    break;
+                case TargetDO.TYPE_PUNCH:
+                    convertPunch(baseViewHolder, targetDO);
+                    break;
+            }
+        }
+
+        private void convertPunch(BaseViewHolder baseViewHolder, TargetDO targetDO) {
+            TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
             holder.setText(R.id.title, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
             targetIconIV.setAlpha(0.65f);
-            ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.bgIV), targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
+            FloatingActionButton fab = holder.getView(R.id.fab);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_1);
+            drawable = drawable.mutate();
+            drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+            fab.setImageDrawable(drawable);
+            ImageView bgIV = holder.getView(R.id.bgIV);
+            bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
+            ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
+        }
+
+        private void convertNormal(BaseViewHolder baseViewHolder, TargetDO targetDO) {
+            TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
+            holder.setText(R.id.title, targetDO.getName());
+            ImageView targetIconIV = holder.getView(R.id.targetIconIV);
+            targetIconIV.setAlpha(0.65f);
+            ImageView bgIV = holder.getView(R.id.bgIV);
+            bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
+            ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
             LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
             if (linearLayout.getChildCount() <= 0) {
                 for (int i = 0; i < showRedoPlanCount; i++) {

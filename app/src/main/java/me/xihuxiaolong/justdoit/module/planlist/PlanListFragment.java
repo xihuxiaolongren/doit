@@ -133,7 +133,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     Drawable shadow;
 
-    int vibrant, darkVibrant;
+    int vibrant;
 
     int mScollY;
 
@@ -211,7 +211,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         fab.setClosedOnTouchOutside(true);
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-        darkVibrant = ContextCompat.getColor(getContext(), R.color.dark_sky);
         ObjectAnimator signatureAnimator = ObjectAnimator
                 .ofFloat(signatureTV, "alpha", 0, 1.0f)
                 .setDuration(1000);

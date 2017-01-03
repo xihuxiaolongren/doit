@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                 public void run() {
                     showBottom(600);
                 }
-            }, 3500);
+            }, 2500);
         }
         viewPager.post(new Runnable() {
             @Override

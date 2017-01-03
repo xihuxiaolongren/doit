@@ -1,5 +1,7 @@
 package me.xihuxiaolong.justdoit.common.database.localentity;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
@@ -14,7 +16,7 @@ import java.util.List;
  * Date: 16/10/27.
  */
 @Entity
-public class TargetDO implements Serializable {
+public class TargetDO implements Serializable, MultiItemEntity {
 
     static final long serialVersionUID = -1L;
 
@@ -149,4 +151,8 @@ public class TargetDO implements Serializable {
         this.textColor = textColor;
     }
 
+    @Override
+    public int getItemType() {
+        return type;
+    }
 }

@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="7:30 am"
-                android:textAppearance="@style/MyTextAppearance.BodyNormal" />
+                android:textAppearance="@style/MyTextAppearance.BodyNormal.Shadow" />
 
         </LinearLayout>
     </FrameLayout>
