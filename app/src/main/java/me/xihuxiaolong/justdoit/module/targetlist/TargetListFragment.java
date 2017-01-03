@@ -377,11 +377,12 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         animateCanlendarRl(scrollY);
 
         // Translate signature text
-        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
-        int signatureTranslationY = maxSignatureTranslationY - scrollY;
-        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
-        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
-        ViewHelper.setAlpha(lineChart, alpha);
+//        int maxSignatureTranslationY = mFlexibleSpaceImageHeight - lineChart.getMeasuredHeight() - mFlexibleSpaceSignatureBottomOffset;
+//        int signatureTranslationY = maxSignatureTranslationY - scrollY;
+//        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
+//        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
+//        ViewHelper.setAlpha(lineChart, alpha);
+        updateSignature(scrollY);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
@@ -393,6 +394,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         else
             shadowFrame.setForeground(null);
 
+    }
+
+    private void updateSignature(int scrollY){
+        int signatureTVHeight = lineChart.getHeight() == 0 ? lineChart.getMeasuredHeight() : lineChart.getHeight();
+        int maxSignatureTranslationY = (mFlexibleSpaceImageHeight + mFlexibleSpaceSignatureBottomOffset - signatureTVHeight) / 2;
+        int signatureTranslationY = maxSignatureTranslationY - scrollY;
+        ViewHelper.setTranslationY(lineChart, signatureTranslationY);
+        float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
+        ViewHelper.setAlpha(lineChart, alpha);
     }
 
     // Scale calendarRl
@@ -495,8 +505,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             xyValues.add(new Entry(3, 3));
             xyValues.add(new Entry(4, 2));
             xyValues.add(new Entry(5, 5));
-            xyValues.add(new Entry(6, 5));
-            xyValues.add(new Entry(7, 5));
+//            xyValues.add(new Entry(6, 0));
+//            xyValues.add(new Entry(7, 0));
             LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
         }
         updateArcProgress(targets.size());
