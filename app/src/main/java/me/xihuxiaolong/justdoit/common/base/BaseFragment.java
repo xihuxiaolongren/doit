@@ -26,12 +26,11 @@ import me.xihuxiaolong.justdoit.R;
 public abstract class BaseFragment extends Fragment {
 
     public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
+        if(getActivity() instanceof BaseActivity)
+            return ((BaseActivity)getActivity()).getStatusBarHeight();
+        else if(getActivity() instanceof BaseMvpActivity)
+            return ((BaseMvpActivity)getActivity()).getStatusBarHeight();
+        return 0;
     }
 
     @Override

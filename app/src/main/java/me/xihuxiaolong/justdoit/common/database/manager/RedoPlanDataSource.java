@@ -116,7 +116,8 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     public List<TargetDO> listAllPunchTarget(boolean withPunchList) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_PUNCH)).orderDesc(TargetDODao.Properties.CreatedTime).list();
+        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_PUNCH))
+                .orderDesc(TargetDODao.Properties.CreatedTime).list();
         clear(daoSession, database);
         return targetDOs;
     }

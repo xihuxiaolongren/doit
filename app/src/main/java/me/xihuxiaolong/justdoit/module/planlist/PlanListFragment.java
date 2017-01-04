@@ -82,8 +82,6 @@ import mehdi.sakout.fancybuttons.FancyButton;
  */
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener {
 
-    private static final int RC_CAMERA_AND_STORTAGE = 123;
-
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int REQUEST_PUNCH = 1;
 
@@ -199,9 +197,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusBarSize = getStatusBarHeight();
-        }
+        mStatusBarSize = getStatusBarHeight();
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         planFab.setOnClickListener(fabListener);

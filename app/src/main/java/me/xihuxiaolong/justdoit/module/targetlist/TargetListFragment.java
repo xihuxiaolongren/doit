@@ -59,6 +59,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
@@ -159,6 +160,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.loadTargets();
+        presenter.loadStatistics();
     }
 
     @Nullable
@@ -184,9 +186,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusBarSize = getStatusBarHeight();
-        }
+        mStatusBarSize = getStatusBarHeight();
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -218,7 +218,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 TargetDO targetDO = ((TargetDO) adapter.getItem(position));
-                switch (view.getId()){
+                switch (view.getId()) {
                     case R.id.fab:
                         openPunch(targetDO.getName());
                         break;
@@ -488,25 +488,36 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void showTargets(List<TargetDO> targets) {
         if (CollectionUtils.isEmpty(targets)) {
-//            fab.setVisibility(View.INVISIBLE);
             calendarRl.setVisibility(View.INVISIBLE);
-            lineChart.setVisibility(View.INVISIBLE);
         } else {
-//            fab.setVisibility(View.VISIBLE);
             calendarRl.setVisibility(View.VISIBLE);
-            lineChart.setVisibility(View.VISIBLE);
-            List<Entry> xyValues = new ArrayList<>();
-            xyValues.add(new Entry(1, 4));
-            xyValues.add(new Entry(2, 2));
-            xyValues.add(new Entry(3, 3));
-            xyValues.add(new Entry(4, 2));
-            xyValues.add(new Entry(5, 5));
-//            xyValues.add(new Entry(6, 0));
-//            xyValues.add(new Entry(7, 0));
-            LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
+
         }
         updateArcProgress(targets.size());
         targetAdapter.setNewData(targets);
+    }
+
+    @Override
+    public void showStatistics(List<PlanHistoryDO> planHistoryDOs) {
+        if (CollectionUtils.isEmpty(planHistoryDOs)) {
+            lineChart.setVisibility(View.INVISIBLE);
+        } else {
+            lineChart.setVisibility(View.VISIBLE);
+            if (planHistoryDOs.size() < 7) {
+                int count = 7 - planHistoryDOs.size();
+                for (int i = 0; i < count; ++i) {
+                    PlanHistoryDO planHistoryDO = new PlanHistoryDO();
+                    planHistoryDOs.add(i, planHistoryDO);
+                }
+            }
+            List<Entry> xyValues = new ArrayList<>();
+            int i = 1;
+            for (PlanHistoryDO planHistoryDO : planHistoryDOs) {
+                xyValues.add(new Entry(i, planHistoryDO.getPunchCount()));
+                i++;
+            }
+            LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
+        }
     }
 
     @Override

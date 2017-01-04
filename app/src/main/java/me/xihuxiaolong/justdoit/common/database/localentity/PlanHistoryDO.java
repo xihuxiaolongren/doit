@@ -66,14 +66,14 @@ public class PlanHistoryDO implements Serializable{
     public void setPhotoCount(int photoCount) {
         this.photoCount = photoCount;
     }
-    public void setDayTime(Long dayTime) {
-        this.dayTime = dayTime;
-    }
     public int getPunchCount() {
         return this.punchCount;
     }
     public void setPunchCount(int punchCount) {
         this.punchCount = punchCount;
+    }
+    public void setDayTime(Long dayTime) {
+        this.dayTime = dayTime;
     }
     
 

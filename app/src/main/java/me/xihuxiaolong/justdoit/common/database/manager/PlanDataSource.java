@@ -104,7 +104,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
                 for(String tag : planDO.getTags().split(","))
                     addTag(tag);
             }
-            planHistoryDataSource.addPlan(planDO.getDayTime());
+            planHistoryDataSource.addPlanDO(planDO.getDayTime(), planDO.getType());
         }
         planDO.setModifiedTime(System.currentTimeMillis());
 
@@ -202,6 +202,11 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
 
         clear(daoSession, database);
         return tagDOs;
+    }
+
+    @Override
+    public List<Integer> listPlanCount(int type, List<Long> time) {
+        return null;
     }
 
     private void addTag(String tag){

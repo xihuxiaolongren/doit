@@ -18,6 +18,9 @@ import com.github.mikephil.charting.formatter.IValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class LineChartManager {
      * @param xyValue 折线在x,y轴的值
      */
     public static void initSingleLineChart(Context context, LineChart mLineChart, List<Entry> xyValue) {
-        initDataStyle(context,mLineChart);
+        initDataStyle(context,mLineChart, xyValue.size());
         //设置折线的样式
         LineDataSet dataSet = new LineDataSet(xyValue, lineName);
         dataSet.setColor(Color.parseColor("#576269"));
@@ -120,8 +123,9 @@ public class LineChartManager {
      *  @Description:初始化图表的样式
      * @param context
      * @param mLineChart
+     * @param size
      */
-    private static void initDataStyle(Context context, LineChart mLineChart) {
+    private static void initDataStyle(Context context, LineChart mLineChart, final int size) {
         //设置图表是否支持触控操作
         mLineChart.setTouchEnabled(false);
         mLineChart.setScaleEnabled(false);
@@ -139,7 +143,7 @@ public class LineChartManager {
         xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.titleTextColor));
         xAxis.setAxisLineWidth(1);
         xAxis.setDrawGridLines(false);
-        xAxis.setLabelCount(7, true);
+        xAxis.setLabelCount(size, true);
         xAxis.setTextSize(8f);
 //        xAxis.setLabelRotationAngle(300f);
         //设置是否显示x轴
@@ -147,7 +151,10 @@ public class LineChartManager {
         xAxis.setValueFormatter(new IAxisValueFormatter() {
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
-                return "周" + ((int) value);
+                int v = (int) ( size - value);
+                if(v == 0)
+                    return "今日";
+                return DateTime.now().minusDays(v).toString(DateTimeFormat.forPattern("M.d"));
             }
 
         });

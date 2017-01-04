@@ -40,4 +40,6 @@ public interface IPlanDataSource {
 
     List<TagDO> listAllTag();
 
+    List<Integer> listPlanCount(int type, List<Long> time);
+
 }

@@ -11,8 +11,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.manager.IPlanHistoryDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
@@ -31,6 +33,9 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     IPlanDataSource planDataSource;
 
     @Inject
+    IPlanHistoryDataSource planHistoryDataSource;
+
+    @Inject
     public TargetListPresenter() {
         EventBus.getDefault().register(this);
     }
@@ -40,6 +45,15 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         List<TargetDO> targetDOs = redoPlanDataSource.listAllTarget(true);
         if (isViewAttached()) {
             getView().showTargets(targetDOs);
+        }
+    }
+
+    @Override
+    public void loadStatistics() {
+        List<PlanHistoryDO> planHistoryDOs = planHistoryDataSource.listPlanHistoryDOs(DateTime.now().minusDays(7).withTimeAtStartOfDay().getMillis(),
+                DateTime.now().withTimeAtStartOfDay().getMillis());
+        if (isViewAttached()) {
+            getView().showStatistics(planHistoryDOs);
         }
     }
 
@@ -87,5 +101,17 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     @Subscribe
     public void onEvent(Event.DeleteTarget deleteTargetEvent) {
         loadTargets();
+    }
+
+    @Subscribe
+    public void onEvent(Event.AddPlan addPlanEvent) {
+        if(addPlanEvent.plan.getType() == PlanDO.TYPE_PUNCH)
+            loadStatistics();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeletePlan deletePlan) {
+        if(deletePlan.plan.getType() == PlanDO.TYPE_PUNCH)
+            loadStatistics();
     }
 }
