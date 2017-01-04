@@ -52,8 +52,9 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     public void loadStatistics() {
         List<PlanHistoryDO> planHistoryDOs = planHistoryDataSource.listPlanHistoryDOs(DateTime.now().minusDays(7).withTimeAtStartOfDay().getMillis(),
                 DateTime.now().withTimeAtStartOfDay().getMillis());
+        List<TargetDO> targetDOs = redoPlanDataSource.listNormalTarget();
         if (isViewAttached()) {
-            getView().showStatistics(planHistoryDOs);
+            getView().showStatistics(planHistoryDOs, targetDOs);
         }
     }
 

@@ -2,7 +2,6 @@
     <string name="app_name">photoga</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="rationale_read_storage">应用需要读取您的相册功能</string>
     <string name="rationale_read_storage_ask_again">应用需要拥有存储权限才能正常使用相册功能. 请前往设置->权限管理->点击允许使用存储功能.</string>
     <string name="rationale_camera">应用需要进入相机权限才能正常使用拍照功能</string>

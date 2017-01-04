@@ -123,6 +123,16 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     }
 
     @Override
+    public List<TargetDO> listNormalTarget() {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_NORMAL))
+                .orderDesc(TargetDODao.Properties.CreatedTime).list();
+        clear(daoSession, database);
+        return targetDOs;
+    }
+
+    @Override
     public long insertOrReplaceTargetDO(TargetDO targetDO) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();

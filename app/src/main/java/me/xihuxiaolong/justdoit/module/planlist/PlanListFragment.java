@@ -67,6 +67,7 @@ import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
+import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
@@ -283,6 +284,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
+                return true;
+            case R.id.action_redo_plan:
+                startActivity(new Intent(getActivity(), RedoPlanListActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

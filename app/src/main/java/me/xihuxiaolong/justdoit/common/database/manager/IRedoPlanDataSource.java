@@ -29,6 +29,8 @@ public interface IRedoPlanDataSource {
 
     List<TargetDO> listAllPunchTarget(boolean withPunchList);
 
+    List<TargetDO> listNormalTarget();
+
     long insertOrReplaceTargetDO(TargetDO targetDO);
 
     void deleteTargetByName(String targetName);

@@ -5,6 +5,6 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingTop="@dimen/flexible_recyclerview_header_height">
+    android:paddingTop="@dimen/target_list_header_height">
 
 </LinearLayout>

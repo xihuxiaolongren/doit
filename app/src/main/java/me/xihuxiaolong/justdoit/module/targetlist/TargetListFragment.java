@@ -85,7 +85,6 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFrag
 public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 1.3f;
-    private static final int SELECT_TEMPLATE_REQUEST = 1;
 
     TargetListComponent targetListComponent;
 
@@ -177,7 +176,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
+        mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.target_list_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
         mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_arcprogress_bottom_offset);
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
@@ -487,18 +486,17 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
-        if (CollectionUtils.isEmpty(targets)) {
-            calendarRl.setVisibility(View.INVISIBLE);
-        } else {
-            calendarRl.setVisibility(View.VISIBLE);
-
-        }
-        updateArcProgress(targets.size());
         targetAdapter.setNewData(targets);
     }
 
     @Override
-    public void showStatistics(List<PlanHistoryDO> planHistoryDOs) {
+    public void showStatistics(List<PlanHistoryDO> planHistoryDOs, List<TargetDO> targetDOs) {
+        if (CollectionUtils.isEmpty(targetDOs)) {
+            calendarRl.setVisibility(View.INVISIBLE);
+        } else {
+            calendarRl.setVisibility(View.INVISIBLE);
+            updateArcProgress(targetDOs.size());
+        }
         if (CollectionUtils.isEmpty(planHistoryDOs)) {
             lineChart.setVisibility(View.INVISIBLE);
         } else {

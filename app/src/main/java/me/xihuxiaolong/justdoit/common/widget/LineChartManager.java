@@ -28,7 +28,7 @@ import me.xihuxiaolong.justdoit.R;
 
 public class LineChartManager {
 
-    private static String lineName = "本周打卡统计";
+    private static String lineName = "近七日打卡次数统计";
     private static String lineName1 = null;
 
     /**

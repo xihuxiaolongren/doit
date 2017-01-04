@@ -25,7 +25,7 @@ public class TargetListContract {
 
         void showTargets(List<TargetDO> targets);
 
-        void showStatistics(List<PlanHistoryDO> planHistoryDOs);
+        void showStatistics(List<PlanHistoryDO> planHistoryDOs, List<TargetDO> targetDOs);
 
         void createTargetSuccess(TargetDO target);
 
