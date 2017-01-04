@@ -436,7 +436,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         if(scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
         mScollY = scrollY;
-        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
 
         // Translate FAB
         int maxFabTranslationY = mFlexibleSpaceImageHeight - mFabSizeNormal / 2;
@@ -457,7 +456,26 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setTranslationY(headerIV, -scrollY / 2);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
 
-        // Scale calendarRl
+        animateCanlendarRl(scrollY);
+
+        // Translate signature text
+        updateSignature(scrollY);
+
+        // Translate toolbar
+        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+
+        // Translate toolbar
+        if (mFlexibleSpaceImageHeight - mActionBarSize < scrollY)
+            shadowFrame.setForeground(shadow);
+        else
+            shadowFrame.setForeground(null);
+
+    }
+
+    // Scale calendarRl
+    void animateCanlendarRl(int scrollY) {
+        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
         ViewHelper.setPivotX(calendarRl, 0);
         ViewHelper.setPivotY(calendarRl, 0);
@@ -476,21 +494,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 maxTitleTranslationY));
         ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
-
-        // Translate signature text
-        updateSignature(scrollY);
-
-        // Translate toolbar
-        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
-        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
-
-        // Translate toolbar
-        if (scale == 1.0f)
-            shadowFrame.setForeground(shadow);
-        else
-            shadowFrame.setForeground(null);
-
     }
+
 
     private void updateSignature(int scrollY){
         int signatureTVHeight = signatureTV.getHeight() == 0 ? signatureTV.getMeasuredHeight() : signatureTV.getHeight();

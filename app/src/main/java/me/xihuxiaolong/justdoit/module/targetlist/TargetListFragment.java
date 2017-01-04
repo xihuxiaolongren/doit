@@ -84,7 +84,7 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFrag
  */
 public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener {
 
-    private static final float MAX_TEXT_SCALE_DELTA = 1.3f;
+    private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
     TargetListComponent targetListComponent;
 
@@ -105,8 +105,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     ImageView headerIV;
     @BindView(R.id.shadowFrame)
     FrameLayout shadowFrame;
-    @BindView(R.id.arc_progress)
-    ArcProgress arcProgress;
+//    @BindView(R.id.arc_progress)
+//    ArcProgress arcProgress;
 
     private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
             mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
@@ -178,7 +178,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.target_list_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_arcprogress_bottom_offset);
+        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
         mFlexibleSpaceSignatureBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_signature_bottom_offset);
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
@@ -403,11 +403,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     // Scale calendarRl
     void animateCanlendarRl(int scrollY) {
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) * 1.3f / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
+        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
         ViewHelper.setPivotX(calendarRl, 0);
         ViewHelper.setPivotY(calendarRl, 0);
         ViewHelper.setScaleX(calendarRl, scale);
         ViewHelper.setScaleY(calendarRl, scale);
+//        if (avatarIV.getVisibility() == View.VISIBLE) {
+//            float scaleAvatar = ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0.8f, 1f);
+//            ViewHelper.setScaleX(avatarIV, scaleAvatar);
+//            ViewHelper.setScaleY(avatarIV, scaleAvatar);
+//        }
 
         // Translate calendarRl
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getMeasuredHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
@@ -494,7 +499,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         if (CollectionUtils.isEmpty(targetDOs)) {
             calendarRl.setVisibility(View.INVISIBLE);
         } else {
-            calendarRl.setVisibility(View.INVISIBLE);
+            calendarRl.setVisibility(View.VISIBLE);
             updateArcProgress(targetDOs.size());
         }
         if (CollectionUtils.isEmpty(planHistoryDOs)) {
@@ -593,7 +598,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     String picUri;
 
     private void updateArcProgress(int count) {
-        arcProgress.setBottomText(count + " 目标 ");
+//        arcProgress.setBottomText(count + " 目标 ");
     }
 
     private void openPunch(final String targetName) {

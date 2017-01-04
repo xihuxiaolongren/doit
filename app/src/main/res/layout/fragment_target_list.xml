@@ -31,7 +31,7 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingBottom="150dp"/>
+            android:paddingBottom="50dp" />
     </FrameLayout>
 
     <com.github.mikephil.charting.charts.LineChart
@@ -40,7 +40,7 @@
         android:layout_height="110dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/text_margin"
-        android:gravity="right"/>
+        android:gravity="right" />
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -54,27 +54,69 @@
     <LinearLayout
         android:id="@+id/calendar_rl"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginLeft="18dp"
         android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <com.github.lzyzsd.circleprogress.ArcProgress
-            android:id="@+id/arc_progress"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            custom:arc_bottom_text="0 目标 "
-            custom:arc_progress="0"
-            custom:arc_text_size="10dp"
-            custom:arc_suffix_text_size="5dp"
-            custom:arc_stroke_width="3dp"
-            custom:arc_suffix_text_padding="2dp"
-            custom:arc_bottom_text_size="5dp"
-            custom:arc_unfinished_color="@color/unselectedTitleTextColor"
-            custom:arc_finished_color="@color/unselectedTitleTextColor"
-            custom:arc_text_color="@color/titleTextColor"
-            />
+        <!--<com.github.lzyzsd.circleprogress.ArcProgress-->
+        <!--android:id="@+id/arc_progress"-->
+        <!--android:layout_width="40dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--custom:arc_bottom_text="0 目标 "-->
+        <!--custom:arc_progress="0"-->
+        <!--custom:arc_text_size="10dp"-->
+        <!--custom:arc_suffix_text_size="5dp"-->
+        <!--custom:arc_stroke_width="3dp"-->
+        <!--custom:arc_suffix_text_padding="2dp"-->
+        <!--custom:arc_bottom_text_size="5dp"-->
+        <!--custom:arc_unfinished_color="@color/unselectedTitleTextColor"-->
+        <!--custom:arc_finished_color="@color/unselectedTitleTextColor"-->
+        <!--custom:arc_text_color="@color/titleTextColor"-->
+        <!--/>-->
+        <TextView
+            android:id="@+id/calendar_day_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginRight="10dp"
+            android:shadowColor="@color/shadowColor"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="12"
+            android:textColor="@color/titleTextColor"
+            android:textSize="@dimen/calendar_day_size" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calendar_week_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="目标"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_week_size" />
+
+            <TextView
+                android:id="@+id/calendar_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendar_week_tv"
+                android:layout_toRightOf="@id/calendar_day_tv"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="36 任务"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_month_year_size" />
+        </LinearLayout>
     </LinearLayout>
 
     <com.github.clans.fab.FloatingActionButton

@@ -144,7 +144,7 @@ public class LineChartManager {
         xAxis.setAxisLineWidth(1);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(size, true);
-        xAxis.setTextSize(8f);
+        xAxis.setTextSize(7f);
 //        xAxis.setLabelRotationAngle(300f);
         //设置是否显示x轴
         xAxis.setEnabled(true);
