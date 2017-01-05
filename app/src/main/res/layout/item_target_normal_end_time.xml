@@ -105,7 +105,7 @@
                 android:id="@+id/roundCornerProgressBar"
                 android:layout_below="@id/countdownView"
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="20dp"
                 app:rcProgress="12"
                 app:rcSecondaryProgress="12"
                 app:rcMax="30"

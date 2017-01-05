@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
@@ -12,20 +13,15 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.siyamed.shapeimageview.mask.PorterShapeImageView;
-import com.google.android.flexbox.FlexboxLayout;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -39,7 +35,6 @@ import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
-import mehdi.sakout.fancybuttons.FancyButton;
 
 public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewHolder> {
 
@@ -49,15 +44,30 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
 
     float scale;
 
+    int textColor, vibrant;
+
     public CardPlanListAdapter(Context context, List<PlanDO> datas, PlanListOnClickListener planListOnClickListener) {
         super(datas);
+        init(context, planListOnClickListener);
+        textColor = ContextCompat.getColor(context, R.color.titleTextColor);
+        vibrant = ContextCompat.getColor(context, R.color.sky);
+    }
+
+    public CardPlanListAdapter(Context context, List<PlanDO> datas, PlanListOnClickListener planListOnClickListener, int textColor, int vibrant) {
+        super(datas);
+        init(context, planListOnClickListener);
+        this.textColor = textColor;
+        this.vibrant = vibrant;
+    }
+
+    private void init(Context context, PlanListOnClickListener planListOnClickListener){
         scale = context.getResources().getDisplayMetrics().density;
         minHeight = DeviceUtil.getScreenHeight();
 
-        addItemType(PlanDO.TYPE_ALERT, R.layout.item_alert);
-        addItemType(PlanDO.TYPE_PLAN, R.layout.item_plan);
-        addItemType(PlanDO.TYPE_PHOTO, R.layout.item_photo);
-        addItemType(PlanDO.TYPE_PUNCH, R.layout.item_punch);
+        addItemType(PlanDO.TYPE_ALERT, R.layout.item_card_alert);
+        addItemType(PlanDO.TYPE_PLAN, R.layout.item_card_plan);
+        addItemType(PlanDO.TYPE_PHOTO, R.layout.item_card_photo);
+        addItemType(PlanDO.TYPE_PUNCH, R.layout.item_card_punch);
         this.planListOnClickListener = planListOnClickListener;
     }
 
@@ -111,52 +121,54 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     }
 
     private void convertAlert(BaseViewHolder holder, PlanDO planDO) {
-        holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
-        DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        if (dateTime.isBeforeNow()) {
-            holder.setText(R.id.doTV, "已完成");
-            holder.setVisible(R.id.doTV, true);
-        } else {
-            holder.setText(R.id.doTV, "未开始");
-            holder.setVisible(R.id.doTV, true);
-        }
-        holder.setTag(R.id.rootView, planDO);
-        holder.setOnClickListener(R.id.rootView, alertListener);
+        DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+        holder.setBackgroundColor(R.id.rootView, vibrant)
+                .setTextColor(R.id.timeTV, textColor)
+                .setTextColor(R.id.dateTV, textColor)
+                .setTextColor(R.id.contentTV, textColor)
+                .setText(R.id.timeTV, startTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
+                .addOnClickListener(R.id.picIV);
+        ImageView typeIV = holder.getView(R.id.typeIV);
+        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        typeIV.setAlpha(0.55f);
+        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
     }
 
     private void convertPhoto(BaseViewHolder holder, PlanDO planDO) {
-        final ImageView picIV = holder.getView(R.id.picIV);
-        holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
-        DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
-        setSingleImage(planDO.getPicUrls(), picIV);
-        ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
-        holder.setTag(R.id.picIV, planDO);
-        holder.setOnClickListener(R.id.picIV, photoListener);
-        holder.setTag(R.id.moreIV, planDO);
-        holder.setOnClickListener(R.id.moreIV, moreClickListener);
+        DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+        holder.setBackgroundColor(R.id.rootView, vibrant)
+                .setTextColor(R.id.timeTV, textColor)
+                .setTextColor(R.id.dateTV, textColor)
+                .setTextColor(R.id.contentTV, textColor)
+                .setText(R.id.timeTV, startTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
+                .addOnClickListener(R.id.picIV);
+        ImageView typeIV = holder.getView(R.id.typeIV);
+        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        typeIV.setAlpha(0.55f);
+        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
     }
 
     private void convertPunch(BaseViewHolder holder, PlanDO planDO) {
-        final ImageView picIV = holder.getView(R.id.picIV);
-        holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
-        DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
-        setSingleImage(planDO.getPicUrls(), picIV);
-        ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
-        holder.setTag(R.id.picIV, planDO);
-        holder.setOnClickListener(R.id.picIV, photoListener);
-        holder.setTag(R.id.moreIV, planDO);
-        holder.setOnClickListener(R.id.moreIV, moreClickListener);
+        DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+        holder.setBackgroundColor(R.id.rootView, vibrant)
+                .setTextColor(R.id.timeTV, textColor)
+                .setTextColor(R.id.dateTV, textColor)
+                .setTextColor(R.id.contentTV, textColor)
+                .setText(R.id.timeTV, startTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
+                .addOnClickListener(R.id.picIV);
+        ImageView typeIV = holder.getView(R.id.typeIV);
+        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        typeIV.setAlpha(0.55f);
+        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
     }
 
     private void setSingleImage(String filepath, ImageView imageView) {
@@ -185,57 +197,20 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     }
 
     private void convertPlan(BaseViewHolder holder, PlanDO planDO) {
-        holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
-        holder.setText(R.id.startTimeTV, startTime.toString(builder));
-        DateTime endTime = new DateTime(planDO.getDayTime()).withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
-        holder.setText(R.id.endTimeTV, endTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        TextView contentTV = holder.getView(R.id.contentTV);
-        ImageView timelineIV = holder.getView(R.id.timelineIV);
-        if (endTime.isBeforeNow()) {
-            contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-            holder.setText(R.id.doTV, "已完成");
-            holder.setVisible(R.id.doTV, true);
-            timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
-        } else if (startTime.isAfterNow()) {
-            holder.setText(R.id.doTV, "未开始");
-            holder.setVisible(R.id.doTV, true);
-            contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-            timelineIV.setImageResource(R.drawable.timeline_plan_other);
-        } else {
-            holder.setText(R.id.doTV, "进行中");
-            holder.setVisible(R.id.doTV, true);
-            contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f);
-            timelineIV.setImageResource(R.drawable.timeline_plan_doing);
-        }
-        FancyButton linkAppFB = holder.getView(R.id.linkAppFB);
-        linkAppFB.setTag(planDO);
-        linkAppFB.setOnClickListener(linkAppClickListener);
-        if (planDO.getLinkAppName() != null) {
-            linkAppFB.setIconResource(ThirdAppUtils.getIcon(mContext, planDO.getLinkAppPackageName()));
-            linkAppFB.getIconImageObject().setLayoutParams(new LinearLayout.LayoutParams((int) (28 * scale + 0.5f), (int) (28 * scale + 0.5f)));
-            linkAppFB.setText(planDO.getLinkAppName());
-            linkAppFB.setVisibility(View.VISIBLE);
-        } else {
-            linkAppFB.setVisibility(View.GONE);
-        }
-        FlexboxLayout flexboxLayout = holder.getView(R.id.tags_fl);
-        if (!TextUtils.isEmpty(planDO.getTags())) {
-            flexboxLayout.removeAllViews();
-            flexboxLayout.setVisibility(View.VISIBLE);
-            for (String tag : planDO.getTags().split(",")) {
-                TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
-                textView.setText("# " + tag);
-                flexboxLayout.addView(textView);
-            }
-        } else {
-            flexboxLayout.setVisibility(View.GONE);
-        }
-
-        holder.setTag(R.id.rootView, planDO);
-        holder.setOnClickListener(R.id.rootView, planListener);
+        holder.setBackgroundColor(R.id.rootView, vibrant)
+                .setTextColor(R.id.timeTV, textColor)
+                .setTextColor(R.id.dateTV, textColor)
+                .setTextColor(R.id.contentTV, textColor)
+                .setText(R.id.timeTV, startTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
+                .addOnClickListener(R.id.picIV);
+        ImageView typeIV = holder.getView(R.id.typeIV);
+        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        typeIV.setAlpha(0.55f);
+        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
     }
 
     private View.OnClickListener linkAppClickListener = new View.OnClickListener() {

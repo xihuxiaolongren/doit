@@ -84,7 +84,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
+        long punchId = planDataSource.insertOrReplacePlanDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
         loadTargets();

@@ -101,6 +101,16 @@
         fab:menu_openDirection="down">
 
         <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/photoFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_photo"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/photo"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/alertFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

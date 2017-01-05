@@ -5,7 +5,7 @@
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="20dp"
     android:layout_marginLeft="14dp"
     android:layout_marginRight="14dp"
     card_view:cardBackgroundColor="@color/sky"
@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/card_type_alert"
+            android:src="@drawable/card_type_photo"
             android:tint="@color/titleTextColor" />
 
         <LinearLayout

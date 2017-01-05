@@ -26,7 +26,7 @@ public class EditPhotoPresenter extends MvpBasePresenter<EditPhotoContract.IView
     @Inject
     IPlanDataSource planDataSource;
 
-//    @Inject @Nullable
+    @Inject @Nullable
     String targetName;
 
     @Inject
@@ -43,9 +43,10 @@ public class EditPhotoPresenter extends MvpBasePresenter<EditPhotoContract.IView
         photo.setStartMinute(dateTime.getMinuteOfHour());
         photo.setStartTime(dateTime.getMillisOfDay());
         photo.setPicUrls(pictures);
+        photo.setTargetName(targetName);
 
         photo.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long photoId = planDataSource.insertOrReplacePlanDO(photo, null);
+        long photoId = planDataSource.insertOrReplacePlanDO(photo);
         photo.setId(photoId);
         EventBus.getDefault().post(new Event.AddPlan(photo));
         if (isViewAttached())

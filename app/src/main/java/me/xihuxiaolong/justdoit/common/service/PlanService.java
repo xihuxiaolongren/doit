@@ -101,7 +101,7 @@ public class PlanService extends Service {
         //Create a new PendingIntent and add it to the AlarmManager
         planDO.setAlarmStatus(1);
         PlanDataSource planDataSource = new PlanDataSource();
-        planDataSource.insertOrReplacePlanDO(planDO, null);
+        planDataSource.insertOrReplacePlanDO(planDO);
         Intent intent = new Intent(getApplicationContext(), PlanService.class);
         intent.putExtra("planDO", planDO);
         intent.putExtra("alarm", true);
@@ -117,7 +117,7 @@ public class PlanService extends Service {
     private void processAlarmOpen(PlanDO planDO) {
         PlanDataSource planDataSource = new PlanDataSource();
         planDO.setAlarmStatus(2);
-        planDataSource.insertOrReplacePlanDO(planDO, null);
+        planDataSource.insertOrReplacePlanDO(planDO);
         Logger.e("TAG sendNotification");
         sendNotification(planDO, true);
     }

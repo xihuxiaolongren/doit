@@ -24,7 +24,7 @@ public interface IPlanDataSource {
 
     PlanDO getPlanDOById(Long id);
 
-    long insertOrReplacePlanDO(PlanDO planDO, String targetName);
+    long insertOrReplacePlanDO(PlanDO planDO);
 
     List<PlanDO> listPlanDOs(Long id, int count);
 

@@ -583,13 +583,13 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         explainTV = (TextView) addTargetDialog.findViewById(R.id.explain);
         deadlineTV = (TextView) addTargetDialog.findViewById(R.id.deadlineTV);
         deadLineLL = addTargetDialog.findViewById(R.id.deadLineLL);
-        explainTV.setText("说明：该目标模式下可添加重复计划/提醒");
+        explainTV.setText("说明：该目标下可任意添加多种类型任务");
         normalRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 punchRB.setChecked(!isChecked);
                 if (isChecked)
-                    explainTV.setText("说明：该目标模式下可添加重复计划/提醒");
+                    explainTV.setText("说明：该目标下可任意添加多种类型任务");
             }
         });
         punchRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -597,7 +597,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 normalRB.setChecked(!isChecked);
                 if (isChecked)
-                    explainTV.setText("说明：该目标模式下可进行打卡操作");
+                    explainTV.setText("说明：该目标下仅可进行打卡操作");
             }
         });
         deadLineLL.setOnClickListener(new View.OnClickListener() {

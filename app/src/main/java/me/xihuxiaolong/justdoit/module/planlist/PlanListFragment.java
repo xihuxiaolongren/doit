@@ -319,8 +319,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     void startPunch(){
         presenter.startAddPunch();
     }
+
     void startPhoto(){
-        startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+        startActivity(new Intent(getActivity(), EditPhotoActivity.class));
     }
 
     void startPlan(){
