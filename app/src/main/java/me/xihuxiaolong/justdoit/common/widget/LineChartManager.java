@@ -1,7 +1,6 @@
 package me.xihuxiaolong.justdoit.common.widget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 
 import com.github.mikephil.charting.animation.Easing;
@@ -36,10 +35,13 @@ public class LineChartManager {
      */
     public static void initSingleLineChart(Context context, LineChart mLineChart, List<Entry> xyValue) {
         initDataStyle(context,mLineChart);
+        int color = ContextCompat.getColor(context, R.color.titleTextColor);
         //设置折线的样式
         LineDataSet dataSet = new LineDataSet(xyValue, lineName);
-        dataSet.setColor(Color.parseColor("#576269"));
-        dataSet.setCircleColor(Color.parseColor("#576269"));
+        dataSet.setValueTextColor(color);
+        dataSet.setColor(color);
+        dataSet.setCircleColor(color);
+        dataSet.setCircleColorHole(ContextCompat.getColor(context, R.color.colorPrimary));
         dataSet.setDrawValues(true);
         dataSet.setValueFormatter(new IValueFormatter() {
             @Override
@@ -122,6 +124,7 @@ public class LineChartManager {
      * @param mLineChart
      */
     private static void initDataStyle(Context context, LineChart mLineChart) {
+        int color = ContextCompat.getColor(context, R.color.titleTextColor);
         //设置图表是否支持触控操作
         mLineChart.setTouchEnabled(false);
         mLineChart.setScaleEnabled(false);
@@ -135,8 +138,9 @@ public class LineChartManager {
 //        title.setEnabled(false);
         //设置x轴的样式
         XAxis xAxis = mLineChart.getXAxis();
+        xAxis.setTextColor(color);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.titleTextColor));
+        xAxis.setAxisLineColor(color);
         xAxis.setAxisLineWidth(1);
         xAxis.setDrawGridLines(false);
         xAxis.setLabelCount(7, true);
