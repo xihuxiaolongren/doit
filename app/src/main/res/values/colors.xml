@@ -7,8 +7,10 @@
     <color name="colorControlActivated">#000000</color>
     <color name="colorStatus">#00FFFFFF</color>
     <color name="titleTextColor">#000000</color>
+    <color name="lightTitleTextColor">#999999</color>
+    <color name="semiTitleTextColor">#A0000000</color>
     <color name="unselectedTitleTextColor">#80000000</color>
-    <color name="bgImageColor">#20FFFFFF</color>
+    <color name="bgImageColor">#60FFFFFF</color>
     <color name="notificationNightTitleTextColor">#FFFFFF</color>
     <color name="shadowColor">#FFFFFF</color>
     <color name="sky">#DDEFF9</color>

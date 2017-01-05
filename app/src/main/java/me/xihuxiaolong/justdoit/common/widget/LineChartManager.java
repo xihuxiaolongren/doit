@@ -29,7 +29,6 @@ import me.xihuxiaolong.justdoit.R;
 public class LineChartManager {
 
     private static String lineName = "近七日打卡次数统计";
-    private static String lineName1 = null;
 
     /**
      * @Description:创建两条折线
@@ -77,46 +76,6 @@ public class LineChartManager {
         mLineChart.animateY(2000, Easing.EasingOption.Linear);
         mLineChart.animateX(2000, Easing.EasingOption.Linear);
         mLineChart.invalidate();
-    }
-    /**
-     * @Description:创建两条折线
-     * @param context 上下文
-     * @param mLineChart 折线图控件
-     * @param xValues 折线在x轴的值
-     * @param yValue 折线在y轴的值
-     * @param yValue1 另一条折线在y轴的值
-     */
-    public static void initDoubleLineChart(Context context, LineChart mLineChart, ArrayList<String> xValues,
-                                           ArrayList<Entry> yValue, ArrayList<Entry> yValue1) {
-
-//        initDataStyle(context,mLineChart);
-//
-//        LineDataSet dataSet = new LineDataSet(yValue, lineName);
-//        dataSet.setColor(Color.parseColor("#576269"));
-//        dataSet.setCircleColor(Color.parseColor("#576269"));
-//        dataSet.setDrawValues(false);
-//
-//        LineDataSet dataSet1 = new LineDataSet(yValue1, lineName1);
-//        dataSet1.enableDashedLine(10f, 10f, 0f);//将折线设置为曲线
-//        dataSet1.setColor(Color.parseColor("#576269"));
-//        dataSet1.setCircleColor(Color.parseColor("#576269"));
-//        dataSet1.setDrawValues(false);
-//
-//        //构建一个类型为LineDataSet的ArrayList 用来存放所有 y的LineDataSet   他是构建最终加入LineChart数据集所需要的参数
-//        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-//
-//        //将数据加入dataSets
-//        dataSets.add(dataSet);
-//        dataSets.add(dataSet1);
-//
-//        //构建一个LineData  将dataSets放入
-//        LineData lineData = new LineData(dataSets);
-//        //将数据插入
-//        mLineChart.setData(lineData);
-//        //设置动画效果
-//        mLineChart.animateY(2000, Easing.EasingOption.Linear);
-//        mLineChart.animateX(2000, Easing.EasingOption.Linear);
-//        mLineChart.invalidate();
     }
 
     /**
@@ -186,11 +145,4 @@ public class LineChartManager {
         lineName = name;
     }
 
-    /**
-     * @Description:设置另一条折线的名称
-     * @param name
-     */
-    public static void setLineName1(String name){
-        lineName1 = name;
-    }
 }

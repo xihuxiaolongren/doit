@@ -39,7 +39,7 @@ public class TargetListContract {
 
         void loadStatistics();
 
-        void createTarget(String name, int type);
+        void createTarget(String name, int type, Long endTime);
 
         void savePunch(String targetName, String content, String pictures);
 
