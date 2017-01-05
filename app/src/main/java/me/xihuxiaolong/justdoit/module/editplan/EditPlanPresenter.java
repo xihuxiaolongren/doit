@@ -67,14 +67,15 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         plan.setLinkAppName(linkAppName);
         plan.setLinkAppPackageName(linkAppPackageName);
         plan.setTempRepeatmode(repeatMode);
+        plan.setTargetName(targetName);
         if(planId != -1L && editPlanDO != null) {
             plan.setId(planId);
             plan.setDayTime(editPlanDO.getDayTime());
-            planDataSource.insertOrReplacePlanDO(plan, targetName);
+            planDataSource.insertOrReplacePlanDO(plan);
             EventBus.getDefault().post(new Event.UpdatePlan(plan));
         }else {
             plan.setDayTime(dayTime);
-            long planId = planDataSource.insertOrReplacePlanDO(plan, targetName);
+            long planId = planDataSource.insertOrReplacePlanDO(plan);
             plan.setId(planId);
             EventBus.getDefault().post(new Event.AddPlan(plan));
         }

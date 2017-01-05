@@ -33,10 +33,14 @@ import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
 public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, EditPhotoContract.IPresenter> implements EditPhotoContract.IView {
 
+    public static final String ARGUMENT_TARGET_NAME = "TARGET_NAME";
+
     EditPhotoComponent editPhotoComponent;
 
     @State
     String picUri;
+
+    private String targetName;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -53,6 +57,7 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        targetName = getIntent().getStringExtra(ARGUMENT_TARGET_NAME);
         injectDependencies();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_photo);
@@ -142,7 +147,7 @@ public class EditPhotoActivity extends BaseMvpActivity<EditPhotoContract.IView, 
 
     protected void injectDependencies() {
         editPhotoComponent = DaggerEditPhotoComponent.builder().appComponent(ProjectActivityUtils.getAppComponent(this))
-                .editPhotoModule(new EditPhotoModule()).build();
+                .editPhotoModule(new EditPhotoModule(targetName)).build();
     }
 
     @NonNull

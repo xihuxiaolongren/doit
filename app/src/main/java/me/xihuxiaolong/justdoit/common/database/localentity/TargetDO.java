@@ -21,6 +21,7 @@ public class TargetDO implements Serializable, MultiItemEntity {
     static final long serialVersionUID = -1L;
 
     public final static int TYPE_NORMAL = 0;
+    public final static int TYPE_NORMAL_END_TIME = 2;   //用于列表显示
     public final static int TYPE_PUNCH = 1;
 
     @Id
@@ -30,6 +31,7 @@ public class TargetDO implements Serializable, MultiItemEntity {
 
     private Long createdTime;
     private Long modifiedTime;
+    private Long endTime;
 
     private String headerImageUri;
     private boolean customTheme;
@@ -44,14 +46,15 @@ public class TargetDO implements Serializable, MultiItemEntity {
     @Transient
     private List<PlanDO> punchList;
 
-    @Generated(hash = 743143549)
+    @Generated(hash = 1328217124)
     public TargetDO(String name, int type, Long createdTime, Long modifiedTime,
-            String headerImageUri, boolean customTheme, int themeColor,
-            int textColor, int count) {
+            Long endTime, String headerImageUri, boolean customTheme,
+            int themeColor, int textColor, int count) {
         this.name = name;
         this.type = type;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
+        this.endTime = endTime;
         this.headerImageUri = headerImageUri;
         this.customTheme = customTheme;
         this.themeColor = themeColor;
@@ -151,8 +154,19 @@ public class TargetDO implements Serializable, MultiItemEntity {
         this.textColor = textColor;
     }
 
+    public Long getEndTime() {
+        return this.endTime;
+    }
+
+    public void setEndTime(Long endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public int getItemType() {
+        if(type == TYPE_NORMAL && endTime != null){
+            return TYPE_NORMAL_END_TIME;
+        }
         return type;
     }
 }

@@ -5,8 +5,10 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorDarkAccent">#F30053</color>
     <color name="colorControlActivated">#FF4081</color>
-    <color name="colorStatus">#11FFFFFF</color>
+    <color name="colorStatus">#00FFFFFF</color>
     <color name="titleTextColor">#FFFFFF</color>
+    <color name="lightTitleTextColor">#aaaaaa</color>
+    <color name="semiTitleTextColor">#A0FFFFFF</color>
     <color name="unselectedTitleTextColor">#80FFFFFF</color>
     <color name="bgImageColor">#60333333</color>
     <color name="shadowColor">#222222</color>

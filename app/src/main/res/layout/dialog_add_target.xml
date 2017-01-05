@@ -24,7 +24,7 @@
     <RelativeLayout
         android:id="@+id/manualThemeRL"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical">
 
@@ -34,19 +34,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:checked="true"
             android:gravity="center_vertical"
             android:text="普通模式"
-            android:checked="true"/>
+            android:textSize="12sp" />
 
         <com.rey.material.widget.RadioButton
             android:id="@+id/punchRB"
             style="@style/Material.Drawable.RadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:gravity="center_vertical"
-            android:text="打卡模式" />
+            android:text="打卡模式"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
@@ -55,5 +58,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:textAppearance="@style/MyTextAppearance.BodyNormal"/>
+        android:layout_marginBottom="10dp"
+        android:textAppearance="@style/MyTextAppearance.BodyNormal" />
+
+    <LinearLayout
+        android:id="@+id/deadLineLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true">
+        <ImageView
+            android:id="@+id/deadlineIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:src="@drawable/icon_deadline"
+            android:tint="@color/lightTitleTextColor" />
+        <TextView
+            android:id="@+id/deadlineTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="完成时间"
+            android:textAppearance="@style/MyTextAppearance.BodySmall"
+            android:textColor="@color/lightTitleTextColor"/>
+    </LinearLayout>
 </LinearLayout>

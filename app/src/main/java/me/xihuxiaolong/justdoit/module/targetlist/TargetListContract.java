@@ -5,6 +5,7 @@ import com.hannesdorfmann.mosby.mvp.MvpView;
 
 import java.util.List;
 
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 /**
@@ -24,6 +25,8 @@ public class TargetListContract {
 
         void showTargets(List<TargetDO> targets);
 
+        void showStatistics(List<PlanHistoryDO> planHistoryDOs, List<TargetDO> targetDOs);
+
         void createTargetSuccess(TargetDO target);
 
         void showAddTargetDialog();
@@ -34,7 +37,9 @@ public class TargetListContract {
 
         void loadTargets();
 
-        void createTarget(String name, int type);
+        void loadStatistics();
+
+        void createTarget(String name, int type, Long endTime);
 
         void savePunch(String targetName, String content, String pictures);
 

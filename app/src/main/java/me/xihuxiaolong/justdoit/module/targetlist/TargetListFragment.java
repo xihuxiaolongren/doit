@@ -3,6 +3,7 @@ package me.xihuxiaolong.justdoit.module.targetlist;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +36,8 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
+import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -53,15 +56,19 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.iwgang.countdownview.CountdownView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
+import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.LineChartManager;
@@ -71,6 +78,7 @@ import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.ARG_TARGET;
 import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFragment.REQUEST_PUNCH;
@@ -81,10 +89,10 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFrag
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener {
+public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener {
 
-    private static final float MAX_TEXT_SCALE_DELTA = 1.3f;
-    private static final int SELECT_TEMPLATE_REQUEST = 1;
+    private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
+    private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
 
     TargetListComponent targetListComponent;
 
@@ -105,8 +113,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     ImageView headerIV;
     @BindView(R.id.shadowFrame)
     FrameLayout shadowFrame;
-    @BindView(R.id.arc_progress)
-    ArcProgress arcProgress;
+//    @BindView(R.id.arc_progress)
+//    ArcProgress arcProgress;
 
     private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
             mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
@@ -159,6 +167,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.loadTargets();
+        presenter.loadStatistics();
     }
 
     @Nullable
@@ -175,18 +184,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-        mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
+        mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.target_list_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_arcprogress_bottom_offset);
+        mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
         mFlexibleSpaceSignatureBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_signature_bottom_offset);
         shadow = ContextCompat.getDrawable(getContext(), R.drawable.bottom_shadow);
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusBarSize = getStatusBarHeight();
-        }
+        mStatusBarSize = getStatusBarHeight();
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -218,7 +225,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 TargetDO targetDO = ((TargetDO) adapter.getItem(position));
-                switch (view.getId()){
+                switch (view.getId()) {
                     case R.id.fab:
                         openPunch(targetDO.getName());
                         break;
@@ -238,7 +245,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         public TargetAdapter(List<TargetDO> datas) {
             super(datas);
-            addItemType(TargetDO.TYPE_NORMAL, R.layout.item_target);
+            addItemType(TargetDO.TYPE_NORMAL, R.layout.item_target_normal);
+            addItemType(TargetDO.TYPE_NORMAL_END_TIME, R.layout.item_target_normal_end_time);
             addItemType(TargetDO.TYPE_PUNCH, R.layout.item_target_punch);
         }
 
@@ -247,6 +255,9 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             switch (targetDO.getItemType()) {
                 case TargetDO.TYPE_NORMAL:
                     convertNormal(baseViewHolder, targetDO);
+                    break;
+                case TargetDO.TYPE_NORMAL_END_TIME:
+                    convertNormalEndTime(baseViewHolder, targetDO);
                     break;
                 case TargetDO.TYPE_PUNCH:
                     convertPunch(baseViewHolder, targetDO);
@@ -272,33 +283,27 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         private void convertNormal(BaseViewHolder baseViewHolder, TargetDO targetDO) {
             TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
-            holder.setText(R.id.title, targetDO.getName());
+            holder.setText(R.id.titleTV, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
             targetIconIV.setAlpha(0.55f);
             ImageView bgIV = holder.getView(R.id.bgIV);
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
-            LinearLayout linearLayout = holder.getView(R.id.redoPlanLL);
-            if (linearLayout.getChildCount() <= 0) {
-                for (int i = 0; i < showRedoPlanCount; i++) {
-                    View redoView = LayoutInflater.from(getContext()).inflate(R.layout.item_redo_plan, linearLayout, false);
-                    holder.addRedoPlanItem(new BaseViewHolder(redoView));
-                    linearLayout.addView(redoView);
-                }
-            }
-            int redoSize = CollectionUtils.isEmpty(targetDO.getRedoPlanDOList()) ? 0 : targetDO.getRedoPlanDOList().size();
-            for (int i = 0; i < showRedoPlanCount; i++) {
-                BaseViewHolder redoPlanViewHolder = holder.redoPlanItems.get(i);
-                if (i < redoSize) {
-                    redoPlanViewHolder.setVisible(R.id.redoLL, true);
-                    RedoPlanDO redoPlanDO = targetDO.getRedoPlanDOList().get(i);
-                    redoPlanViewHolder.setText(R.id.redoTitleTV, redoPlanDO.getContent());
-                    redoPlanViewHolder.setText(R.id.redoModeTV, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
-                    redoPlanViewHolder.setText(R.id.lastTimeTV, "已持续 " + Days.daysBetween(DateTime.now(), new DateTime(redoPlanDO.getCreatedTime())).getDays() + " 天");
-                } else {
-                    redoPlanViewHolder.setVisible(R.id.redoLL, false);
-                }
-            }
+            FancyButton fancyButton = holder.getView(R.id.persistTV);
+            fancyButton.setText("12");
+            fancyButton.getTextViewObject().setTypeface(null, Typeface.BOLD);
+        }
+
+        private void convertNormalEndTime(BaseViewHolder baseViewHolder, TargetDO targetDO) {
+            TargetViewHolder holder = (TargetViewHolder) baseViewHolder;
+            holder.setText(R.id.titleTV, targetDO.getName());
+            ImageView targetIconIV = holder.getView(R.id.targetIconIV);
+            targetIconIV.setAlpha(0.55f);
+            ImageView bgIV = holder.getView(R.id.bgIV);
+            bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
+            ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
+            CountdownView countdownView = holder.getView(R.id.countdownView);
+            countdownView.start(995550000);
         }
 
         @Override
@@ -404,11 +409,16 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     // Scale calendarRl
     void animateCanlendarRl(int scrollY) {
         float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
-        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) * 1.3f / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
+        float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
         ViewHelper.setPivotX(calendarRl, 0);
         ViewHelper.setPivotY(calendarRl, 0);
         ViewHelper.setScaleX(calendarRl, scale);
         ViewHelper.setScaleY(calendarRl, scale);
+//        if (avatarIV.getVisibility() == View.VISIBLE) {
+//            float scaleAvatar = ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0.8f, 1f);
+//            ViewHelper.setScaleX(avatarIV, scaleAvatar);
+//            ViewHelper.setScaleY(avatarIV, scaleAvatar);
+//        }
 
         // Translate calendarRl
         int maxTitleTranslationY = (int) (mFlexibleSpaceImageHeight - calendarRl.getMeasuredHeight() * scale - mFlexibleSpaceCalendarBottomOffset);
@@ -487,26 +497,35 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void showTargets(List<TargetDO> targets) {
-        if (CollectionUtils.isEmpty(targets)) {
-//            fab.setVisibility(View.INVISIBLE);
+        targetAdapter.setNewData(targets);
+    }
+
+    @Override
+    public void showStatistics(List<PlanHistoryDO> planHistoryDOs, List<TargetDO> targetDOs) {
+        if (CollectionUtils.isEmpty(targetDOs)) {
             calendarRl.setVisibility(View.INVISIBLE);
+        } else {
+            calendarRl.setVisibility(View.VISIBLE);
+        }
+        if (CollectionUtils.isEmpty(planHistoryDOs)) {
             lineChart.setVisibility(View.INVISIBLE);
         } else {
-//            fab.setVisibility(View.VISIBLE);
-            calendarRl.setVisibility(View.VISIBLE);
             lineChart.setVisibility(View.VISIBLE);
+            if (planHistoryDOs.size() < 7) {
+                int count = 7 - planHistoryDOs.size();
+                for (int i = 0; i < count; ++i) {
+                    PlanHistoryDO planHistoryDO = new PlanHistoryDO();
+                    planHistoryDOs.add(i, planHistoryDO);
+                }
+            }
             List<Entry> xyValues = new ArrayList<>();
-            xyValues.add(new Entry(1, 4));
-            xyValues.add(new Entry(2, 2));
-            xyValues.add(new Entry(3, 3));
-            xyValues.add(new Entry(4, 2));
-            xyValues.add(new Entry(5, 5));
-//            xyValues.add(new Entry(6, 0));
-//            xyValues.add(new Entry(7, 0));
+            int i = 1;
+            for (PlanHistoryDO planHistoryDO : planHistoryDOs) {
+                xyValues.add(new Entry(i, planHistoryDO.getPunchCount()));
+                i++;
+            }
             LineChartManager.initSingleLineChart(getContext(), lineChart, xyValues);
         }
-        updateArcProgress(targets.size());
-        targetAdapter.setNewData(targets);
     }
 
     @Override
@@ -520,6 +539,9 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     private MaterialEditText addTargetET;
     private RadioButton normalRB, punchRB;
     private TextView explainTV;
+    private TextView deadlineTV;
+    private View deadLineLL;
+    private Long deadLine;
 
     @Override
     public void showAddTargetDialog() {
@@ -530,7 +552,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        presenter.createTarget(addTargetET.getText().toString(), normalRB.isChecked() ? TargetDO.TYPE_NORMAL : TargetDO.TYPE_PUNCH);
+                        presenter.createTarget(addTargetET.getText().toString(), normalRB.isChecked() ? TargetDO.TYPE_NORMAL : TargetDO.TYPE_PUNCH, deadLine);
+                        deadLine = null;
                     }
                 })
                 .negativeText(R.string.action_cancel)
@@ -558,13 +581,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
         normalRB = (RadioButton) addTargetDialog.findViewById(R.id.normalRB);
         punchRB = (RadioButton) addTargetDialog.findViewById(R.id.punchRB);
         explainTV = (TextView) addTargetDialog.findViewById(R.id.explain);
-        explainTV.setText("说明：在该目标模式下可添加重复计划/提醒");
+        deadlineTV = (TextView) addTargetDialog.findViewById(R.id.deadlineTV);
+        deadLineLL = addTargetDialog.findViewById(R.id.deadLineLL);
+        explainTV.setText("说明：该目标下可任意添加多种类型任务");
         normalRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 punchRB.setChecked(!isChecked);
                 if (isChecked)
-                    explainTV.setText("说明：在该目标模式下可添加重复计划/提醒");
+                    explainTV.setText("说明：该目标下可任意添加多种类型任务");
             }
         });
         punchRB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -572,20 +597,40 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 normalRB.setChecked(!isChecked);
                 if (isChecked)
-                    explainTV.setText("说明：在该目标模式下可进行打卡操作");
+                    explainTV.setText("说明：该目标下仅可进行打卡操作");
+            }
+        });
+        deadLineLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateTime now = DateTime.now();
+                MonthAdapter.CalendarDay minDate = new MonthAdapter.CalendarDay(now.getYear(), now.getMonthOfYear() - 1, now.getDayOfMonth());
+                CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
+                        .setOnDateSetListener(TargetListFragment.this)
+                        .setDoneText(getResources().getString(R.string.action_confirm))
+                        .setCancelText(getResources().getString(R.string.action_cancel))
+                        .setDateRange(minDate, null);
+                if (DayNightModeUtils.isCurrentNight())
+                    cdp.setThemeDark();
+                else
+                    cdp.setThemeLight();
+                cdp.show(getChildFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
         addTargetDialog.show();
+    }
+
+    @Override
+    public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
+        DateTime dateTime = new DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0);
+        deadlineTV.setText(getString(R.string.calendar_date_picker_result_values, year, monthOfYear + 1, dayOfMonth));
+        deadLine = dateTime.getMillis();
     }
 
     private MaterialDialog addPunchDialog;
     private MaterialEditText addPunchET;
     private ImageView picIV;
     String picUri;
-
-    private void updateArcProgress(int count) {
-        arcProgress.setBottomText(count + " 目标 ");
-    }
 
     private void openPunch(final String targetName) {
         addPunchDialog = new MaterialDialog.Builder(getActivity())

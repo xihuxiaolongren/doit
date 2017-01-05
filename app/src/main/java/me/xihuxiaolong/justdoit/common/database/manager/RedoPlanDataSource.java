@@ -53,9 +53,10 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
         TargetDO targetDO = daoSession.getTargetDODao().queryBuilder()
                 .where(TargetDODao.Properties.Name.eq(targetName)).unique();
         if(targetDO != null && withRedoPlanList) {
-            if(targetDO.getType() == TargetDO.TYPE_NORMAL)
-                targetDO.setRedoPlanDOList(listRedoPlanDOsByTarget(targetName));
-            else if(targetDO.getType() == TargetDO.TYPE_PUNCH) {
+            if(targetDO.getType() == TargetDO.TYPE_NORMAL) {
+                PlanDataSource planDataSource = new PlanDataSource();
+                targetDO.setPunchList(planDataSource.listPlanDOsByTargetName(targetName));
+            } else if(targetDO.getType() == TargetDO.TYPE_PUNCH) {
                 PlanDataSource planDataSource = new PlanDataSource();
                 targetDO.setPunchList(planDataSource.listPlanDOsByTargetName(targetName));
             }
@@ -116,7 +117,18 @@ public class RedoPlanDataSource extends BaseDataSource implements IRedoPlanDataS
     public List<TargetDO> listAllPunchTarget(boolean withPunchList) {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
-        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_PUNCH)).orderDesc(TargetDODao.Properties.CreatedTime).list();
+        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_PUNCH))
+                .orderDesc(TargetDODao.Properties.CreatedTime).list();
+        clear(daoSession, database);
+        return targetDOs;
+    }
+
+    @Override
+    public List<TargetDO> listNormalTarget() {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        DaoSession daoSession = new DaoMaster(database).newSession();
+        List<TargetDO> targetDOs = daoSession.getTargetDODao().queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_NORMAL))
+                .orderDesc(TargetDODao.Properties.CreatedTime).list();
         clear(daoSession, database);
         return targetDOs;
     }

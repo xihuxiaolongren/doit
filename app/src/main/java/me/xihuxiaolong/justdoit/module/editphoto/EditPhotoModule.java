@@ -17,7 +17,15 @@ import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
 @Module
 public class EditPhotoModule {
 
-    public EditPhotoModule(){
+    private String targetName;
+
+    public EditPhotoModule(String targetName){
+        this.targetName = targetName;
+    }
+
+    @Provides @Nullable
+    String provideTargetName() {
+        return targetName;
     }
 
     @Provides

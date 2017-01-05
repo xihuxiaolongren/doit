@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginRight="14dp"
+    card_view:cardBackgroundColor="@color/sky"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="2dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/targetIconIV"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/bg_target"
+            android:tint="@color/titleTextColor" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/bgIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/contentRL"
+            android:layout_alignLeft="@+id/contentRL"
+            android:layout_alignRight="@+id/contentRL"
+            android:layout_alignTop="@+id/contentRL"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:transitionName="targetIV"
+            app:riv_corner_radius="2dp" />
+
+        <RelativeLayout
+            android:id="@+id/contentRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/titleTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/countTV"
+                android:textAppearance="@style/MyTextAppearance.BodyLarge"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/countTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="5dp"
+                android:text="共计 32 项"
+                android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+            <TextView
+                android:id="@+id/tipTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleTV"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="6dp"
+                android:text="剩余: "
+                android:textSize="10sp"
+                android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+            <cn.iwgang.countdownview.CountdownView
+                android:id="@+id/countdownView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@id/titleTV"
+                android:layout_toRightOf="@id/tipTV"
+                app:isHideTimeBackground="true"
+                app:isShowDay="true"
+                app:isShowHour="true"
+                app:isShowMinute="true"
+                app:isShowSecond="false"
+                app:isTimeTextBold="true"
+                app:suffixGravity="bottom"
+                app:timeTextColor="@color/titleTextColor"
+                app:suffixDay="天"
+                app:suffixHour="小时"
+                app:suffixMinute="分"
+                app:suffixTextSize="10sp"
+                app:suffixTextColor="@color/titleTextColor"
+                app:suffixLRMargin="5dp"
+                app:timeTextSize="22sp" />
+
+            <com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar
+                android:id="@+id/roundCornerProgressBar"
+                android:layout_below="@id/countdownView"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                app:rcProgress="12"
+                app:rcSecondaryProgress="12"
+                app:rcMax="30"
+                app:rcRadius="15dp"
+                app:rcBackgroundPadding="4dp"
+                app:rcReverse="false"
+                app:rcProgressColor="@color/semiTitleTextColor"
+                app:rcSecondaryProgressColor="@color/semiTitleTextColor"
+                app:rcBackgroundColor="@color/unselectedTitleTextColor" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

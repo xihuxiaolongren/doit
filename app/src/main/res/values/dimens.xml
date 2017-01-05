@@ -18,6 +18,7 @@
     <dimen name="signature_min_size">14sp</dimen>
     <dimen name="flexible_space_image_height">220dp</dimen>
     <dimen name="flexible_recyclerview_header_height">150dp</dimen>
+    <dimen name="target_list_header_height">180dp</dimen>
     <dimen name="flexible_space_calendar_bottom_offset">50dp</dimen>
     <dimen name="flexible_space_arcprogress_bottom_offset">40dp</dimen>
     <dimen name="flexible_space_title_bottom_offset">70dp</dimen>

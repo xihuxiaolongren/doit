@@ -98,7 +98,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
+        long punchId = planDataSource.insertOrReplacePlanDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
     }

@@ -22,6 +22,7 @@
     <string name="add_target_hint">输入目标名称</string>
     <string name="add_punch_hint">一句话描述 . . . </string>
     <string name="add_target_prefill"></string>
+    <string name="action_redo_plan">重复任务管理</string>
     <string name="add_alert">新建提醒</string>
     <string name="add_clock">添加提醒</string>
     <string name="add_link">关联应用</string>
@@ -50,4 +51,5 @@
     <string name="add_photo">此刻</string>
     <string name="rationale_camera_and_read_storage"><![CDATA[应用需要读取您的相册&使用相机功能]]></string>
     <string name="share">分享</string>
+    <string name="calendar_date_picker_result_values">%1$s 年 %2$s 月 %3$s 日</string>
 </resources>

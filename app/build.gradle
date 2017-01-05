@@ -148,6 +148,8 @@ dependencies {
     compile 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
     compile 'com.github.czy1121:cornerlabelview:1.0.3'
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    compile 'com.github.iwgang:countdownview:2.1.2'
+    compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
 
     compile project(path: ':library')
     compile project(path: ':photoga')

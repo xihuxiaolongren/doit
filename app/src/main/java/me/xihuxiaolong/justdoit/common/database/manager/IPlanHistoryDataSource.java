@@ -15,13 +15,13 @@ public interface IPlanHistoryDataSource {
 
     void addPlanDO(long dayTime, int type);
     void deletePlanDO(long dayTime, int type);
-    void addPlan(long dayTime);
+//    void addPlan(long dayTime);
     void deletePlan(long dayTime);
-    void addAlert(long dayTime);
+//    void addAlert(long dayTime);
     void deleteAlert(long dayTime);
-    void addPhoto(long dayTime);
+//    void addPhoto(long dayTime);
     void deletePhoto(long dayTime);
-    void addPunch(long dayTime);
+//    void addPunch(long dayTime);
     void deletePunch(long dayTime);
 
     PlanHistoryDO getPlanHistoryDOById(Long id);

@@ -24,7 +24,7 @@ public interface IPlanDataSource {
 
     PlanDO getPlanDOById(Long id);
 
-    long insertOrReplacePlanDO(PlanDO planDO, String targetName);
+    long insertOrReplacePlanDO(PlanDO planDO);
 
     List<PlanDO> listPlanDOs(Long id, int count);
 
@@ -39,5 +39,7 @@ public interface IPlanDataSource {
     List<PlanDO> listPlanDOsByDefault();
 
     List<TagDO> listAllTag();
+
+    List<Integer> listPlanCount(int type, List<Long> time);
 
 }

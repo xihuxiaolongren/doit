@@ -28,22 +28,19 @@ import me.xihuxiaolong.justdoit.R;
 public abstract class BaseMvpFragment<V extends MvpView, P extends MvpPresenter<V>> extends MvpFragment<V, P> {
 
     private int menuColor;
-    private boolean isFirstSet;
 
     abstract protected void injectDependencies();
 
     public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
+        if(getActivity() instanceof BaseActivity)
+            return ((BaseActivity)getActivity()).getStatusBarHeight();
+        else if(getActivity() instanceof BaseMvpActivity)
+            return ((BaseMvpActivity)getActivity()).getStatusBarHeight();
+        return 0;
     }
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isFirstSet = true;
     }
 
     @Override

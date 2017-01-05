@@ -90,13 +90,13 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
     }
 
     @Override
-    public long insertOrReplacePlanDO(PlanDO planDO, String targetName) {
+    public long insertOrReplacePlanDO(PlanDO planDO) {
         if(planDO.getId() == null){
             planDO.setCreatedTime(System.currentTimeMillis());
             if(planDO.getTempRepeatmode() != 0){
                 RedoPlanDO redoPlanDO = gson.fromJson(gson.toJson(planDO), RedoPlanDO.class);
                 redoPlanDO.setRepeatMode(planDO.getTempRepeatmode());
-                redoPlanDO.setTargetName(targetName);
+                redoPlanDO.setTargetName(planDO.getTargetName());
                 redoPlanDO.setPlanType(planDO.getType());
                 redoPlanDataSource.insertOrReplaceRedoPlanDO(redoPlanDO);
             }
@@ -104,7 +104,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
                 for(String tag : planDO.getTags().split(","))
                     addTag(tag);
             }
-            planHistoryDataSource.addPlan(planDO.getDayTime());
+            planHistoryDataSource.addPlanDO(planDO.getDayTime(), planDO.getType());
         }
         planDO.setModifiedTime(System.currentTimeMillis());
 
@@ -148,7 +148,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
-        List<PlanDO> planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.TargetName.eq(targetName)).orderAsc(PlanDODao.Properties.StartTime).list();
+        List<PlanDO> planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.TargetName.eq(targetName)).orderDesc(PlanDODao.Properties.StartTime).list();
 
         clear(daoSession, database);
         return planDOs;
@@ -165,7 +165,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
                 PlanDO planDO = gson.fromJson(gson.toJson(redoPlanDO), PlanDO.class);
                 planDO.setId(null);
                 planDO.setDayTime(dayTime);
-                insertOrReplacePlanDO(planDO, null);
+                insertOrReplacePlanDO(planDO);
                 planDOs.add(planDO);
             }
         }
@@ -202,6 +202,11 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
 
         clear(daoSession, database);
         return tagDOs;
+    }
+
+    @Override
+    public List<Integer> listPlanCount(int type, List<Long> time) {
+        return null;
     }
 
     private void addTag(String tag){

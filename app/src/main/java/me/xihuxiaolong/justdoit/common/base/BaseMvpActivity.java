@@ -46,17 +46,16 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 
     abstract protected void injectDependencies();
 
-    @TargetApi(19)
-    private void initWindow() {
+    protected void initWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 //            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+//            SystemBarTintManager tintManager = new SystemBarTintManager(this);
             // enable status bar tint
-            tintManager.setStatusBarTintEnabled(true);
+//            tintManager.setStatusBarTintEnabled(true);
             // enable navigation bar tint
 //        tintManager.setNavigationBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(R.color.colorStatus);
+//            tintManager.setStatusBarTintResource(R.color.colorStatus);
         }
     }
 
@@ -72,9 +71,11 @@ public abstract class BaseMvpActivity<V extends MvpView, P extends MvpPresenter<
 
     public int getStatusBarHeight() {
         int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = getResources().getDimensionPixelSize(resourceId);
+            }
         }
         return result;
     }

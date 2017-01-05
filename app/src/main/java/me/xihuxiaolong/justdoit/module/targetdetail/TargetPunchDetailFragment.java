@@ -81,7 +81,7 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks{
+public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContract.IView, TargetDetailContract.IPresenter> implements TargetDetailContract.IView, ObservableScrollViewCallbacks {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
@@ -183,9 +183,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         fab.setOnClickListener(fabListener);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusBarSize = getStatusBarHeight();
-        }
+        mStatusBarSize = getStatusBarHeight();
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -201,7 +199,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        punchAdapter = new PunchAdapter(R.layout.item_punch_target, new ArrayList<PlanDO>());
+        punchAdapter = new PunchAdapter(R.layout.item_card_punch, new ArrayList<PlanDO>());
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_detail_header, recyclerView, false);
         punchAdapter.addHeaderView(headerView);
         recyclerView.setAdapter(punchAdapter);
@@ -215,7 +213,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 PlanDO planDO = ((PlanDO) adapter.getItem(position));
-                switch (view.getId()){
+                switch (view.getId()) {
                     case R.id.picIV:
                         if (!TextUtils.isEmpty(planDO.getPicUrls()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, view.getTransitionName());
@@ -247,9 +245,9 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     .setText(R.id.contentTV, punch.getContent())
                     .setVisible(R.id.picIV, !TextUtils.isEmpty(punch.getPicUrls()))
                     .addOnClickListener(R.id.picIV);
-            ImageView okIV = holder.getView(R.id.okIV);
-            okIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
-            okIV.setAlpha(0.55f);
+            ImageView typeIV = holder.getView(R.id.typeIV);
+            typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+            typeIV.setAlpha(0.55f);
             ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.picIV), punch.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
 
         }
@@ -348,9 +346,11 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             if (palette.getMutedSwatch() != null) colorList.add(palette.getMutedSwatch());
             if (palette.getVibrantSwatch() != null) colorList.add(palette.getVibrantSwatch());
             if (palette.getDarkMutedSwatch() != null) colorList.add(palette.getDarkMutedSwatch());
-            if (palette.getDarkVibrantSwatch() != null) colorList.add(palette.getDarkVibrantSwatch());
+            if (palette.getDarkVibrantSwatch() != null)
+                colorList.add(palette.getDarkVibrantSwatch());
             if (palette.getLightMutedSwatch() != null) colorList.add(palette.getLightMutedSwatch());
-            if (palette.getLightVibrantSwatch() != null) colorList.add(palette.getLightVibrantSwatch());
+            if (palette.getLightVibrantSwatch() != null)
+                colorList.add(palette.getLightVibrantSwatch());
             List<Palette.Swatch> list = new ArrayList<>();
             list.addAll(colorList);
             final ColorAdapter colorAdapter = new ColorAdapter(R.layout.item_color, list);
@@ -376,12 +376,12 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             colorRecyclerView.addOnItemTouchListener(new OnItemClickListener() {
                 @Override
                 public void onSimpleItemClick(BaseQuickAdapter baseQuickAdapter, View view, int position) {
-                    if(position == 0){
+                    if (position == 0) {
                         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
                         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
                         updateTheme();
                         targetDO.setCustomTheme(false);
-                    }else {
+                    } else {
                         Palette.Swatch swatch = (Palette.Swatch) baseQuickAdapter.getItem(position);
                         vibrant = swatch.getRgb();
                         textColor = swatch.getBodyTextColor();
@@ -405,10 +405,10 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         @Override
         protected void convert(BaseViewHolder holder, Palette.Swatch color) {
             CircleImageView circleImageView = holder.getView(R.id.color);
-            if(holder.getAdapterPosition() == 0){
+            if (holder.getAdapterPosition() == 0) {
                 holder.setVisible(R.id.tips, true);
                 circleImageView.setFillColor(ContextCompat.getColor(getContext(), R.color.sky));
-            }else {
+            } else {
                 holder.setVisible(R.id.tips, false);
                 circleImageView.setFillColor(color.getRgb());
             }
@@ -537,7 +537,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         if (targetDO != null) {
             this.targetDO = targetDO;
             headerPicUri = targetDO.getHeaderImageUri();
-            if(!TextUtils.isEmpty(headerPicUri)) {
+            if (!TextUtils.isEmpty(headerPicUri)) {
                 setHeaderIV(targetDO.getHeaderImageUri());
                 getActivity().invalidateOptionsMenu();
                 if (targetDO.getCustomTheme()) {

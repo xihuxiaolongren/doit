@@ -72,14 +72,15 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
         alert.setEndMinute(minute);
         alert.setEndTime(hour * 60 + minute);
         alert.setTempRepeatmode(repeatMode);
+        alert.setTargetName(targetName);
 
         if(alertId != -1L) {
             alert.setId(alertId);
-            planDataSource.insertOrReplacePlanDO(alert, targetName);
+            planDataSource.insertOrReplacePlanDO(alert);
             EventBus.getDefault().post(new Event.UpdatePlan(alert));
         }else {
             alert.setDayTime(dayTime);
-            long alertId = planDataSource.insertOrReplacePlanDO(alert, targetName);
+            long alertId = planDataSource.insertOrReplacePlanDO(alert);
             alert.setId(alertId);
             EventBus.getDefault().post(new Event.AddPlan(alert));
         }

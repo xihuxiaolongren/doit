@@ -11,8 +11,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.manager.IPlanHistoryDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
@@ -31,6 +33,9 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     IPlanDataSource planDataSource;
 
     @Inject
+    IPlanHistoryDataSource planHistoryDataSource;
+
+    @Inject
     public TargetListPresenter() {
         EventBus.getDefault().register(this);
     }
@@ -44,10 +49,21 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     }
 
     @Override
-    public void createTarget(String name, int type) {
+    public void loadStatistics() {
+        List<PlanHistoryDO> planHistoryDOs = planHistoryDataSource.listPlanHistoryDOs(DateTime.now().minusDays(7).withTimeAtStartOfDay().getMillis(),
+                DateTime.now().withTimeAtStartOfDay().getMillis());
+        List<TargetDO> targetDOs = redoPlanDataSource.listNormalTarget();
+        if (isViewAttached()) {
+            getView().showStatistics(planHistoryDOs, targetDOs);
+        }
+    }
+
+    @Override
+    public void createTarget(String name, int type, Long endTime) {
         TargetDO targetDO = new TargetDO();
         targetDO.setName(name);
         targetDO.setType(type);
+        targetDO.setEndTime(endTime);
         redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
         if (isViewAttached()) {
             getView().createTargetSuccess(targetDO);
@@ -68,7 +84,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
+        long punchId = planDataSource.insertOrReplacePlanDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
         loadTargets();
@@ -87,5 +103,17 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
     @Subscribe
     public void onEvent(Event.DeleteTarget deleteTargetEvent) {
         loadTargets();
+    }
+
+    @Subscribe
+    public void onEvent(Event.AddPlan addPlanEvent) {
+        if(addPlanEvent.plan.getType() == PlanDO.TYPE_PUNCH)
+            loadStatistics();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeletePlan deletePlan) {
+        if(deletePlan.plan.getType() == PlanDO.TYPE_PUNCH)
+            loadStatistics();
     }
 }

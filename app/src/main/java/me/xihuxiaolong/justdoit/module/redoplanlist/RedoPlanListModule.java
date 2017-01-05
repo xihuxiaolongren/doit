@@ -1,12 +1,12 @@
-package me.xihuxiaolong.justdoit.module.targetlist;
+package me.xihuxiaolong.justdoit.module.redoplanlist;
+
+import android.support.annotation.Nullable;
 
 import dagger.Module;
 import dagger.Provides;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanHistoryDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanHistoryDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.RedoPlanDataSource;
 
 /**
@@ -15,9 +15,17 @@ import me.xihuxiaolong.justdoit.common.database.manager.RedoPlanDataSource;
  * Date: 16/7/6.
  */
 @Module
-public class TargetListModule {
+public class RedoPlanListModule {
 
-    public TargetListModule(){
+    String targetName;
+
+    public RedoPlanListModule(String targetName){
+        this.targetName = targetName;
+    }
+
+    @Provides @Nullable
+    String provideTargetName() {
+        return targetName;
     }
 
     @Provides
@@ -30,8 +38,4 @@ public class TargetListModule {
         return new PlanDataSource();
     }
 
-    @Provides
-    IPlanHistoryDataSource providePlanHistoryDataSource() {
-        return new PlanHistoryDataSource();
-    }
 }

@@ -94,7 +94,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
         punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long punchId = planDataSource.insertOrReplacePlanDO(punch, null);
+        long punchId = planDataSource.insertOrReplacePlanDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
         loadTarget();
@@ -108,6 +108,24 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
     @Subscribe
     public void onEvent(Event.DeleteTarget deleteTargetEvent) {
         loadTarget();
+    }
+
+    @Subscribe
+    public void onEvent(Event.AddPlan addPlanEvent) {
+        if(targetName.equals(addPlanEvent.plan.getTargetName()))
+            loadTarget();
+    }
+
+    @Subscribe
+    public void onEvent(Event.UpdatePlan updatePlanEvent) {
+        if(targetName.equals(updatePlanEvent.plan.getTargetName()))
+            loadTarget();
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeletePlan deletePlanEvent) {
+        if(targetName.equals(deletePlanEvent.plan.getTargetName()))
+            loadTarget();
     }
 
 }

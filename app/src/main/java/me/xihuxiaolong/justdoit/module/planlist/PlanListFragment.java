@@ -67,6 +67,7 @@ import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
+import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
@@ -81,8 +82,6 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * Date: 16/7/5.
  */
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener {
-
-    private static final int RC_CAMERA_AND_STORTAGE = 123;
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int REQUEST_PUNCH = 1;
@@ -199,9 +198,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         mFabSizeNormal = getResources().getDimensionPixelSize(R.dimen.fab_menu_size_normal);
 
         ViewGroup.LayoutParams layoutParams = toolbar.getLayoutParams();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mStatusBarSize = getStatusBarHeight();
-        }
+        mStatusBarSize = getStatusBarHeight();
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         planFab.setOnClickListener(fabListener);
@@ -288,6 +285,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             case R.id.action_settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
                 return true;
+            case R.id.action_redo_plan:
+                startActivity(new Intent(getActivity(), RedoPlanListActivity.class));
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -319,8 +319,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     void startPunch(){
         presenter.startAddPunch();
     }
+
     void startPhoto(){
-        startActivity(new Intent(getActivity(), EditPhotoActivity.class).putExtra(EditAlertActivity.ARGUMENT_DAY_TIME, DateTime.now().withTimeAtStartOfDay().getMillis()));
+        startActivity(new Intent(getActivity(), EditPhotoActivity.class));
     }
 
     void startPlan(){
@@ -436,7 +437,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         if(scrollListener != null)
             scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
         mScollY = scrollY;
-        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
 
         // Translate FAB
         int maxFabTranslationY = mFlexibleSpaceImageHeight - mFabSizeNormal / 2;
@@ -457,7 +457,26 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setTranslationY(headerIV, -scrollY / 2);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
 
-        // Scale calendarRl
+        animateCanlendarRl(scrollY);
+
+        // Translate signature text
+        updateSignature(scrollY);
+
+        // Translate toolbar
+        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
+        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
+
+        // Translate toolbar
+        if (mFlexibleSpaceImageHeight - mActionBarSize < scrollY)
+            shadowFrame.setForeground(shadow);
+        else
+            shadowFrame.setForeground(null);
+
+    }
+
+    // Scale calendarRl
+    void animateCanlendarRl(int scrollY) {
+        float flexibleRange = mFlexibleSpaceImageHeight - mActionBarSize;
         float scale = 1 + ScrollUtils.getFloat((flexibleRange - scrollY) / flexibleRange, 0, MAX_TEXT_SCALE_DELTA);
         ViewHelper.setPivotX(calendarRl, 0);
         ViewHelper.setPivotY(calendarRl, 0);
@@ -476,21 +495,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 maxTitleTranslationY));
         ViewHelper.setTranslationX(calendarRl, ScrollUtils.getFloat(scrollY, 0,
                 mFlexibleSpaceCalendarLeftOffset));
-
-        // Translate signature text
-        updateSignature(scrollY);
-
-        // Translate toolbar
-        float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));
-        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
-
-        // Translate toolbar
-        if (scale == 1.0f)
-            shadowFrame.setForeground(shadow);
-        else
-            shadowFrame.setForeground(null);
-
     }
+
 
     private void updateSignature(int scrollY){
         int signatureTVHeight = signatureTV.getHeight() == 0 ? signatureTV.getMeasuredHeight() : signatureTV.getHeight();

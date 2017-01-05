@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="14dp"
+    android:layout_marginRight="14dp"
+    card_view:cardBackgroundColor="@color/sky"
+    card_view:cardCornerRadius="5dp"
+    card_view:cardElevation="2dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/targetIconIV"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentRight="true"
+            android:paddingBottom="10dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/bg_target"
+            android:tint="@color/titleTextColor" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/bgIV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/contentRL"
+            android:layout_alignLeft="@+id/contentRL"
+            android:layout_alignRight="@+id/contentRL"
+            android:layout_alignTop="@+id/contentRL"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:transitionName="targetIV"
+            app:riv_corner_radius="2dp" />
+
+        <RelativeLayout
+            android:id="@+id/contentRL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/titleTV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_toLeftOf="@+id/countTV"
+                android:textAppearance="@style/MyTextAppearance.BodyLarge"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/countTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="3dp"
+                android:text="共计 32 项"
+                android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/titleTV"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已持续"
+                    android:textAppearance="@style/MyTextAppearance.BodySmall"
+                    android:layout_marginRight="10dp"/>
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/persistTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    fancy:fb_radius="4dp"
+                    fancy:fb_text="123"
+                    fancy:fb_textSize="22sp"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingRight="8dp"
+                    fancy:fb_defaultColor="@color/titleTextColor"
+                    fancy:fb_textColor="@color/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="天"
+                    android:textAppearance="@style/MyTextAppearance.BodySmall"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
