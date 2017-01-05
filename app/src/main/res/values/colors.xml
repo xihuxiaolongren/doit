@@ -25,5 +25,7 @@
 
     <color name="lightWhite">#DDDDDD</color>
 
+    <color name="lineChartBackgroundColor">#00FFFFFF</color>
+
 
 </resources>

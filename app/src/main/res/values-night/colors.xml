@@ -20,4 +20,6 @@
 
     <color name="lightWhite">#DDDDDD</color>
 
+    <color name="lineChartBackgroundColor">#80000000</color>
+
 </resources>

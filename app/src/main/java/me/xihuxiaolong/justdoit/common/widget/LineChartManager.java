@@ -37,13 +37,12 @@ public class LineChartManager {
      */
     public static void initSingleLineChart(Context context, LineChart mLineChart, List<Entry> xyValue) {
         int color = ContextCompat.getColor(context, R.color.titleTextColor);
-        int color1 = ContextCompat.getColor(context, R.color.colorPrimary);
         initDataStyle(context,mLineChart, xyValue.size());
         //设置折线的样式
         LineDataSet dataSet = new LineDataSet(xyValue, lineName);
         dataSet.setValueTextColor(color);
-        dataSet.setColors(color, color1);
-        dataSet.setCircleColors(color, color1);
+        dataSet.setColor(color);
+        dataSet.setCircleColor(color);
         dataSet.setCircleColorHole(ContextCompat.getColor(context, R.color.colorPrimary));
         dataSet.setDrawValues(true);
         dataSet.setValueFormatter(new IValueFormatter() {
@@ -89,16 +88,19 @@ public class LineChartManager {
      */
     private static void initDataStyle(Context context, LineChart mLineChart, final int size) {
         int color = ContextCompat.getColor(context, R.color.titleTextColor);
+        int color1 = ContextCompat.getColor(context, R.color.lineChartBackgroundColor);
         //设置图表是否支持触控操作
         mLineChart.setTouchEnabled(false);
         mLineChart.setScaleEnabled(false);
         mLineChart.getDescription().setEnabled(false);
+        mLineChart.setBackgroundColor(color1);
         //设置点击折线点时，显示其数值
 //        MyMakerView mv = new MyMakerView(context, R.layout.item_mark_layout);
 //        mLineChart.setMarkerView(mv);
         //设置折线的描述的样式（默认在图表的左下角）
         Legend title = mLineChart.getLegend();
         title.setForm(Legend.LegendForm.LINE);
+        title.setTextColor(color);
 //        title.setEnabled(false);
         //设置x轴的样式
         XAxis xAxis = mLineChart.getXAxis();
