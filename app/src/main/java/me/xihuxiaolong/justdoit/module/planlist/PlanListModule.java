@@ -4,10 +4,15 @@ import org.joda.time.DateTime;
 
 import dagger.Module;
 import dagger.Provides;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.RedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.repo.DbUtil;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.repo.PlanRepo;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataServiceImpl;
+import me.xihuxiaolong.justdoit.common.database.repo.RedoPlanRepo;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataServiceImpl;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataServiceImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,13 +37,18 @@ public class PlanListModule {
     }
 
     @Provides
-    IPlanDataSource providePlanDataSource() {
-        return new PlanDataSource();
+    PlanDataService providePlanDataService() {
+        return new PlanDataServiceImpl();
     }
 
     @Provides
-    IRedoPlanDataSource provideRedoPlanDataSource() {
-        return new RedoPlanDataSource();
+    TargetDataService provideTargetDataService() {
+        return new TargetDataServiceImpl();
+    }
+
+    @Provides
+    RedoPlanRepo provideRedoPlanDBService() {
+        return DbUtil.getRedoPlanRepo();
     }
 
 }

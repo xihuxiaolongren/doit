@@ -1,10 +1,9 @@
-package me.xihuxiaolong.justdoit.common.database.manager;
+package me.xihuxiaolong.justdoit.common.database.service;
 
 import java.util.List;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 
 
 /**
@@ -12,7 +11,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
  * User: xiaolong
  * Date: 16/8/8.
  */
-public interface IPlanDataSource {
+public interface PlanDataService {
 
     void deletePlanById(Long id);
 

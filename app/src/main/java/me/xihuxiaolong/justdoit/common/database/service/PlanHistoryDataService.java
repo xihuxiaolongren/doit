@@ -1,8 +1,7 @@
-package me.xihuxiaolong.justdoit.common.database.manager;
+package me.xihuxiaolong.justdoit.common.database.service;
 
 import java.util.List;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 
 
@@ -11,7 +10,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
  * User: xiaolong
  * Date: 16/8/8.
  */
-public interface IPlanHistoryDataSource {
+public interface PlanHistoryDataService {
 
     void addPlanDO(long dayTime, int type);
     void deletePlanDO(long dayTime, int type);

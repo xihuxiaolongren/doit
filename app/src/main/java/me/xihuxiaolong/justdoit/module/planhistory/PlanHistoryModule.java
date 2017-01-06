@@ -2,8 +2,8 @@ package me.xihuxiaolong.justdoit.module.planhistory;
 
 import dagger.Module;
 import dagger.Provides;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataServiceImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,8 +20,8 @@ public class PlanHistoryModule {
     }
 
     @Provides
-    IPlanDataSource providePlanDataSource() {
-        return new PlanDataSource();
+    PlanDataService providePlanDataSource() {
+        return new PlanDataServiceImpl();
     }
 
     @Provides

@@ -2,6 +2,7 @@ package me.xihuxiaolong.justdoit.common.database.localentity;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 
 import java.io.Serializable;
@@ -16,7 +17,7 @@ public class CacheDO implements Serializable{
 
     static final long serialVersionUID = -1L;
 
-    @Index(unique = true)
+    @Id
     private String key;
 
     private String value;

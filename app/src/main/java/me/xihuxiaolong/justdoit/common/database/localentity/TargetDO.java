@@ -44,7 +44,7 @@ public class TargetDO implements Serializable, MultiItemEntity {
     private List<RedoPlanDO> redoPlanDOList;
 
     @Transient
-    private List<PlanDO> punchList;
+    private List<PlanDO> planDOList;
 
     @Generated(hash = 1328217124)
     public TargetDO(String name, int type, Long createdTime, Long modifiedTime,
@@ -90,12 +90,12 @@ public class TargetDO implements Serializable, MultiItemEntity {
         this.redoPlanDOList = redoPlanDOList;
     }
 
-    public List<PlanDO> getPunchList() {
-        return punchList;
+    public List<PlanDO> getPlanDOList() {
+        return planDOList;
     }
 
-    public void setPunchList(List<PlanDO> punchList) {
-        this.punchList = punchList;
+    public void setPlanDOList(List<PlanDO> planDOList) {
+        this.planDOList = planDOList;
     }
 
     public String getHeaderImageUri() {

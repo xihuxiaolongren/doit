@@ -6,13 +6,18 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
+import me.xihuxiaolong.justdoit.common.database.localentity.PlanDODao;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.repo.PlanRepo;
+import me.xihuxiaolong.justdoit.common.database.repo.TargetRepo;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -27,10 +32,10 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
     String targetName;
 
     @Inject
-    IRedoPlanDataSource redoPlanDataSource;
+    PlanDataService planDataSource;
 
     @Inject
-    IPlanDataSource planDataSource;
+    TargetDataService targetDataService;
 
     TargetDO targetDO;
 
@@ -41,17 +46,24 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
 
     @Override
     public void loadTarget() {
-        targetDO = redoPlanDataSource.getTargetByName(targetName, true);
+        targetDO = targetDataService.getTargetByKey(targetName);
+        if(targetDO != null) {
+            targetDO.setPlanDOList(getPlanListByTarget());
+        }
         if (isViewAttached()) {
             getView().showTarget(targetDO);
         }
+    }
+
+    private List<PlanDO> getPlanListByTarget(){
+        return planDataSource.listPlanDOsByTargetName(targetName);
     }
 
     @Override
     public void updateTarget(String headerImageUri) {
         if (targetDO != null) {
             targetDO.setHeaderImageUri(headerImageUri);
-            redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+            targetDataService.insertOrReplaceTarget(targetDO);
             EventBus.getDefault().post(new Event.UpdateTarget(targetName));
             if (isViewAttached())
                 getView().updateTargetSuccess();
@@ -64,7 +76,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
             targetDO.setCustomTheme(customTheme);
             targetDO.setTextColor(textColor);
             targetDO.setThemeColor(themeColor);
-            redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+            targetDataService.insertOrReplaceTarget(targetDO);
             EventBus.getDefault().post(new Event.UpdateTarget(targetName));
             if (isViewAttached())
                 getView().updateTargetSuccess();
@@ -74,7 +86,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
     @Override
     public void deleteTarget() {
         if (targetName != null) {
-            redoPlanDataSource.deleteTargetByName(targetName);
+            targetDataService.deleteTargetByKey(targetName);
             EventBus.getDefault().post(new Event.DeleteTarget(targetName));
             if (isViewAttached())
                 getView().deleteTargetSuccess();

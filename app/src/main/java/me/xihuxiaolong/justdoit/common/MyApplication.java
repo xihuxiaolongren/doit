@@ -17,6 +17,7 @@ import me.xihuxiaolong.justdoit.common.dagger.component.AppComponent;
 import me.xihuxiaolong.justdoit.common.dagger.component.DaggerAppComponent;
 import me.xihuxiaolong.justdoit.common.dagger.module.AppModule;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.database.repo.DbCore;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import timber.log.Timber;
 
@@ -57,6 +58,9 @@ public class MyApplication extends Application {
         LeakCanary.install(this);
 
         ViewTarget.setTagId(R.id.glide_tag);
+
+        //数据库初始化
+        DbCore.init(this);
 
         //acra初始化
 //        ACRA.init(this);

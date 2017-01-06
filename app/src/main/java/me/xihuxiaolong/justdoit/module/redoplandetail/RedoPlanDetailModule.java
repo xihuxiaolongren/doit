@@ -3,8 +3,12 @@ package me.xihuxiaolong.justdoit.module.redoplandetail;
 import dagger.Module;
 import dagger.Provides;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.RedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.repo.DbUtil;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.repo.RedoPlanRepo;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataServiceImpl;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataServiceImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,8 +31,8 @@ public class RedoPlanDetailModule {
     }
 
     @Provides
-    IRedoPlanDataSource provideRedoPlanDataSource() {
-        return new RedoPlanDataSource();
+    RedoPlanDataService provideRedoPlanDataSource() {
+        return new RedoPlanDataServiceImpl();
     }
 
 }

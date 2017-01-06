@@ -34,6 +34,8 @@ public class PlanDO implements MultiItemEntity, Serializable{
 
     private int type;
 
+    private Long redoPlanId;
+
     private String title;
 
     private String content;
@@ -61,15 +63,17 @@ public class PlanDO implements MultiItemEntity, Serializable{
     @Transient
     private int tempRepeatmode;
 
-    @Generated(hash = 2119872504)
-    public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, String title,
-            String content, String tags, String linkAppName, String linkAppPackageName,
-            String picUrls, int startTime, int startHour, int startMinute, int endTime,
-            int endHour, int endMinute, long dayTime, int alarmStatus, String targetName) {
+    @Generated(hash = 32806420)
+    public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, Long redoPlanId,
+            String title, String content, String tags, String linkAppName,
+            String linkAppPackageName, String picUrls, int startTime, int startHour,
+            int startMinute, int endTime, int endHour, int endMinute, long dayTime,
+            int alarmStatus, String targetName) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
         this.type = type;
+        this.redoPlanId = redoPlanId;
         this.title = title;
         this.content = content;
         this.tags = tags;
@@ -255,5 +259,13 @@ public class PlanDO implements MultiItemEntity, Serializable{
 
     public void setTargetName(String targetName) {
         this.targetName = targetName;
+    }
+
+    public Long getRedoPlanId() {
+        return this.redoPlanId;
+    }
+
+    public void setRedoPlanId(Long redoPlanId) {
+        this.redoPlanId = redoPlanId;
     }
 }

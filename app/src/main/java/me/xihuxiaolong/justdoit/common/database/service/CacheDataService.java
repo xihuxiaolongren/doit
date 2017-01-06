@@ -1,8 +1,8 @@
-package me.xihuxiaolong.justdoit.common.database.manager;
+package me.xihuxiaolong.justdoit.common.database.service;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.CacheDO;
 
-public interface ICacheDataSource {
+public interface CacheDataService {
 
 	void deleteCacheByKey(String key);
 

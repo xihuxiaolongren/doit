@@ -6,8 +6,8 @@ import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataServiceImpl;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,8 +45,8 @@ public class EditAlertModule {
     }
 
     @Provides
-    IPlanDataSource providePlanDataSource() {
-        return new PlanDataSource();
+    PlanDataService providePlanDataSource() {
+        return new PlanDataServiceImpl();
     }
 
 }

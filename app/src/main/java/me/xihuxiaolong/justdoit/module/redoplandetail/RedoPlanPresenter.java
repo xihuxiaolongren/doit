@@ -9,7 +9,8 @@ import org.greenrobot.eventbus.EventBus;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.repo.RedoPlanRepo;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -24,7 +25,7 @@ public class RedoPlanPresenter extends MvpBasePresenter<RedoPlanContract.IView> 
     RedoPlanDO redoPlanDO;
 
     @Inject
-    IRedoPlanDataSource redoPlanDataSource;
+    RedoPlanDataService redoPlanDataService;
 
     @Inject
     public RedoPlanPresenter() {
@@ -32,7 +33,6 @@ public class RedoPlanPresenter extends MvpBasePresenter<RedoPlanContract.IView> 
 
     @Override
     public void loadRedoPlan() {
-//        redoPlanDO = redoPlanDataSource.getRedoPlanById(redoPlanDO.getId());
         if (isViewAttached()) {
             getView().showRedoPlan(redoPlanDO);
         }
@@ -40,7 +40,7 @@ public class RedoPlanPresenter extends MvpBasePresenter<RedoPlanContract.IView> 
 
     @Override
     public void removeRedoPlan() {
-        redoPlanDataSource.deleteRedoPlanById(redoPlanDO.getId());
+        redoPlanDataService.deleteRedoPlanById(redoPlanDO.getId());
         if(!TextUtils.isEmpty(redoPlanDO.getTargetName()))
             EventBus.getDefault().post(new Event.UpdateTarget(redoPlanDO.getTargetName()));
         if(isViewAttached())

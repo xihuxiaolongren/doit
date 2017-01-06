@@ -108,8 +108,8 @@ public class RedoPlanListFragment extends BaseMvpFragment<RedoPlanListContract.I
     Toolbar toolbar;
     @BindView(R.id.recycler_background)
     View recyclerBackground;
-    @BindView(R.id.day_night_background_view)
-    DayNightBackgroundView dayNightBackgroundView;
+//    @BindView(R.id.day_night_background_view)
+//    DayNightBackgroundView dayNightBackgroundView;
     @BindView(R.id.headerIV)
     ImageView headerIV;
     @BindView(R.id.shadowFrame)

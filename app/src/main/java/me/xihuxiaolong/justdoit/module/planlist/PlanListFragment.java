@@ -654,6 +654,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onResume() {
         super.onResume();
+        //TODO 判断当前页面的日期是否等于当前日期，不是则重新加载当前页面
     }
 
     @Override

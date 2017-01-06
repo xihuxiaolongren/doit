@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.CacheDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
-import me.xihuxiaolong.justdoit.common.database.manager.CacheDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.ICacheDataSource;
+import me.xihuxiaolong.justdoit.common.database.repo.CacheRepo;
+import me.xihuxiaolong.justdoit.common.database.repo.DbUtil;
 
 public class CacheService implements ICacheService {
 
@@ -25,20 +25,25 @@ public class CacheService implements ICacheService {
 
 	private static Gson gson = new Gson();
 
-	private ICacheDataSource cacheDataSource;
+	private CacheRepo cacheRepo;
+
+//	private ICacheDataSource cacheDataSource;
 
 	public CacheService(){
-		cacheDataSource = new CacheDataSource();
+//		cacheDataSource = new CacheDataSource();
+		cacheRepo = DbUtil.getCacheRepo();
 	}
 
 	@Override
 	public void delete(String key) {
-		cacheDataSource.deleteCacheByKey(key);
+		cacheRepo.deleteByKey(key);
+//		cacheDataSource.deleteCacheByKey(key);
 	}
 
 	@Override
 	public String get(String key) {
-		CacheDO cacheDO = cacheDataSource.getCacheByKey(key);
+		CacheDO cacheDO = cacheRepo.query(key);
+//		CacheDO cacheDO = cacheDataSource.getCacheByKey(key);
 		if(cacheDO == null)
 			return null;
 		if(cacheDO.getExpire() != -1 && ((Math.abs(System.currentTimeMillis() - cacheDO.getCreateTime())) / 1000) - cacheDO.getExpire() > 0){
@@ -55,11 +60,13 @@ public class CacheService implements ICacheService {
 	}
 
 	public long put(String key, Object value) {
-		return cacheDataSource.insertOrReplaceCache(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), -1));
+		return cacheRepo.saveOrUpdate(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), -1));
+//		return cacheDataSource.insertOrReplaceCache(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), -1));
 	}
 
 	public long put(String key, Object value, int expireTime) {
-		return cacheDataSource.insertOrReplaceCache(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), expireTime));
+		return cacheRepo.saveOrUpdate(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), expireTime));
+//		return cacheDataSource.insertOrReplaceCache(new CacheDO(key, gson.toJson(value), System.currentTimeMillis(), expireTime));
 	}
 
 }

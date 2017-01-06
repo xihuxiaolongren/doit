@@ -13,9 +13,12 @@ import javax.inject.Inject;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanHistoryDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.localentity.TargetDODao;
+import me.xihuxiaolong.justdoit.common.database.repo.BaseRepo;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.PlanHistoryDataService;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -27,13 +30,13 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IView> implements TargetListContract.IPresenter {
 
     @Inject
-    IRedoPlanDataSource redoPlanDataSource;
+    PlanDataService planDataService;
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanHistoryDataService planHistoryDataService;
 
     @Inject
-    IPlanHistoryDataSource planHistoryDataSource;
+    TargetDataService targetDataService;
 
     @Inject
     public TargetListPresenter() {
@@ -42,7 +45,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
 
     @Override
     public void loadTargets() {
-        List<TargetDO> targetDOs = redoPlanDataSource.listAllTarget(true);
+        List<TargetDO> targetDOs = targetDataService.listAllTargets();
         if (isViewAttached()) {
             getView().showTargets(targetDOs);
         }
@@ -50,11 +53,12 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
 
     @Override
     public void loadStatistics() {
-        List<PlanHistoryDO> planHistoryDOs = planHistoryDataSource.listPlanHistoryDOs(DateTime.now().minusDays(7).withTimeAtStartOfDay().getMillis(),
-                DateTime.now().withTimeAtStartOfDay().getMillis());
-        List<TargetDO> targetDOs = redoPlanDataSource.listNormalTarget();
+        List<PlanHistoryDO> planHistoryDOs = planHistoryDataService
+                .listPlanHistoryDOs(DateTime.now().minusDays(7).withTimeAtStartOfDay().getMillis(),
+                        DateTime.now().withTimeAtStartOfDay().getMillis());
+        List<TargetDO> normalTargetDOs = targetDataService.listAllNormalTargets();
         if (isViewAttached()) {
-            getView().showStatistics(planHistoryDOs, targetDOs);
+            getView().showStatistics(planHistoryDOs, normalTargetDOs);
         }
     }
 
@@ -64,7 +68,9 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         targetDO.setName(name);
         targetDO.setType(type);
         targetDO.setEndTime(endTime);
-        redoPlanDataSource.insertOrReplaceTargetDO(targetDO);
+        targetDO.setCreatedTime(System.currentTimeMillis());
+        targetDO.setModifiedTime(System.currentTimeMillis());
+        targetDataService.insertOrReplaceTarget(targetDO);
         if (isViewAttached()) {
             getView().createTargetSuccess(targetDO);
         }
@@ -84,7 +90,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         punch.setTargetName(targetName);
 
         punch.setDayTime(dateTime.withTimeAtStartOfDay().getMillis());
-        long punchId = planDataSource.insertOrReplacePlanDO(punch);
+        long punchId = planDataService.insertOrReplacePlanDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddPlan(punch));
         loadTargets();

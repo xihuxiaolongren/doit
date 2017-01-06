@@ -5,14 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -74,7 +71,6 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
@@ -609,7 +605,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
                 }
                 updateTheme();
             }
-            cardPlanListAdapter.setNewData(targetDO.getPunchList());
+            cardPlanListAdapter.setNewData(targetDO.getPlanDOList());
         }
     }
 

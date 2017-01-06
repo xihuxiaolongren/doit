@@ -21,7 +21,7 @@ import java.util.List;
 
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataServiceImpl;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.module.main.MainActivity;
@@ -80,7 +80,7 @@ public class PlanService extends Service {
 
     //设置闹钟&通知栏
     private void setAlarmForPlan() {
-        PlanDataSource planDataSource = new PlanDataSource();
+        PlanDataServiceImpl planDataSource = new PlanDataServiceImpl();
         List<PlanDO> list = planDataSource.listPlanDOsByOneDay(DateTime.now().withTimeAtStartOfDay().getMillis());
         for (PlanDO planDO : list) {
             int cMinute = DateTime.now().minuteOfDay().get();
@@ -100,7 +100,7 @@ public class PlanService extends Service {
     private void setAlarm(DateTime dateTime, PlanDO planDO) {
         //Create a new PendingIntent and add it to the AlarmManager
         planDO.setAlarmStatus(1);
-        PlanDataSource planDataSource = new PlanDataSource();
+        PlanDataServiceImpl planDataSource = new PlanDataServiceImpl();
         planDataSource.insertOrReplacePlanDO(planDO);
         Intent intent = new Intent(getApplicationContext(), PlanService.class);
         intent.putExtra("planDO", planDO);
@@ -115,7 +115,7 @@ public class PlanService extends Service {
 
     //闹钟响起
     private void processAlarmOpen(PlanDO planDO) {
-        PlanDataSource planDataSource = new PlanDataSource();
+        PlanDataServiceImpl planDataSource = new PlanDataServiceImpl();
         planDO.setAlarmStatus(2);
         planDataSource.insertOrReplacePlanDO(planDO);
         Logger.e("TAG sendNotification");
