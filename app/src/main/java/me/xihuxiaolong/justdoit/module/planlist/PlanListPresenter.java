@@ -6,6 +6,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,8 +15,8 @@ import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 
@@ -25,16 +26,16 @@ import me.xihuxiaolong.library.utils.CollectionUtils;
  * Date: 16/9/27.
  */
 
-public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> implements PlanListContract.IPresenter{
+public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> implements PlanListContract.IPresenter {
 
     @Inject
     long dayTime;
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     @Inject
-    IRedoPlanDataSource redoPlanDataSource;
+    TargetDataService targetDataService;
 
     @Inject
     ICacheService cacheService;
@@ -46,11 +47,20 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void loadPlans() {
-        List<PlanDO> planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
-        if(CollectionUtils.isEmpty(planDOs)){
-            int count = planDataSource.createOneDayPlanDOs(dayTime);
-            if(count > 0)
-                planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
+        List<PlanDO> planDOs = new ArrayList<>();
+        if (dayTime == DateTime.now().withTimeAtStartOfDay().getMillis()) {
+            planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
+            if (CollectionUtils.isEmpty(planDOs)) {       //为空，根据redoPlan创建
+                int count = planDataSource.createOneDayPlanDOs(dayTime);
+                if (count > 0)
+                    planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
+            }
+        } else if (dayTime > DateTime.now().withTimeAtStartOfDay().getMillis()) {
+            planDataSource.createOneDayPlanDOs(dayTime);
+            planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
+        } else {
+            planDOs = planDataSource.listPlanDOsByOneDay(dayTime);
+
         }
         if (isViewAttached()) {
             getView().showPlans(planDOs);
@@ -59,20 +69,20 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void loadDayInfo() {
-        if(!DateTime.now().withTimeAtStartOfDay().equals(new DateTime(dayTime).withTimeAtStartOfDay()) && isViewAttached())
+        if (!DateTime.now().withTimeAtStartOfDay().equals(new DateTime(dayTime).withTimeAtStartOfDay()) && isViewAttached())
             getView().showOtherDayUI();
     }
 
     @Override
     public void loadUserSettings() {
         UserSettings userSettings = cacheService.getSettings();
-        if(userSettings != null && isViewAttached()){
+        if (userSettings != null && isViewAttached()) {
             int hour = DateTime.now().getHourOfDay();
-            if(hour > 6 && hour < 10){
+            if (hour > 6 && hour < 10) {
                 getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanStart());
-            }else if(hour > 18 && hour < 24){
+            } else if (hour > 18 && hour < 24) {
                 getView().showSignature(userSettings.getMotto(), userSettings.getMottoPlanEnd());
-            }else
+            } else
                 getView().showSignature(userSettings.getMotto(), null);
             getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime(dayTime));
         }
@@ -80,8 +90,8 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void startAddPunch() {
-        List<TargetDO> targetDOs = redoPlanDataSource.listAllPunchTarget(false);
-        if(isViewAttached())
+        List<TargetDO> targetDOs = targetDataService.listAllPunchTargets();
+        if (isViewAttached())
             getView().showPunchDialog(targetDOs);
     }
 
@@ -123,19 +133,19 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Subscribe
     public void onEvent(Event.AddPlan addPlanEvent) {
-        if(dayTime == addPlanEvent.plan.getDayTime())
+        if (dayTime == addPlanEvent.plan.getDayTime())
             loadPlans();
     }
 
     @Subscribe
     public void onEvent(Event.UpdatePlan updatePlanEvent) {
-        if(dayTime == updatePlanEvent.plan.getDayTime())
+        if (dayTime == updatePlanEvent.plan.getDayTime())
             loadPlans();
     }
 
     @Subscribe
     public void onEvent(Event.DeletePlan deletePlanEvent) {
-        if(dayTime == deletePlanEvent.plan.getDayTime())
+        if (dayTime == deletePlanEvent.plan.getDayTime())
             loadPlans();
     }
 

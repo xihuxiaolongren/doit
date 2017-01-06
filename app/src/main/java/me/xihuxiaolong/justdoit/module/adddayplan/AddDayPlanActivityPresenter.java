@@ -12,7 +12,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 
@@ -28,7 +28,7 @@ public class AddDayPlanActivityPresenter extends MvpBasePresenter<AddDayPlanActi
     long dayTime;
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     @Inject
     public AddDayPlanActivityPresenter() {EventBus.getDefault().register(this);}

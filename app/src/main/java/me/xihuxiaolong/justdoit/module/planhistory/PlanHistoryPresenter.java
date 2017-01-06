@@ -4,14 +4,13 @@ import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.joda.time.DateTime;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -26,7 +25,7 @@ public class PlanHistoryPresenter extends MvpBasePresenter<PlanHistoryContract.I
     long dayTime;
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     @Inject
     public PlanHistoryPresenter() {

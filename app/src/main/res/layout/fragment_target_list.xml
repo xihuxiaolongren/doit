@@ -42,6 +42,17 @@
         android:layout_marginRight="@dimen/text_margin"
         android:gravity="right" />
 
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/menu_target_1"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorDarkAccent"
+        fab:fab_size="normal" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -118,16 +129,5 @@
                 android:textSize="@dimen/calendar_month_year_size" />
         </LinearLayout>
     </LinearLayout>
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/menu_target_1"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorPressed="@color/colorDarkAccent"
-        fab:fab_size="normal" />
 
 </RelativeLayout>

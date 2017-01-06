@@ -70,6 +70,17 @@
             android:paddingBottom="50dp" />
     </FrameLayout>
 
+    <com.github.clans.fab.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/menu_punch_normal_white"
+        fab:fab_colorNormal="@color/colorAccent"
+        fab:fab_colorPressed="@color/colorDarkAccent"
+        fab:fab_size="normal" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -86,16 +97,5 @@
         android:textColor="@color/titleTextColor"
         android:textSize="@dimen/title_size"
         android:transitionName="targetTitle" />
-
-    <com.github.clans.fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/menu_punch_normal_white"
-        fab:fab_colorNormal="@color/colorAccent"
-        fab:fab_colorPressed="@color/colorDarkAccent"
-        fab:fab_size="normal" />
 
 </RelativeLayout>

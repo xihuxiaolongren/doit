@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -22,7 +22,7 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 public class EditPhotoPresenter extends MvpBasePresenter<EditPhotoContract.IView> implements EditPhotoContract.IPresenter {
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     @Inject @Nullable
     String targetName;

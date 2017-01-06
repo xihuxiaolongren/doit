@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,7 +20,7 @@ import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 public class PlanHistoryActivityPresenter extends MvpBasePresenter<PlanHistoryActivityContract.IView> implements PlanHistoryActivityContract.IPresenter{
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     List<DateTime> dayTimes;
 

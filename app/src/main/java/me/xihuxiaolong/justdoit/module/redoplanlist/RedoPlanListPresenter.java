@@ -4,20 +4,15 @@ import android.support.annotation.Nullable;
 
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.joda.time.DateTime;
-
 import java.util.List;
 
 import javax.inject.Inject;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.justdoit.common.event.Event;
+import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
+import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
+import me.xihuxiaolong.justdoit.common.database.repo.RedoPlanRepo;
+import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,10 +26,10 @@ public class RedoPlanListPresenter extends MvpBasePresenter<RedoPlanListContract
     String targetName;
 
     @Inject
-    IRedoPlanDataSource redoPlanDataSource;
+    RedoPlanDataService redoPlanDataSource;
 
     @Inject
-    IPlanDataSource planDataSource;
+    PlanDataService planDataSource;
 
     List<RedoPlanDO> redoPlanDOs;
 

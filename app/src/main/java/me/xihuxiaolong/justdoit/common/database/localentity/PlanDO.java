@@ -34,6 +34,8 @@ public class PlanDO implements MultiItemEntity, Serializable{
 
     private int type;
 
+    private Long redoPlanId;
+
     private String title;
 
     private String content;
@@ -73,6 +75,7 @@ public class PlanDO implements MultiItemEntity, Serializable{
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
         this.type = type;
+        this.redoPlanId = redoPlanId;
         this.title = title;
         this.content = content;
         this.tags = tags;
@@ -268,5 +271,11 @@ public class PlanDO implements MultiItemEntity, Serializable{
         this.targetName = targetName;
     }
 
+    public Long getRedoPlanId() {
+        return this.redoPlanId;
+    }
 
+    public void setRedoPlanId(Long redoPlanId) {
+        this.redoPlanId = redoPlanId;
+    }
 }

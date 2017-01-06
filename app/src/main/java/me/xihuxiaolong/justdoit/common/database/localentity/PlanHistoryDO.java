@@ -45,9 +45,6 @@ public class PlanHistoryDO implements Serializable{
     public long getDayTime() {
         return this.dayTime;
     }
-    public void setDayTime(long dayTime) {
-        this.dayTime = dayTime;
-    }
     public int getPlanCount() {
         return this.planCount;
     }

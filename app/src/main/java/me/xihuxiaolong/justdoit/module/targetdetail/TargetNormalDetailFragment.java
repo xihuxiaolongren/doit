@@ -540,7 +540,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
                 }
                 updateTheme();
             }
-            cardPlanListAdapter.setNewData(targetDO.getPunchList());
+            cardPlanListAdapter.setNewData(targetDO.getPlanDOList());
         }
     }
 

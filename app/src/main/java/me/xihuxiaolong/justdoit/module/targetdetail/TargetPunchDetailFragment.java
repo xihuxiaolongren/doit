@@ -545,7 +545,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                 }
                 updateTheme();
             }
-            punchAdapter.setNewData(targetDO.getPunchList());
+            punchAdapter.setNewData(targetDO.getPlanDOList());
         }
     }
 
