@@ -253,9 +253,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         } else {
             inflater.inflate(R.menu.menu_frament_planlist_other_day, menu);
         }
-//        addMenuItem = menu.findItem(R.id.action_add);
-//        addMenuItem.setVisible(!mFabIsShown);
-//        addMenuItem.setEnabled(!mFabIsShown);
+        addMenuItem = menu.findItem(R.id.action_add);
+        addMenuItem.setVisible(!mFabIsShown);
+        addMenuItem.setEnabled(!mFabIsShown);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
