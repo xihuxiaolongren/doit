@@ -148,7 +148,7 @@ public class PlanDataSource extends BaseDataSource implements IPlanDataSource {
         SQLiteDatabase database = helper.getWritableDatabase();
         DaoSession daoSession = new DaoMaster(database).newSession();
 
-        List<PlanDO> planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.TargetName.eq(targetName)).orderDesc(PlanDODao.Properties.StartTime).list();
+        List<PlanDO> planDOs = daoSession.getPlanDODao().queryBuilder().where(PlanDODao.Properties.TargetName.eq(targetName)).orderDesc(PlanDODao.Properties.CreatedTime).list();
 
         clear(daoSession, database);
         return planDOs;

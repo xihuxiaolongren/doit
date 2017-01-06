@@ -239,7 +239,6 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
             DateTime startTime = new DateTime(punch.getDayTime()).withTime(punch.getStartHour(), punch.getStartMinute(), 0, 0);
             holder.setBackgroundColor(R.id.rootView, vibrant)
                     .setTextColor(R.id.timeTV, textColor)
-                    .setTextColor(R.id.dateTV, textColor)
                     .setTextColor(R.id.contentTV, textColor)
                     .setText(R.id.timeTV, startTime.toString(builder))
                     .setText(R.id.contentTV, punch.getContent())

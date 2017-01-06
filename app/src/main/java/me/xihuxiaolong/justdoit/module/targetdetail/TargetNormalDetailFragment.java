@@ -5,14 +5,11 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,9 +43,6 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,9 +57,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
@@ -74,7 +66,6 @@ import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
@@ -137,9 +128,8 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
 
     Drawable shadow;
 
-    int vibrant, titleColor, textColor;
+    int vibrant, textColor;
 
-    //    RedoPlanAdapter redoPlanAdapter;
     CardPlanListAdapter cardPlanListAdapter;
 
     ScrollListener scrollListener;
@@ -205,7 +195,6 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
         mActionBarSize = layoutParams.height - mStatusBarSize;
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
-//        titleColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
         textColor = ContextCompat.getColor(getContext(), R.color.titleTextColor);
 
         titleTv.setText(targetName);
@@ -218,8 +207,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-//        redoPlanAdapter = new RedoPlanAdapter(R.layout.item_redo_plan_detail, new ArrayList<RedoPlanDO>());
-        cardPlanListAdapter = new CardPlanListAdapter(getContext(), new ArrayList<PlanDO>(), null);
+        cardPlanListAdapter = new CardPlanListAdapter(getContext(), new ArrayList<PlanDO>(), null, textColor, vibrant);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_target_detail_header, recyclerView, false);
         cardPlanListAdapter.addHeaderView(headerView);
         recyclerView.setAdapter(cardPlanListAdapter);
@@ -227,65 +215,14 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
         recyclerView.addOnItemTouchListener(new OnItemClickListener() {
             @Override
             public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                RedoPlanDO redoPlanDO = ((RedoPlanDO) adapter.getItem(position));
-//                Intent intent = new Intent(getActivity(), RedoPlanDetailActivity.class).putExtra(RedoPlanDetailActivity.ARG_REDO_PLAN, redoPlanDO)
-//                        .putExtra("vibrant", vibrant).putExtra("textColor", textColor);
-//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//                    View view1 = view.findViewById(R.id.rootView);
-//                    View view2 = view.findViewById(R.id.title_tv);
-//                    View view3 = view.findViewById(R.id.persist_tv);
-//                    View view4 = view.findViewById(R.id.redo_tv);
-//                    View view5 = view.findViewById(R.id.time_tv);
-//                    View view6 = view.findViewById(R.id.typeIV);
-//                    Pair<View, String> p1 = Pair.create(view1, view1.getTransitionName());
-//                    Pair<View, String> p2 = Pair.create(view2, view2.getTransitionName());
-//                    Pair<View, String> p3 = Pair.create(view3, view3.getTransitionName());
-//                    Pair<View, String> p4 = Pair.create(view4, view4.getTransitionName());
-//                    Pair<View, String> p5 = Pair.create(view5, view5.getTransitionName());
-//                    Pair<View, String> p6 = Pair.create(view6, view6.getTransitionName());
-//                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), p1, p2, p3, p4, p5, p6);
-//                    startActivity(intent, options.toBundle());
-//                } else {
-//                    startActivity(intent);
-//                }
             }
         });
         return view;
     }
 
-    class RedoPlanAdapter extends BaseQuickAdapter<RedoPlanDO, BaseViewHolder> {
-
-        public RedoPlanAdapter(int layoutId, List<RedoPlanDO> datas) {
-            super(layoutId, datas);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder holder, RedoPlanDO redoPlanDO) {
-            DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-            DateTime startTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getStartHour(), redoPlanDO.getStartMinute(), 0, 0);
-            DateTime endTime = new DateTime(redoPlanDO.getDayTime()).withTime(redoPlanDO.getEndHour(), redoPlanDO.getEndMinute(), 0, 0);
-            holder.setBackgroundColor(R.id.rootView, vibrant)
-                    .setTextColor(R.id.title_tv, textColor)
-                    .setTextColor(R.id.persist_tv, textColor)
-                    .setTextColor(R.id.redo_tv, textColor)
-                    .setTextColor(R.id.time_tv, textColor)
-                    .setText(R.id.title_tv, redoPlanDO.getContent())
-                    .setText(R.id.persist_tv, "已持续 " + Days.daysBetween(new DateTime(redoPlanDO.getCreatedTime()), DateTime.now()).getDays() + " 天")
-                    .setText(R.id.redo_tv, BusinessUtils.repeatModeStr(redoPlanDO.getRepeatMode()));
-            if (PlanDO.TYPE_PLAN == redoPlanDO.getPlanType()) {
-                holder.setText(R.id.time_tv, startTime.toString(builder) + " - " + endTime.toString(builder));
-                holder.setImageResource(R.id.typeIV, R.drawable.icon_plan);
-            } else if (PlanDO.TYPE_ALERT == redoPlanDO.getPlanType()) {
-                holder.setText(R.id.time_tv, startTime.toString(builder));
-                holder.setImageResource(R.id.typeIV, R.drawable.icon_alert);
-            }
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        Icepick.saveInstanceState(this, outState);
     }
 
     @Override
@@ -303,7 +240,6 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-//                getActivity().supportFinishAfterTransition();
                 getActivity().onBackPressed();
                 return true;
             case R.id.action_set_color:
@@ -368,15 +304,12 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
     }
 
     private void updateTheme() {
-//        titleTv.setTextColor(textColor);
-//        titleTv.setShadowLayer(0, 0, 0, vibrant);
-//        float alpha1 = Math.min(1, (float) mSCrollY / (mFlexibleRecyclerOffset - 20));
-//        toolbar.setBackgroundColor(ScrollUtils.getColorWithAlpha(alpha1, vibrant));
-//        setAllMenuColor(menu, toolbar, textColor);
         dayNightBackgroundView.setRootBackgroundColor(vibrant);
         fab.setMenuButtonColorNormal(vibrant);
         fab.setMenuButtonColorPressed(vibrant);
         fab.getMenuIconView().setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        cardPlanListAdapter.setTextColor(textColor);
+        cardPlanListAdapter.setVibrant(vibrant);
         cardPlanListAdapter.notifyDataSetChanged();
     }
 
@@ -487,8 +420,6 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
         } else {
             showFab();
         }
-
-//        ViewHelper.setTranslationY(fbsLl, -scrollY);
 
         // Translate toolbar
         float alpha1 = Math.min(1, (float) scrollY / (mFlexibleRecyclerOffset - 20));

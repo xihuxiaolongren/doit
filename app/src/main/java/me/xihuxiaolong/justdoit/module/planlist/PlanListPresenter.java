@@ -93,7 +93,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         punch.setContent(content);
         punch.setStartHour(dateTime.getHourOfDay());
         punch.setStartMinute(dateTime.getMinuteOfHour());
-        punch.setStartTime(dateTime.getMillisOfDay());
+        punch.setStartTime(dateTime.getMinuteOfDay());
         punch.setPicUrls(pictures);
         punch.setTargetName(targetName);
 

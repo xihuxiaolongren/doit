@@ -35,6 +35,7 @@ import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ThirdAppUtils;
 import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewHolder> {
 
@@ -57,6 +58,14 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
         super(datas);
         init(context, planListOnClickListener);
         this.textColor = textColor;
+        this.vibrant = vibrant;
+    }
+
+    public void setTextColor(int textColor){
+        this.textColor = textColor;
+    }
+
+    public void setVibrant(int vibrant){
         this.vibrant = vibrant;
     }
 
@@ -125,12 +134,19 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         holder.setBackgroundColor(R.id.rootView, vibrant)
                 .setTextColor(R.id.timeTV, textColor)
-                .setTextColor(R.id.dateTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
+        if(planDO.getTempDayTime() == null){
+            holder.setVisible(R.id.timeSectionFB, false);
+        }else {
+            DateTime dateTime = new DateTime(planDO.getDayTime());
+            holder.setVisible(R.id.timeSectionFB, true);
+            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
+            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
+        }
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);
@@ -142,12 +158,19 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         holder.setBackgroundColor(R.id.rootView, vibrant)
                 .setTextColor(R.id.timeTV, textColor)
-                .setTextColor(R.id.dateTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
+        if(planDO.getTempDayTime() == null){
+            holder.setVisible(R.id.timeSectionFB, false);
+        }else {
+            DateTime dateTime = new DateTime(planDO.getDayTime());
+            holder.setVisible(R.id.timeSectionFB, true);
+            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
+            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
+        }
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);
@@ -159,12 +182,19 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         holder.setBackgroundColor(R.id.rootView, vibrant)
                 .setTextColor(R.id.timeTV, textColor)
-                .setTextColor(R.id.dateTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
+        if(planDO.getTempDayTime() == null){
+            holder.setVisible(R.id.timeSectionFB, false);
+        }else {
+            DateTime dateTime = new DateTime(planDO.getDayTime());
+            holder.setVisible(R.id.timeSectionFB, true);
+            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
+            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
+        }
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);
@@ -199,14 +229,22 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     private void convertPlan(BaseViewHolder holder, PlanDO planDO) {
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
+        DateTime endTime = new DateTime(planDO.getDayTime()).withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
         holder.setBackgroundColor(R.id.rootView, vibrant)
                 .setTextColor(R.id.timeTV, textColor)
-                .setTextColor(R.id.dateTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
-                .setText(R.id.timeTV, startTime.toString(builder))
+                .setText(R.id.timeTV, startTime.toString(builder) + " - " + endTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
+        if(planDO.getTempDayTime() == null){
+            holder.setVisible(R.id.timeSectionFB, false);
+        }else {
+            DateTime dateTime = new DateTime(planDO.getDayTime());
+            holder.setVisible(R.id.timeSectionFB, true);
+            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
+            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
+        }
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);

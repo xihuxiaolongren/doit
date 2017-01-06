@@ -12,7 +12,6 @@ import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.manager.IPlanDataSource;
 import me.xihuxiaolong.justdoit.common.database.manager.IRedoPlanDataSource;
-import me.xihuxiaolong.justdoit.common.database.manager.PlanDataSource;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -42,6 +41,13 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
     @Override
     public void loadTarget() {
         targetDO = redoPlanDataSource.getTargetByName(targetName, true);
+        long currentDayTime = 0;
+        for(PlanDO planDO : targetDO.getPunchList()){
+            if(currentDayTime != planDO.getDayTime()){
+                currentDayTime = planDO.getDayTime();
+                planDO.setTempDayTime(currentDayTime);
+            }
+        }
         if (isViewAttached()) {
             getView().showTarget(targetDO);
         }
@@ -89,7 +95,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
         punch.setContent(content);
         punch.setStartHour(dateTime.getHourOfDay());
         punch.setStartMinute(dateTime.getMinuteOfHour());
-        punch.setStartTime(dateTime.getMillisOfDay());
+        punch.setStartTime(dateTime.getMinuteOfDay());
         punch.setPicUrls(pictures);
         punch.setTargetName(targetName);
 

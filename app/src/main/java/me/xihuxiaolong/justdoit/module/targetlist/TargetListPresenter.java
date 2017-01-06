@@ -79,7 +79,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         punch.setContent(content);
         punch.setStartHour(dateTime.getHourOfDay());
         punch.setStartMinute(dateTime.getMinuteOfHour());
-        punch.setStartTime(dateTime.getMillisOfDay());
+        punch.setStartTime(dateTime.getMinuteOfDay());
         punch.setPicUrls(pictures);
         punch.setTargetName(targetName);
 

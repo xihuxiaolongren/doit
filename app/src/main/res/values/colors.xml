@@ -27,5 +27,7 @@
 
     <color name="lineChartBackgroundColor">#00FFFFFF</color>
 
+    <color name="semi_black_transparent">#80000000</color>
+
 
 </resources>
