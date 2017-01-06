@@ -253,8 +253,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         } else {
             inflater.inflate(R.menu.menu_frament_planlist_other_day, menu);
         }
-        addMenuItem = menu.findItem(R.id.action_add);
-        addMenuItem.setVisible(!mFabIsShown);
+//        addMenuItem = menu.findItem(R.id.action_add);
+//        addMenuItem.setVisible(!mFabIsShown);
+//        addMenuItem.setEnabled(!mFabIsShown);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -517,6 +518,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     private void showFab() {
         if (!mFabIsShown) {
+//            fab.setVisibility(View.VISIBLE);
             for (int i = 0; i < fab.getChildCount(); ++i) {
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(1).scaleY(1).setDuration(200).start();
@@ -532,6 +534,12 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).cancel();
                 ViewPropertyAnimator.animate(fab.getChildAt(i)).scaleX(0).scaleY(0).setDuration(200).start();
             }
+//            fab.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    fab.setVisibility(View.GONE);
+//                }
+//            }, 300);
             getActivity().invalidateOptionsMenu();
             mFabIsShown = false;
         }

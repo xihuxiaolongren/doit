@@ -29,26 +29,14 @@
         android:orderInCategory="2"
         android:title="@string/action_history"
         app:showAsAction="ifRoom" />
-    <!--<item-->
-        <!--android:id="@+id/action_night"-->
-        <!--android:icon="@drawable/menu_night"-->
-        <!--android:orderInCategory="3"-->
-        <!--android:title="@string/action_night"-->
-        <!--app:showAsAction="ifRoom" />-->
-    <!--<item-->
-        <!--android:id="@+id/action_day"-->
-        <!--android:icon="@drawable/menu_day"-->
-        <!--android:orderInCategory="3"-->
-        <!--android:title="@string/action_day"-->
-        <!--app:showAsAction="ifRoom" />-->
     <item
         android:id="@+id/action_add_tomorrow_plan"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:title="@string/action_add_tomorrow_plan"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="5"
+        android:orderInCategory="4"
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item
