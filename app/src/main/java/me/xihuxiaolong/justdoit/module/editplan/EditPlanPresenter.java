@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
+import org.joda.time.DateTime;
 
 import java.util.LinkedHashSet;
 
@@ -59,10 +60,10 @@ public class EditPlanPresenter extends MvpBasePresenter<EditPlanContract.IView> 
         plan.setContent(content);
         plan.setStartHour(startHour);
         plan.setStartMinute(startMinute);
-        plan.setStartTime(startHour * 60 + startMinute);
+        plan.setStartTime(DateTime.now().withTimeAtStartOfDay().plusHours(startHour).plusMinutes(startMinute).getMillis());
         plan.setEndHour(endHour);
         plan.setEndMinute(endMinute);
-        plan.setEndTime(endHour * 60 + endMinute);
+        plan.setStartTime(DateTime.now().withTimeAtStartOfDay().plusHours(endHour).plusMinutes(endMinute).getMillis());
         plan.setTags(tags);
         plan.setLinkAppName(linkAppName);
         plan.setLinkAppPackageName(linkAppPackageName);

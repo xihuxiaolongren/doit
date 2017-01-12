@@ -39,7 +39,7 @@ public class EditPhotoPresenter extends MvpBasePresenter<EditPhotoContract.IView
         photo.setContent(content);
         photo.setStartHour(dateTime.getHourOfDay());
         photo.setStartMinute(dateTime.getMinuteOfHour());
-        photo.setStartTime(dateTime.getMinuteOfDay());
+        photo.setStartTime(dateTime.getMillis());
         photo.setPicUrls(pictures);
         photo.setTargetName(targetName);
 

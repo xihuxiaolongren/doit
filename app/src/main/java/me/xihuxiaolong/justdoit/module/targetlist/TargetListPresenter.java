@@ -13,11 +13,8 @@ import javax.inject.Inject;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDODao;
-import me.xihuxiaolong.justdoit.common.database.repo.BaseRepo;
 import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 import me.xihuxiaolong.justdoit.common.database.service.PlanHistoryDataService;
-import me.xihuxiaolong.justdoit.common.database.service.RedoPlanDataService;
 import me.xihuxiaolong.justdoit.common.database.service.TargetDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
@@ -85,7 +82,7 @@ public class TargetListPresenter extends MvpBasePresenter<TargetListContract.IVi
         punch.setContent(content);
         punch.setStartHour(dateTime.getHourOfDay());
         punch.setStartMinute(dateTime.getMinuteOfHour());
-        punch.setStartTime(dateTime.getMinuteOfDay());
+        punch.setStartTime(dateTime.getMillis());
         punch.setPicUrls(pictures);
         punch.setTargetName(targetName);
 

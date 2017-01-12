@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.hannesdorfmann.mosby.mvp.MvpBasePresenter;
 
 import org.greenrobot.eventbus.EventBus;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -43,18 +44,6 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
     public void loadAlert() {
         if(alertId != -1L) {
             editAlert = planDataSource.getPlanDOById(alertId);
-            if(editAlert == null){
-                editAlert = new PlanDO();
-                PlanDO lastPlanDO = planDataSource.getPlanByLastEndTime();
-                if(lastPlanDO != null) {
-                    editAlert.setStartTime(lastPlanDO.getEndTime() + 30);
-                    editAlert.setStartHour(editAlert.getStartTime() / 60);
-                    editAlert.setStartTime(editAlert.getStartTime() % 60);
-                    editAlert.setEndTime(editAlert.getEndTime() % 60);
-                    editAlert.setStartTime(editAlert.getEndTime() % 60);
-                    editAlert.setStartTime(editAlert.getEndTime() % 60);
-                }
-            }
             if (isViewAttached())
                 getView().showAlert(editAlert);
         }
@@ -67,10 +56,10 @@ public class EditAlertPresenter extends MvpBasePresenter<EditAlertContract.IView
         alert.setContent(content);
         alert.setStartHour(hour);
         alert.setStartMinute(minute);
-        alert.setStartTime(hour * 60 + minute);
+        alert.setStartTime(DateTime.now().withTimeAtStartOfDay().plusHours(hour).plusMinutes(minute).getMillis());
         alert.setEndHour(hour);
         alert.setEndMinute(minute);
-        alert.setEndTime(hour * 60 + minute);
+        alert.setStartTime(DateTime.now().withTimeAtStartOfDay().plusHours(hour).plusMinutes(minute).getMillis());
         alert.setTempRepeatmode(repeatMode);
         alert.setTargetName(targetName);
 

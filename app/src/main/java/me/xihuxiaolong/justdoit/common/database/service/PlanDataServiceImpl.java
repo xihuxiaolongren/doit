@@ -1,6 +1,5 @@
 package me.xihuxiaolong.justdoit.common.database.service;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.google.gson.Gson;
@@ -9,16 +8,12 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.DaoMaster;
-import me.xihuxiaolong.justdoit.common.database.localentity.DaoSession;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDODao;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TagDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TagDODao;
 import me.xihuxiaolong.justdoit.common.database.repo.DbUtil;
-import me.xihuxiaolong.justdoit.common.database.repo.PlanHistoryRepo;
 import me.xihuxiaolong.justdoit.common.database.repo.PlanRepo;
 import me.xihuxiaolong.justdoit.common.database.repo.TagRepo;
 
@@ -157,6 +152,8 @@ public class PlanDataServiceImpl implements PlanDataService {
                 planDO.setId(null);
                 planDO.setRedoPlanId(redoPlanDO.getId());
                 planDO.setDayTime(dayTime);
+                planDO.setStartTime(new DateTime(dayTime).plusHours(redoPlanDO.getStartHour()).plusMinutes(redoPlanDO.getStartMinute()).getMillis());
+                planDO.setEndTime(new DateTime(dayTime).plusHours(redoPlanDO.getEndHour()).plusMinutes(redoPlanDO.getEndMinute()).getMillis());
                 insertOrReplacePlanDO(planDO);
                 count++;
             }

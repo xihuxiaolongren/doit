@@ -90,7 +90,7 @@ public class PlanService extends Service {
                 if (planDO.getAlarmStatus() == 1)
                     break;
                 else if (planDO.getAlarmStatus() == 0) {
-                    setAlarm(DateTime.now().withTimeAtStartOfDay().plusMinutes(planDO.getStartTime()), planDO);
+                    setAlarm(new DateTime(planDO.getStartTime()), planDO);
                     break;
                 }
             }

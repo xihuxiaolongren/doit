@@ -98,7 +98,7 @@ public class TargetDetailPresenter extends MvpBasePresenter<TargetDetailContract
         punch.setContent(content);
         punch.setStartHour(dateTime.getHourOfDay());
         punch.setStartMinute(dateTime.getMinuteOfHour());
-        punch.setStartTime(dateTime.getMinuteOfDay());
+        punch.setStartTime(dateTime.getMillis());
         punch.setPicUrls(pictures);
         punch.setTargetName(targetName);
 

@@ -1,20 +1,15 @@
 package me.xihuxiaolong.justdoit.module.main;
 
 import android.animation.ObjectAnimator;
-import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -112,7 +107,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                 public void run() {
                     showBottom(600);
                 }
-            }, 2500);
+            }, 2000);
         }
         viewPager.post(new Runnable() {
             @Override

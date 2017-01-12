@@ -1,7 +1,5 @@
 package me.xihuxiaolong.justdoit.common.database.localentity;
 
-//import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.greenrobot.greendao.annotation.Entity;
@@ -46,11 +44,11 @@ public class PlanDO implements MultiItemEntity, Serializable{
 
     private String picUrls;
 
-    private int startTime;
+    private long startTime;
     private int startHour;
     private int startMinute;
 
-    private int endTime;
+    private long endTime;
     private int endHour;
     private int endMinute;
 
@@ -66,11 +64,13 @@ public class PlanDO implements MultiItemEntity, Serializable{
     @Transient
     private Long tempDayTime;
 
-    @Generated(hash = 2119872504)
-    public PlanDO(Long id, Long createdTime, Long modifiedTime, int type, String title,
-            String content, String tags, String linkAppName, String linkAppPackageName,
-            String picUrls, int startTime, int startHour, int startMinute, int endTime,
-            int endHour, int endMinute, long dayTime, int alarmStatus, String targetName) {
+    @Generated(hash = 1322980388)
+    public PlanDO(Long id, Long createdTime, Long modifiedTime, int type,
+            Long redoPlanId, String title, String content, String tags,
+            String linkAppName, String linkAppPackageName, String picUrls,
+            long startTime, int startHour, int startMinute, long endTime,
+            int endHour, int endMinute, long dayTime, int alarmStatus,
+            String targetName) {
         this.id = id;
         this.createdTime = createdTime;
         this.modifiedTime = modifiedTime;
@@ -169,11 +169,11 @@ public class PlanDO implements MultiItemEntity, Serializable{
         this.linkAppPackageName = linkAppPackageName;
     }
 
-    public int getStartTime() {
+    public long getStartTime() {
         return this.startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
@@ -193,11 +193,11 @@ public class PlanDO implements MultiItemEntity, Serializable{
         this.startMinute = startMinute;
     }
 
-    public int getEndTime() {
+    public long getEndTime() {
         return this.endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 

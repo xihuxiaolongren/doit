@@ -36,11 +36,11 @@ public class RedoPlanDO implements Serializable{
     private String linkAppName;
     private String linkAppPackageName;
 
-    private int startTime;
+    private long startTime;
     private int startHour;
     private int startMinute;
 
-    private int endTime;
+    private long endTime;
     private int endHour;
     private int endMinute;
 
@@ -48,11 +48,11 @@ public class RedoPlanDO implements Serializable{
 
     private String targetName;
 
-    @Generated(hash = 251670105)
+    @Generated(hash = 1877024765)
     public RedoPlanDO(Long id, Long createdTime, Long modifiedTime, int repeatMode,
             int planType, String title, String content, String tags,
-            String linkAppName, String linkAppPackageName, int startTime,
-            int startHour, int startMinute, int endTime, int endHour,
+            String linkAppName, String linkAppPackageName, long startTime,
+            int startHour, int startMinute, long endTime, int endHour,
             int endMinute, long dayTime, String targetName) {
         this.id = id;
         this.createdTime = createdTime;
@@ -158,11 +158,11 @@ public class RedoPlanDO implements Serializable{
         this.linkAppPackageName = linkAppPackageName;
     }
 
-    public int getStartTime() {
+    public long getStartTime() {
         return this.startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
@@ -182,11 +182,11 @@ public class RedoPlanDO implements Serializable{
         this.startMinute = startMinute;
     }
 
-    public int getEndTime() {
+    public long getEndTime() {
         return this.endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(long endTime) {
         this.endTime = endTime;
     }
 
