@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.planlist;
+package me.xihuxiaolong.justdoit.module.homepage;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -12,12 +12,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,6 +48,9 @@ import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.orhanobut.logger.Logger;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -58,7 +67,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
-import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
@@ -66,14 +74,22 @@ import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
+import me.xihuxiaolong.justdoit.module.adddayplan.PlanTemplateFragment;
+import me.xihuxiaolong.justdoit.module.easybackloglist.EasyBacklogListFragment;
+import me.xihuxiaolong.justdoit.module.easyplanlist.EasyPlanListFragment;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
+import me.xihuxiaolong.justdoit.module.planlist.DaggerPlanListComponent;
+import me.xihuxiaolong.justdoit.module.planlist.OtherDayActivity;
+import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
+import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
+import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
@@ -86,17 +102,17 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener, BacklogListAdapter.BacklogListOnClickListener {
+public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, HomePageContract.IPresenter> implements HomePageContract.IView, ScrollListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener{
 
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final int REQUEST_PUNCH = 1;
 
-    PlanListComponent planListComponent;
+    HomePageComponent homePageComponent;
 
-    @BindView(R.id.recyclerView)
-    ObservableRecyclerView recyclerView;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -122,15 +138,19 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     FloatingActionButton photoFab;
     @BindView(R.id.punchFab)
     FloatingActionButton punchFab;
+    @BindView(R.id.backlogFab)
+    FloatingActionButton backlogFab;
     @BindView(R.id.fab)
     FloatingActionMenu fab;
     @BindView(R.id.headerIV)
     ImageView headerIV;
-    @BindView(R.id.shadowFrame)
-    FrameLayout shadowFrame;
+    @BindView(R.id.shadowFrameHomePage)
+    FrameLayout shadowFrameHomePage;
+    @BindView(R.id.viewPagerTab)
+    SmartTabLayout viewPagerTab;
 
     private int mFlexibleSpaceImageHeight, mFlexibleRecyclerOffset, mFlexibleSpaceShowFabOffset, mFlexibleSpaceCalendarBottomOffset, mFlexibleSpaceCalendarLeftOffset,
-            mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal;
+            mFlexibleSpaceSignatureBottomOffset, mFabSizeNormal, tablayoutHeight;
     private int mActionBarSize, mStatusBarSize;
 
     boolean mFabIsShown = true;
@@ -143,18 +163,12 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     int mScollY;
 
-    BacklogListAdapter backlogListAdapter;
-
-    PlanListAdapter planListAdapter;
-
     long dayTime;
 
     ScrollListener scrollListener;
 
-    int currentListMode;
-
-    public static PlanListFragment newInstance(Long dayTime) {
-        PlanListFragment fragment = new PlanListFragment();
+    public static HomePageFragment newInstance(Long dayTime) {
+        HomePageFragment fragment = new HomePageFragment();
         Bundle args = new Bundle();
         if(dayTime != null)
             args.putLong("dayTime", dayTime);
@@ -163,15 +177,15 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
-    public PlanListContract.IPresenter createPresenter() {
-        return planListComponent.presenter();
+    public HomePageContract.IPresenter createPresenter() {
+        return homePageComponent.presenter();
     }
 
     @Override
     protected void injectDependencies() {
-        planListComponent = DaggerPlanListComponent.builder()
+        homePageComponent = DaggerHomePageComponent.builder()
                 .appComponent(ProjectActivityUtils.getAppComponent(getActivity()))
-                .planListModule(new PlanListModule(dayTime))
+                .homePageModule(new HomePageModule(dayTime))
                 .build();
     }
 
@@ -186,8 +200,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.loadDayInfo();
-        presenter.loadPlansByMode();
         presenter.loadUserSettings();
     }
 
@@ -197,7 +209,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                              @Nullable Bundle savedInstanceState) {
         dayTime = getArguments().getLong("dayTime", -1L);
         injectDependencies();
-        View view = inflater.inflate(R.layout.fragment_plan_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_page, container, false);
         ButterKnife.bind(this, view);
         Logger.d(toolbar);
         initToolbar(toolbar, false);
@@ -206,6 +218,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
+        tablayoutHeight = getResources().getDimensionPixelSize(R.dimen.tablayout_height);
         mFlexibleSpaceCalendarBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_bottom_offset);
         mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset);
         mFlexibleSpaceSignatureBottomOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_signature_bottom_offset);
@@ -220,6 +233,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         alertFab.setOnClickListener(fabListener);
         photoFab.setOnClickListener(fabListener);
         punchFab.setOnClickListener(fabListener);
+        backlogFab.setOnClickListener(fabListener);
         fab.setClosedOnTouchOutside(true);
 
         vibrant = ContextCompat.getColor(getContext(), R.color.sky);
@@ -237,46 +251,61 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 //            }
 //        });
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setScrollViewCallbacks(this);
-//        Icepick.restoreInstanceState(this, savedInstanceState);
+        FragmentPagerItems.Creator creator = FragmentPagerItems.with(getContext())
+                .add("日程", EasyPlanListFragment.class)
+                .add("待办", EasyBacklogListFragment.class);
+
+        final FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getChildFragmentManager(), creator.create());
+
+        viewPager.setAdapter(adapter);
+//        viewPager.setOffscreenPageLimit(2);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if(position == 1) {
+                    EasyPlanListFragment easyPlanListFragment = (EasyPlanListFragment) adapter.getPage(0);
+                    if(easyPlanListFragment != null)
+                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
+                } else if(position == 0){
+                    EasyBacklogListFragment easyBacklogListFragment = (EasyBacklogListFragment) adapter.getPage(1);
+                    if(easyBacklogListFragment != null)
+                        easyBacklogListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position == 0) {
+                    EasyPlanListFragment easyPlanListFragment = (EasyPlanListFragment) adapter.getPage(0);
+                    if(easyPlanListFragment != null)
+                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
+                } else if(position == 1){
+                    EasyBacklogListFragment easyPlanListFragment = (EasyBacklogListFragment) adapter.getPage(1);
+                    if(easyPlanListFragment != null)
+                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        viewPagerTab.setViewPager(viewPager);
         return view;
-    }
-
-    void createPlanList(){
-        planListAdapter = new PlanListAdapter(getActivity(), new ArrayList<PlanDO>(), this);
-        planListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_planlist, (ViewGroup) recyclerView.getParent(), false));
-        planListAdapter.setHeaderFooterEmpty(true, true);
-        final View footView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_bottom, recyclerView, false);
-        planListAdapter.addFooterView(footView);
-        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
-        planListAdapter.addHeaderView(headerView);
-    }
-
-    void createBacklogList(){
-//        backlogListAdapter = new BacklogListAdapter(getActivity(), new ArrayList<PlanDO>(), this);
-//        backlogListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_backloglist, (ViewGroup) recyclerView.getParent(), false));
-//        backlogListAdapter.setHeaderFooterEmpty(true, true);
-//        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_backlog_header, recyclerView, false);
-//        backlogListAdapter.addHeaderView(headerView);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        Icepick.saveInstanceState(this, outState);
     }
 
     boolean isTodayDay = true;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (isTodayDay) {
-            inflater.inflate(R.menu.menu_frament_planlist, menu);
-        } else {
-            inflater.inflate(R.menu.menu_frament_planlist_other_day, menu);
-        }
+        inflater.inflate(R.menu.menu_frament_planlist, menu);
         addMenuItem = menu.findItem(R.id.action_add);
         addMenuItem.setVisible(!mFabIsShown);
         addMenuItem.setEnabled(!mFabIsShown);
@@ -333,6 +362,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
                 case R.id.punchFab:
                     startPunch();
                     break;
+                case R.id.backlogFab:
+                    showBacklogDialog();
+                    break;
 //                case R.id.tomorrowPlanFab:
 //                    startActivity(new Intent(getActivity(), AddDayPlanActivity.class).putExtra("dayTime", DateTime.now().withTimeAtStartOfDay().plusDays(1).getMillis()));
 //                    break;
@@ -377,37 +409,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
         DateTime dateTime = new DateTime(year, monthOfYear + 1, dayOfMonth, 0, 0);
         startActivity(new Intent(getActivity(), OtherDayActivity.class).putExtra("dayTime", dateTime.withTimeAtStartOfDay().getMillis()));
-    }
-
-    @Override
-    public void removePlanItem(long planId) {
-
-    }
-
-    @Override
-    public void addPlanItem(PlanDO planDO) {
-
-    }
-
-    @Override
-    public void updatePlanItem(PlanDO planDO) {
-
-    }
-
-    @Override
-    public void showPlans(final List<PlanDO> plans) {
-        if(planListAdapter == null)
-            createPlanList();
-        recyclerView.setAdapter(planListAdapter);
-        planListAdapter.setNewData(plans);
-    }
-
-    @Override
-    public void showBacklogs(List<PlanDO> plans) {
-        if(backlogListAdapter == null)
-            createBacklogList();
-        recyclerView.setAdapter(backlogListAdapter);
-//        backlogListAdapter.setNewData(plans);
     }
 
     @Override
@@ -477,15 +478,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
-    public void showOtherDayUI() {
-        isTodayDay = false;
-        mFlexibleSpaceCalendarLeftOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_calendar_left_offset_other);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("明日计划");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getActivity().invalidateOptionsMenu();
-    }
-
-    @Override
     public void savePunchSuccess() {
 
     }
@@ -511,6 +503,13 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             showFab();
         }
 
+        int maxIndicatorTranslationY = mFlexibleSpaceImageHeight - tablayoutHeight / 2;
+        float indicatorTranslationY = ScrollUtils.getFloat(
+                -scrollY + mFlexibleSpaceImageHeight - tablayoutHeight / 2,
+                mActionBarSize,
+                maxIndicatorTranslationY);
+        ViewHelper.setTranslationY(viewPagerTab, indicatorTranslationY);
+
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerIV, -scrollY / 2);
         ViewHelper.setTranslationY(recyclerBackground, Math.max(0, -scrollY + mFlexibleSpaceImageHeight));
@@ -526,10 +525,14 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
         // Translate toolbar
         if (mFlexibleSpaceImageHeight - mActionBarSize < scrollY)
-            shadowFrame.setForeground(shadow);
+            shadowFrameHomePage.setForeground(shadow);
         else
-            shadowFrame.setForeground(null);
+            shadowFrameHomePage.setForeground(null);
 
+    }
+
+    public ViewGroup getInterView(){
+        return shadowFrameHomePage;
     }
 
     // Scale calendarRl
@@ -563,14 +566,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         ViewHelper.setTranslationY(signatureTV, signatureTranslationY);
         float alpha = Math.min(1, (float) (mFlexibleSpaceImageHeight - (scrollY * 1.4)) / mFlexibleSpaceImageHeight);
         ViewHelper.setAlpha(signatureTV, alpha);
-    }
-
-    @Override
-    public void onDownMotionEvent() {
-    }
-
-    @Override
-    public void onUpOrCancelMotionEvent(ScrollState scrollState) {
     }
 
     private void showFab() {
@@ -679,6 +674,52 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             addTagToUnselectView(target);
     }
 
+    private  MaterialDialog addBacklogDialog;
+    MaterialEditText backlogET;
+    View backlogPositive;
+
+    public void showBacklogDialog(){
+        picUri = null;
+        selectTarget = null;
+        addBacklogDialog = new MaterialDialog.Builder(getActivity())
+                .title(R.string.add_backlog_title)
+                .customView(R.layout.dialog_add_backlog, true)
+                .positiveText(getResources().getString(R.string.action_confirm))
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        presenter.saveBacklog(backlogET.getText().toString());
+                    }
+                })
+                .negativeText(getResources().getString(R.string.action_cancel))
+                .dismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        ActivityUtils.hideSoftKeyboard(getActivity());
+                    }
+                })
+                .show();
+        backlogPositive = addBacklogDialog.getActionButton(DialogAction.POSITIVE);
+        backlogPositive.setEnabled(false);
+        backlogET = (MaterialEditText) addBacklogDialog.findViewById(R.id.backlogET);
+        backlogET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                backlogPositive.setEnabled(s.length() > 0 ? true : false);
+            }
+        });
+    }
+
     private void addTagToUnselectView(TargetDO target) {
         FancyButton fancyButton = (FancyButton) LayoutInflater.from(getActivity()).inflate(R.layout.item_unselected_tag, allTargetsFl, false);
         fancyButton.setText(target.getName());
@@ -715,31 +756,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     }
 
     @Override
-    public void planClick(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditPlanActivity.class).putExtra(EditPlanActivity.ARGUMENT_EDIT_PLAN_ID, planDO.getId()));
-    }
-
-    @Override
-    public void alertClick(PlanDO planDO) {
-        startActivity(new Intent(getActivity(), EditAlertActivity.class).putExtra(EditAlertActivity.ARGUMENT_EDIT_ALERT_ID, planDO.getId()));
-    }
-
-    @Override
-    public void deleteClick(final PlanDO planDO) {
-        DialogUtils.showDialog(getContext(), getResources().getString(R.string.delete_all_type), "确定要删除本条记录吗？", new MaterialDialog.SingleButtonCallback() {
-            @Override
-            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                presenter.deletePlan(planDO);
-            }
-        });
-    }
-
-    @Override
-    public void shareClick(PlanDO planDO) {
-        presenter.sharePlan(planDO);
-    }
-
-    @Override
     public void reloadToolbar() {
         if(toolbar != null) {
             Logger.d(toolbar);
@@ -747,8 +763,4 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         }
     }
 
-    @Override
-    public void backlogClick(BacklogDO backlogDO) {
-
-    }
 }

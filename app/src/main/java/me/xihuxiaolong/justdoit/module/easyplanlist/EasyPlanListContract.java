@@ -1,4 +1,4 @@
-package me.xihuxiaolong.justdoit.module.planlist;
+package me.xihuxiaolong.justdoit.module.easyplanlist;
 
 import com.hannesdorfmann.mosby.mvp.MvpPresenter;
 import com.hannesdorfmann.mosby.mvp.MvpView;
@@ -15,7 +15,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
  * User: xiaolong
  * Date: 16/8/12.
  */
-public class PlanListContract {
+public class EasyPlanListContract {
 
     interface IView extends MvpView {
 
@@ -27,41 +27,15 @@ public class PlanListContract {
 
         void showPlans(List<PlanDO> plans);
 
-        void showBacklogs(List<PlanDO> plans);
-
-        void showDayInfo(String avatarUrl, DateTime dateTime);
-
-        void showSignature(String signature, String preSignature);
-
-        void showOtherDayUI();
-
-        void savePunchSuccess();
-
-        void showPunchDialog(List<TargetDO> targetList);
-
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
-        void loadPlansByMode();
-
         void loadPlans();
-
-        void loadBacklogs();
-
-        void loadDayInfo();
-
-        void loadUserSettings();
-
-        void startAddPunch();
-
-        void savePunch(String content, String pictures, String targetName);
 
         void deletePlan(PlanDO planDO);
 
         void sharePlan(PlanDO planDO);
-
-        void switchPlansByMode();
 
     }
 }

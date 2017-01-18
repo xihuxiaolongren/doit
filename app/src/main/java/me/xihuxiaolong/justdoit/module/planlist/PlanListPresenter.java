@@ -40,9 +40,20 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     @Inject
     ICacheService cacheService;
 
+    int currentListMode;
+
     @Inject
     public PlanListPresenter() {
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void loadPlansByMode() {
+        if (currentListMode == 0) {
+            loadPlans();
+        } else {
+            loadBacklogs();
+        }
     }
 
     @Override
@@ -64,6 +75,14 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         }
         if (isViewAttached()) {
             getView().showPlans(planDOs);
+        }
+    }
+
+    @Override
+    public void loadBacklogs() {
+        List<PlanDO> planDOs = planDataSource.listBacklogs(null, 2000);
+        if (isViewAttached()) {
+            getView().showBacklogs(planDOs);
         }
     }
 
@@ -129,6 +148,15 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
     @Override
     public void sharePlan(PlanDO planDO) {
 
+    }
+
+    @Override
+    public void switchPlansByMode() {
+        if(currentListMode == 0)
+            currentListMode = 1;
+        else
+            currentListMode = 0;
+        loadPlansByMode();
     }
 
     @Subscribe

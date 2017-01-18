@@ -26,6 +26,7 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
+import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
@@ -179,7 +180,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    PlanListFragment planListFragment = PlanListFragment.newInstance();
+                    HomePageFragment planListFragment = HomePageFragment.newInstance(null);
                     return planListFragment;
                 case 1:
                     TargetListFragment targetListFragment = TargetListFragment.newInstance();

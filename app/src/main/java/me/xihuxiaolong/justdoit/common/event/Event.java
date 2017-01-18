@@ -1,6 +1,7 @@
 package me.xihuxiaolong.justdoit.common.event;
 
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
+import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 
 /**
@@ -34,6 +35,33 @@ public class Event {
 
         public UpdatePlan(PlanDO plan) {
             this.plan = plan;
+        }
+    }
+
+    public static class DeleteBacklog {
+
+        public BacklogDO backlog;
+
+        public DeleteBacklog(BacklogDO backlog) {
+            this.backlog = backlog;
+        }
+    }
+
+    public static class AddBacklog {
+
+        public BacklogDO backlog;
+
+        public AddBacklog(BacklogDO backlog) {
+            this.backlog = backlog;
+        }
+    }
+
+    public static class UpdateBacklog {
+
+        public BacklogDO backlog;
+
+        public UpdateBacklog(BacklogDO backlog) {
+            this.backlog = backlog;
         }
     }
 

@@ -22,4 +22,6 @@
 
     <color name="lineChartBackgroundColor">#80000000</color>
 
+    <color name="backlog_black_transparent">#20000000</color>
+
 </resources>

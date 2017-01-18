@@ -29,6 +29,8 @@ public interface PlanDataService {
 
     List<PlanDO> listPlanDOsByOneDay(Long dayTime);
 
+    List<PlanDO> listBacklogs(Long id, int count);
+
     List<PlanDO> listPlanDOsByTargetName(String targetName);
 
     int createOneDayPlanDOs(Long dayTime);
