@@ -1,89 +1,43 @@
 package me.xihuxiaolong.justdoit.module.easyplanlist;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
-import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
-import com.github.clans.fab.FloatingActionButton;
-import com.github.clans.fab.FloatingActionMenu;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
-import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.github.ksoichiro.android.observablescrollview.Scrollable;
-import com.google.android.flexbox.FlexboxLayout;
-import com.nineoldandroids.view.ViewHelper;
-import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.orhanobut.logger.Logger;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
-import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
-import me.xihuxiaolong.justdoit.common.util.ImageUtils;
+import me.xihuxiaolong.justdoit.common.event.Event;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
-import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
-import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
-import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
-import me.xihuxiaolong.justdoit.module.planlist.DaggerPlanListComponent;
-import me.xihuxiaolong.justdoit.module.planlist.OtherDayActivity;
-import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
-import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
-import me.xihuxiaolong.library.utils.ActivityUtils;
-import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
-import me.xihuxiaolongren.photoga.MediaChoseActivity;
-import mehdi.sakout.fancybuttons.FancyButton;
 
 
 /**
@@ -105,11 +59,14 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     long dayTime;
 
     ScrollListener scrollListener;
+    @BindView(R.id.fragment_root)
+    FrameLayout fragmentRoot;
+    private int mFlexibleSpaceImageHeight;
 
     public static EasyPlanListFragment newInstance(Long dayTime) {
         EasyPlanListFragment fragment = new EasyPlanListFragment();
         Bundle args = new Bundle();
-        if(dayTime != null)
+        if (dayTime != null)
             args.putLong("dayTime", dayTime);
         fragment.setArguments(args);
         return fragment;
@@ -154,15 +111,17 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_easy_plan_list, container, false);
         ButterKnife.bind(this, view);
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        EventBus.getDefault().register(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setTouchInterceptionViewGroup(((HomePageFragment)getParentFragment()).getInterView());
+        recyclerView.setTouchInterceptionViewGroup(fragmentRoot);
         recyclerView.setScrollViewCallbacks(this);
         return view;
     }
 
-    void createPlanList(){
+    void createPlanList() {
         planListAdapter = new PlanListAdapter(getActivity(), new ArrayList<PlanDO>(), this);
         planListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_planlist, (ViewGroup) recyclerView.getParent(), false));
         planListAdapter.setHeaderFooterEmpty(true, true);
@@ -195,9 +154,21 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
 
     @Override
     public void showPlans(final List<PlanDO> plans) {
-        if(planListAdapter == null)
+        if (planListAdapter == null)
             createPlanList();
         planListAdapter.setNewData(plans);
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+                int minHeight = DeviceUtil.getScreenHeight() + mFlexibleSpaceImageHeight;
+                int bottom = minHeight - recyclerView.computeVerticalScrollRange();
+                if (bottom > 0)
+                    recyclerView.setPadding(0, 0, 0, bottom);
+                else
+                    recyclerView.setPadding(0, 0, 0, 50);
+            }
+        }, 100);
     }
 
     @Override
@@ -205,12 +176,13 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     }
 
     public void setScrollY(int scrollY, int threshold) {
-        if(scrollY == mScollY)
+        if (scrollY == mScollY)
             return;
         if (recyclerView == null) {
             return;
         }
         mScollY = scrollY;
+        Logger.e("plan" + mScollY);
         View firstVisibleChild = recyclerView.getChildAt(0);
         if (firstVisibleChild != null) {
             int offset = scrollY;
@@ -229,9 +201,13 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+        Logger.e("plan" + scrollY + "  " + firstScroll + "  " + dragging);
+        if (scrollListener != null)
+            scrollListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
+        if(isVisible())
+            EventBus.getDefault().post(new Event.PlanListScroll(scrollY));
+
     }
 
     @Override
@@ -278,6 +254,11 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     @Override
     public void shareClick(PlanDO planDO) {
         presenter.sharePlan(planDO);
+    }
+
+    @Subscribe
+    public void onEvent(Event.BacklogListScroll backlogListScroll) {
+        setScrollY(backlogListScroll.scrollY, mFlexibleSpaceImageHeight);
     }
 
 }

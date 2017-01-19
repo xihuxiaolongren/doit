@@ -35,9 +35,8 @@ public class BacklogListAdapter extends BaseQuickAdapter<BacklogDO, BaseViewHold
         init(context, backlogListOnClickListener);
     }
 
-    private void init(Context context, BacklogListOnClickListener backlogListOnClickListener){
+    private void init(Context context, BacklogListOnClickListener backlogListOnClickListener) {
         minHeight = DeviceUtil.getScreenHeight();
-
         this.backlogListOnClickListener = backlogListOnClickListener;
     }
 
@@ -52,7 +51,8 @@ public class BacklogListAdapter extends BaseQuickAdapter<BacklogDO, BaseViewHold
 
     @Override
     protected void convert(BaseViewHolder holder, BacklogDO backlogDO) {
-        holder.setText(R.id.contentTV, backlogDO.getContent());
+        holder.setText(R.id.contentTV, backlogDO.getContent())
+                .setVisible(R.id.picIV, false);
     }
 
     public interface BacklogListOnClickListener {

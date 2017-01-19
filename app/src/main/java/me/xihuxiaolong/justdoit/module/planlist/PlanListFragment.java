@@ -494,7 +494,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+            scrollListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
 
         // Translate FAB

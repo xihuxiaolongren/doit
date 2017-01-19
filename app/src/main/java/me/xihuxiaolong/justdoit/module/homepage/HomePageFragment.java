@@ -30,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -54,6 +55,8 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.orhanobut.logger.Logger;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
@@ -69,6 +72,7 @@ import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
+import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
@@ -214,6 +218,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
         Logger.d(toolbar);
         initToolbar(toolbar, false);
         setHasOptionsMenu(true);
+        EventBus.getDefault().register(this);
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleRecyclerOffset = getResources().getDimensionPixelSize(R.dimen.flexible_recyclerview_header_height);
@@ -258,39 +263,6 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
         final FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), creator.create());
         viewPager.setAdapter(adapter);
-//        viewPager.setOffscreenPageLimit(2);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(position == 1) {
-                    EasyPlanListFragment easyPlanListFragment = (EasyPlanListFragment) adapter.getPage(0);
-                    if(easyPlanListFragment != null)
-                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
-                } else if(position == 0){
-                    EasyBacklogListFragment easyBacklogListFragment = (EasyBacklogListFragment) adapter.getPage(1);
-                    if(easyBacklogListFragment != null)
-                        easyBacklogListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
-                }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                if(position == 0) {
-                    EasyPlanListFragment easyPlanListFragment = (EasyPlanListFragment) adapter.getPage(0);
-                    if(easyPlanListFragment != null)
-                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
-                } else if(position == 1){
-                    EasyBacklogListFragment easyPlanListFragment = (EasyBacklogListFragment) adapter.getPage(1);
-                    if(easyPlanListFragment != null)
-                        easyPlanListFragment.setScrollY(mScollY, mFlexibleSpaceImageHeight);
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         viewPagerTab.setViewPager(viewPager);
         return view;
     }
@@ -480,9 +452,12 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
     }
 
     @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+    public void onScrollChanged(int scrollY, int flag) {
+        int i = viewPager.getCurrentItem();
+        if(flag != i)
+            return;
         if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+            scrollListener.onScrollChanged(scrollY, flag);
         mScollY = scrollY;
 
         // Translate FAB
@@ -596,7 +571,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
 
     private  MaterialDialog addPunchDialog;
     FlexboxLayout allTargetsFl;
-    MaterialEditText targetET;
+    MaterialEditText punchET;
     TextView selectTipTV;
     private ImageView picIV;
     private ImageView operIV;
@@ -615,7 +590,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        presenter.savePunch(targetET.getText().toString(), picUri, selectTarget);
+                        presenter.savePunch(punchET.getText().toString(), picUri, selectTarget);
                     }
                 })
                 .negativeText(getResources().getString(R.string.action_cancel))
@@ -625,14 +600,16 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
                         ActivityUtils.hideSoftKeyboard(getActivity());
                     }
                 })
-                .show();
+                .build();
+        addPunchDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         targetPositive = addPunchDialog.getActionButton(DialogAction.POSITIVE);
         targetPositive.setEnabled(false);
         selectTipTV = (TextView) addPunchDialog.findViewById(R.id.selectTipTV);
         selectTipTV.setVisibility(CollectionUtils.isEmpty(targetList) ? View.GONE : View.VISIBLE);
         allTargetsFl = (FlexboxLayout) addPunchDialog.findViewById(R.id.all_target_fl);
-        targetET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
-        targetET.addTextChangedListener(new TextWatcher() {
+        punchET = (MaterialEditText) addPunchDialog.findViewById(R.id.addPunchET);
+        punchET.requestFocus();
+        punchET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -669,6 +646,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
         });
         for(TargetDO target : targetList)
             addTagToUnselectView(target);
+        addPunchDialog.show();
     }
 
     @Override
@@ -700,10 +678,12 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
                         ActivityUtils.hideSoftKeyboard(getActivity());
                     }
                 })
-                .show();
+                .build();
+        addBacklogDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         backlogPositive = addBacklogDialog.getActionButton(DialogAction.POSITIVE);
         backlogPositive.setEnabled(false);
         backlogET = (MaterialEditText) addBacklogDialog.findViewById(R.id.backlogET);
+        backlogET.requestFocus();
         backlogET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -720,6 +700,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
                 backlogPositive.setEnabled(s.length() > 0 ? true : false);
             }
         });
+        addBacklogDialog.show();
     }
 
     private void addTagToUnselectView(TargetDO target) {
@@ -763,6 +744,18 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
             Logger.d(toolbar);
             setToolbar(toolbar, false);
         }
+    }
+
+    @Subscribe
+    public void onEvent(Event.AddPlan addPlan) {
+        if(viewPager != null)
+            viewPager.setCurrentItem(0, true);
+    }
+
+    @Subscribe
+    public void onEvent(Event.AddBacklog addBacklog) {
+        if(viewPager != null)
+            viewPager.setCurrentItem(1, true);
     }
 
 }

@@ -106,4 +106,18 @@ public class Event {
         public ChangeDayNightTheme() {
         }
     }
+
+    public static class BacklogListScroll {
+        public int scrollY;
+        public BacklogListScroll(int scrollY) {
+            this.scrollY = scrollY;
+        }
+    }
+
+    public static class PlanListScroll {
+        public int scrollY;
+        public PlanListScroll(int scrollY) {
+            this.scrollY = scrollY;
+        }
+    }
 }

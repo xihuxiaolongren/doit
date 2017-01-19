@@ -135,7 +135,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     boolean isBottomVisible = true;
 
     @Override
-    public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
+    public void onScrollChanged(int scrollY, int flag) {
         if (scrollY - mScrollY > 10 && isBottomVisible) {
             hideBottom(500);
         } else if (scrollY - mScrollY < -10 && !isBottomVisible) {

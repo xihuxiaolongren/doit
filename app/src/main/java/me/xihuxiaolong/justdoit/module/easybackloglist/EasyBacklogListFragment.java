@@ -10,12 +10,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +30,10 @@ import butterknife.ButterKnife;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
+import me.xihuxiaolong.justdoit.common.event.Event;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
-import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.DialogUtils;
@@ -53,11 +58,14 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     long dayTime;
 
     ScrollListener scrollListener;
+    @BindView(R.id.fragment_root)
+    FrameLayout fragmentRoot;
+    private int mFlexibleSpaceImageHeight;
 
     public static EasyBacklogListFragment newInstance(Long dayTime) {
         EasyBacklogListFragment fragment = new EasyBacklogListFragment();
         Bundle args = new Bundle();
-        if(dayTime != null)
+        if (dayTime != null)
             args.putLong("dayTime", dayTime);
         fragment.setArguments(args);
         return fragment;
@@ -102,15 +110,17 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         injectDependencies();
         View view = inflater.inflate(R.layout.fragment_easy_plan_list, container, false);
         ButterKnife.bind(this, view);
+        mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+        EventBus.getDefault().register(this);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setTouchInterceptionViewGroup(((HomePageFragment)getParentFragment()).getInterView());
+        recyclerView.setTouchInterceptionViewGroup(fragmentRoot);
         recyclerView.setScrollViewCallbacks(this);
         return view;
     }
 
-    void createBacklogList(){
+    void createBacklogList() {
         backlogListAdapter = new BacklogListAdapter(getActivity(), R.layout.item_card_backlog, new ArrayList<BacklogDO>(), this);
         backlogListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_backloglist, (ViewGroup) recyclerView.getParent(), false));
         backlogListAdapter.setHeaderFooterEmpty(true, true);
@@ -141,9 +151,22 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
 
     @Override
     public void showBacklogs(final List<BacklogDO> backlogDOs) {
-        if(backlogListAdapter == null)
+        if (backlogListAdapter == null)
             createBacklogList();
         backlogListAdapter.setNewData(backlogDOs);
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+                int minHeight = DeviceUtil.getScreenHeight() + mFlexibleSpaceImageHeight;
+                int bottom = minHeight - recyclerView.computeVerticalScrollRange();
+                if (bottom > 0)
+                    recyclerView.setPadding(0, 0, 0, bottom);
+                else
+                    recyclerView.setPadding(0, 0, 0, 50);
+            }
+        }, 100);
+
     }
 
     @Override
@@ -151,12 +174,13 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     }
 
     public void setScrollY(int scrollY, int threshold) {
-        if(scrollY == mScollY)
+        if (scrollY == mScollY)
             return;
         if (recyclerView == null) {
             return;
         }
         mScollY = scrollY;
+        Logger.e("backlog" + mScollY);
         View firstVisibleChild = recyclerView.getChildAt(0);
         if (firstVisibleChild != null) {
             int offset = scrollY;
@@ -175,9 +199,13 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+        Logger.e("backlog" + scrollY + "  " + firstScroll + "  " + dragging);
+        if (scrollListener != null)
+            scrollListener.onScrollChanged(scrollY, 1);
         mScollY = scrollY;
+        if(isVisible())
+            EventBus.getDefault().post(new Event.BacklogListScroll(scrollY));
+
     }
 
     @Override
@@ -217,5 +245,10 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     @Override
     public void backlogClick(BacklogDO backlogDO) {
 
+    }
+
+    @Subscribe
+    public void onEvent(Event.PlanListScroll planListScroll) {
+        setScrollY(planListScroll.scrollY, mFlexibleSpaceImageHeight);
     }
 }
