@@ -20,4 +20,6 @@ public interface BacklogDataService {
 
     List<BacklogDO> listBacklogDOs();
 
+    long count();
+
 }

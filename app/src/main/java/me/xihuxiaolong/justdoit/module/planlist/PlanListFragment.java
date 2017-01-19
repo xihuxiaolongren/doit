@@ -86,6 +86,7 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * User: xiaolong
  * Date: 16/7/5.
  */
+@Deprecated
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener, BacklogListAdapter.BacklogListOnClickListener {
 
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
@@ -404,9 +405,9 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void showBacklogs(List<PlanDO> plans) {
-        if(backlogListAdapter == null)
-            createBacklogList();
-        recyclerView.setAdapter(backlogListAdapter);
+//        if(backlogListAdapter == null)
+//            createBacklogList();
+//        recyclerView.setAdapter(backlogListAdapter);
 //        backlogListAdapter.setNewData(plans);
     }
 

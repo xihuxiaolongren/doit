@@ -27,11 +27,15 @@ public class HomePageContract {
 
         void showPunchDialog(List<TargetDO> targetList);
 
+        void updateBacklogCount(long count);
+
     }
 
     interface IPresenter extends MvpPresenter<IView> {
 
         void loadUserSettings();
+
+        void loadBacklogCount();
 
         void startAddPunch();
 

@@ -85,7 +85,6 @@ import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.planlist.DaggerPlanListComponent;
 import me.xihuxiaolong.justdoit.module.planlist.OtherDayActivity;
-import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
@@ -201,6 +200,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.loadUserSettings();
+        presenter.loadBacklogCount();
     }
 
     @Nullable
@@ -257,7 +257,6 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
 
         final FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
                 getChildFragmentManager(), creator.create());
-
         viewPager.setAdapter(adapter);
 //        viewPager.setOffscreenPageLimit(2);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -300,8 +299,6 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
-
-    boolean isTodayDay = true;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -672,6 +669,11 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
         });
         for(TargetDO target : targetList)
             addTagToUnselectView(target);
+    }
+
+    @Override
+    public void updateBacklogCount(long count) {
+        ((TextView)viewPagerTab.getTabAt(1)).setText("待办 (" + count + ")");
     }
 
     private  MaterialDialog addBacklogDialog;

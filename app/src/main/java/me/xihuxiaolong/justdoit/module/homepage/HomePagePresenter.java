@@ -45,7 +45,7 @@ public class HomePagePresenter extends MvpBasePresenter<HomePageContract.IView> 
     @Inject
     ICacheService cacheService;
 
-    int currentListMode;
+    long backlogCount;
 
     @Inject
     public HomePagePresenter() {
@@ -65,6 +65,13 @@ public class HomePagePresenter extends MvpBasePresenter<HomePageContract.IView> 
                 getView().showSignature(userSettings.getMotto(), null);
             getView().showDayInfo(userSettings.isShowAvatar() ? userSettings.getAvatarUri() : null, new DateTime(dayTime));
         }
+    }
+
+    @Override
+    public void loadBacklogCount() {
+        backlogCount = backlogDataService.count();
+        if (isViewAttached())
+            getView().updateBacklogCount(backlogCount);
     }
 
     @Override
@@ -106,4 +113,17 @@ public class HomePagePresenter extends MvpBasePresenter<HomePageContract.IView> 
         loadUserSettings();
     }
 
+    @Subscribe
+    public void onEvent(Event.AddBacklog addBacklogEvent) {
+        backlogCount += 1;
+        if (isViewAttached())
+            getView().updateBacklogCount(backlogCount);
+    }
+
+    @Subscribe
+    public void onEvent(Event.DeleteBacklog deleteBacklogEvent) {
+        backlogCount -= 1;
+        if (isViewAttached())
+            getView().updateBacklogCount(backlogCount);
+    }
 }

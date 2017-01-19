@@ -52,7 +52,7 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
         if (currentListMode == 0) {
             loadPlans();
         } else {
-            loadBacklogs();
+//            loadBacklogs();
         }
     }
 
@@ -80,10 +80,10 @@ public class PlanListPresenter extends MvpBasePresenter<PlanListContract.IView> 
 
     @Override
     public void loadBacklogs() {
-        List<PlanDO> planDOs = planDataSource.listBacklogs(null, 2000);
-        if (isViewAttached()) {
-            getView().showBacklogs(planDOs);
-        }
+//        List<PlanDO> planDOs = planDataSource.listBacklogs(null, 2000);
+//        if (isViewAttached()) {
+//            getView().showBacklogs(planDOs);
+//        }
     }
 
     @Override

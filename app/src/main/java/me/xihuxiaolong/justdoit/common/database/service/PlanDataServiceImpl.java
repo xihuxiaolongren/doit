@@ -128,13 +128,14 @@ public class PlanDataServiceImpl implements PlanDataService {
 
     @Override
     public List<PlanDO> listBacklogs(Long id, int count) {
-        List<PlanDO> planDOs;
-        if(id == null)
-            planDOs = planRepo.queryBuilder().where(PlanDODao.Properties.Type.eq(PlanDO.TYPE_BACKLOG)).orderDesc(PlanDODao.Properties.Id).limit(count).list();
-        else
-            planDOs = planRepo.queryBuilder().where(PlanDODao.Properties.Type.eq(PlanDO.TYPE_BACKLOG), PlanDODao.Properties.Id.lt(id))
-                    .orderDesc(PlanDODao.Properties.Id).limit(count).list();
-        return planDOs;
+//        List<PlanDO> planDOs;
+//        if(id == null)
+//            planDOs = planRepo.queryBuilder().where(PlanDODao.Properties.Type.eq(PlanDO.TYPE_BACKLOG)).orderDesc(PlanDODao.Properties.Id).limit(count).list();
+//        else
+//            planDOs = planRepo.queryBuilder().where(PlanDODao.Properties.Type.eq(PlanDO.TYPE_BACKLOG), PlanDODao.Properties.Id.lt(id))
+//                    .orderDesc(PlanDODao.Properties.Id).limit(count).list();
+//        return planDOs;
+        return null;
     }
 
     private List<PlanDO> listRedoPlanDOsByOneDay(Long dayTime) {

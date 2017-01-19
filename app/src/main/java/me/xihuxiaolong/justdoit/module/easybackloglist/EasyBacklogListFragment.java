@@ -116,6 +116,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         backlogListAdapter.setHeaderFooterEmpty(true, true);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_backlog_header, recyclerView, false);
         backlogListAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(backlogListAdapter);
     }
 
     @Override
@@ -142,7 +143,6 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     public void showBacklogs(final List<BacklogDO> backlogDOs) {
         if(backlogListAdapter == null)
             createBacklogList();
-        recyclerView.setAdapter(backlogListAdapter);
         backlogListAdapter.setNewData(backlogDOs);
     }
 

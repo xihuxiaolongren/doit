@@ -45,4 +45,9 @@ public class BacklogDataServiceImpl implements BacklogDataService {
         return backlogRepo.queryBuilder()
                 .orderDesc(BacklogDODao.Properties.Id).list();
     }
+
+    @Override
+    public long count() {
+        return backlogRepo.count();
+    }
 }

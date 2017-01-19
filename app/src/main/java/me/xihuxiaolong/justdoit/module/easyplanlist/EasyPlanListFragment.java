@@ -71,6 +71,7 @@ import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
 import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
@@ -156,6 +157,7 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setTouchInterceptionViewGroup(((HomePageFragment)getParentFragment()).getInterView());
         recyclerView.setScrollViewCallbacks(this);
         return view;
     }
@@ -168,6 +170,7 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
         planListAdapter.addFooterView(footView);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
         planListAdapter.addHeaderView(headerView);
+        recyclerView.setAdapter(planListAdapter);
     }
 
     @Override
@@ -194,7 +197,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     public void showPlans(final List<PlanDO> plans) {
         if(planListAdapter == null)
             createPlanList();
-        recyclerView.setAdapter(planListAdapter);
         planListAdapter.setNewData(plans);
     }
 
