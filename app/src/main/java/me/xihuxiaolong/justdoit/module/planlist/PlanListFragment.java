@@ -62,6 +62,7 @@ import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
@@ -86,7 +87,6 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * User: xiaolong
  * Date: 16/7/5.
  */
-@Deprecated
 public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener, BacklogListAdapter.BacklogListOnClickListener {
 
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
@@ -144,15 +144,11 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     int mScollY;
 
-    BacklogListAdapter backlogListAdapter;
-
     PlanListAdapter planListAdapter;
 
     long dayTime;
 
     ScrollListener scrollListener;
-
-    int currentListMode;
 
     public static PlanListFragment newInstance(Long dayTime) {
         PlanListFragment fragment = new PlanListFragment();
@@ -253,14 +249,6 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
         planListAdapter.addFooterView(footView);
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_plan_header, recyclerView, false);
         planListAdapter.addHeaderView(headerView);
-    }
-
-    void createBacklogList(){
-//        backlogListAdapter = new BacklogListAdapter(getActivity(), new ArrayList<PlanDO>(), this);
-//        backlogListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_backloglist, (ViewGroup) recyclerView.getParent(), false));
-//        backlogListAdapter.setHeaderFooterEmpty(true, true);
-//        final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_backlog_header, recyclerView, false);
-//        backlogListAdapter.addHeaderView(headerView);
     }
 
     @Override
@@ -401,6 +389,18 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             createPlanList();
         recyclerView.setAdapter(planListAdapter);
         planListAdapter.setNewData(plans);
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize + mFlexibleSpaceImageHeight;
+                int bottom = minHeight - recyclerView.computeVerticalScrollRange();
+                if (bottom > 0)
+                    recyclerView.setPadding(0, 0, 0, bottom);
+                else
+                    recyclerView.setPadding(0, 0, 0, 50);
+            }
+        }, 100);
     }
 
     @Override

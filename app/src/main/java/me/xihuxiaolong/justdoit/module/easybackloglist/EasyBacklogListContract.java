@@ -34,5 +34,7 @@ public class EasyBacklogListContract {
 
         void shareBacklog(BacklogDO backlogDO);
 
+        void saveBacklog(String content);
+
     }
 }

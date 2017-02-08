@@ -59,8 +59,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     long dayTime;
 
     ScrollListener scrollListener;
-    @BindView(R.id.fragment_root)
-    FrameLayout fragmentRoot;
     private int mFlexibleSpaceImageHeight;
 
     public static EasyPlanListFragment newInstance(Long dayTime) {
@@ -116,7 +114,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setTouchInterceptionViewGroup(fragmentRoot);
         recyclerView.setScrollViewCallbacks(this);
         return view;
     }
@@ -202,11 +199,13 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         Logger.e("plan" + scrollY + "  " + firstScroll + "  " + dragging);
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
-        if(isVisible())
+        if(isVisible()) {
+            Logger.e("planlist " + scrollY);
+            if (scrollListener != null)
+                scrollListener.onScrollChanged(scrollY, 0);
             EventBus.getDefault().post(new Event.PlanListScroll(scrollY));
+        }
 
     }
 

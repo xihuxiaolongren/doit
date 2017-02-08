@@ -25,13 +25,7 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 public class EasyBacklogListPresenter extends MvpBasePresenter<EasyBacklogListContract.IView> implements EasyBacklogListContract.IPresenter {
 
     @Inject
-    long dayTime;
-
-    @Inject
     BacklogDataService backlogDataService;
-
-    @Inject
-    ICacheService cacheService;
 
     @Inject
     public EasyBacklogListPresenter() {
@@ -44,7 +38,6 @@ public class EasyBacklogListPresenter extends MvpBasePresenter<EasyBacklogListCo
         if (isViewAttached()) {
             getView().showBacklogs(backlogDOs);
         }
-//        EventBus.getDefault().post(new Event.DeletePlan(backlogDO));
     }
 
     @Override
@@ -55,6 +48,15 @@ public class EasyBacklogListPresenter extends MvpBasePresenter<EasyBacklogListCo
     @Override
     public void shareBacklog(BacklogDO backlogDO) {
 
+    }
+
+    @Override
+    public void saveBacklog(String content) {
+        BacklogDO punch = new BacklogDO();
+        punch.setContent(content);
+        long punchId = backlogDataService.insertOrReplaceBacklogDO(punch);
+        punch.setId(punchId);
+        EventBus.getDefault().post(new Event.AddBacklog(punch));
     }
 
     @Subscribe

@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -26,7 +27,9 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
+import me.xihuxiaolong.justdoit.module.easybackloglist.EasyBacklogListFragment;
 import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
+import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 
@@ -70,6 +73,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
         viewPager.setOffscreenPageLimit(3);
+        bottomBar.getTabAtPosition(1).setBadgeCount(5);
         bottomBar.setOnTabSelectListener(
                 new OnTabSelectListener() {
                     @Override
@@ -86,6 +90,10 @@ public class MainActivity extends BaseActivity implements ScrollListener {
                             case R.id.item3:
                                 viewPager.setCurrentItem(2, false);
                                 invalidateFragmentMenus(2);
+                                break;
+                            case R.id.item4:
+                                viewPager.setCurrentItem(3, false);
+                                invalidateFragmentMenus(3);
                                 break;
                         }
                     }
@@ -179,12 +187,15 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    HomePageFragment planListFragment = HomePageFragment.newInstance(null);
+                    PlanListFragment planListFragment = PlanListFragment.newInstance(null);
                     return planListFragment;
                 case 1:
+                    EasyBacklogListFragment easyBacklogListFragment = EasyBacklogListFragment.newInstance();
+                    return easyBacklogListFragment;
+                case 2:
                     TargetListFragment targetListFragment = TargetListFragment.newInstance();
                     return targetListFragment;
-                case 2:
+                case 3:
                     SettingsFragment settingsFragment = SettingsFragment.newInstance();
                     return settingsFragment;
                 default:
@@ -214,7 +225,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
     public void onBackPressed() {
         if(viewPager.getCurrentItem() != 0){
             viewPager.setCurrentItem(0, false);
-            bottomBar.setDefaultTabPosition(0);
+            bottomBar.selectTabAtPosition(0, true);
             invalidateFragmentMenus(0);
         }else {
             moveTaskToBack(true);

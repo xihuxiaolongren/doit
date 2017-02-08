@@ -659,8 +659,6 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
     View backlogPositive;
 
     public void showBacklogDialog(){
-        picUri = null;
-        selectTarget = null;
         addBacklogDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_backlog_title)
                 .customView(R.layout.dialog_add_backlog, true)

@@ -73,7 +73,7 @@
     </style>
 
     <style name="MyTextAppearance.Bottom" parent="Base.TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/contentTextSize</item>
+        <item name="android:textSize">@dimen/contentSmallTextSize</item>
         <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
     </style>
