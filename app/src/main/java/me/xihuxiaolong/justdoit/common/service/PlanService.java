@@ -123,7 +123,7 @@ public class PlanService extends Service {
     }
 
     private void sendNotification(PlanDO planDO, boolean vibr) {
-        //当前版本remoteView 无法自动识别到夜间模式的资源目录
+        //当前 Android 版本 remoteView 无法自动识别到夜间模式的资源目录
         RemoteViews remoteViewBig;
         RemoteViews remoteViewNormal;
         if (DayNightModeUtils.isCurrentNight()) {
