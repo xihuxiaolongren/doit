@@ -29,5 +29,7 @@
 
     <color name="semi_black_transparent">#80000000</color>
 
+    <color name="backlog_black_transparent">#60FFFFFF</color>
+
 
 </resources>

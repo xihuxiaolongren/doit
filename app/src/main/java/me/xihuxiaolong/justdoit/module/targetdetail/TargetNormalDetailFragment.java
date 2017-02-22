@@ -398,7 +398,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         mSCrollY = scrollY;
         if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+            scrollListener.onScrollChanged(scrollY, 0);
 
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerFL, -scrollY);

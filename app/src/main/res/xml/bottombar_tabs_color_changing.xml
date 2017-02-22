@@ -3,13 +3,21 @@
     <tab
         id="@+id/item1"
         icon="@drawable/tab_every_plan_new"
+        badgeBackgroundColor="#80000000"
         title="今日计划" />
     <tab
         id="@+id/item2"
-        icon="@drawable/tab_target_new"
-        title="目标" />
+        icon="@drawable/tab_backlog"
+        badgeBackgroundColor="#80000000"
+        title="待办事项" />
     <tab
         id="@+id/item3"
+        icon="@drawable/tab_target_new"
+        badgeBackgroundColor="#80000000"
+        title="目标" />
+    <tab
+        id="@+id/item4"
         icon="@drawable/tab_me_new"
+        badgeBackgroundColor="#80000000"
         title="我的" />
 </tabs>

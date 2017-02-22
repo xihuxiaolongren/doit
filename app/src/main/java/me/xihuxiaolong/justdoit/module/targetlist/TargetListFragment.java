@@ -241,8 +241,6 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     class TargetAdapter extends BaseMultiItemQuickAdapter<TargetDO, BaseViewHolder> {
 
-        int showRedoPlanCount = 3;
-
         public TargetAdapter(List<TargetDO> datas) {
             super(datas);
             addItemType(TargetDO.TYPE_NORMAL, R.layout.item_target_normal);
@@ -359,7 +357,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, firstScroll, dragging);
+            scrollListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
 
         // Translate FAB

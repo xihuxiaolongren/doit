@@ -10,6 +10,7 @@
     <string name="action_search">搜索</string>
     <string name="sleep">休息</string>
     <string name="plan">计划</string>
+    <string name="backlog">待办</string>
     <string name="alert">提醒</string>
     <string name="photo">此刻</string>
     <string name="punch">打卡</string>
@@ -18,9 +19,11 @@
     <string name="add_tag">添加标签</string>
     <string name="add_target_title">创建一个目标</string>
     <string name="add_punch_title">打卡</string>
+    <string name="add_backlog_title">待办</string>
     <string name="color_dialog_title">调色板</string>
     <string name="add_target_hint">输入目标名称</string>
     <string name="add_punch_hint">一句话描述 . . . </string>
+    <string name="add_backlog_hint">添加待办事项 . . . </string>
     <string name="add_target_prefill"></string>
     <string name="action_redo_plan">重复任务管理</string>
     <string name="add_alert">新建提醒</string>
@@ -32,6 +35,7 @@
     <string name="action_cancel">取消</string>
     <string name="add_plan">新建计划</string>
     <string name="empty_plan">今日暂无安排 . . .</string>
+    <string name="empty_backlog">暂无待办事项 . . .</string>
     <string name="empty_plan_history">当日未设定计划</string>
     <string name="menu_delete">删除</string>
     <string name="alert_time">提醒时刻</string>

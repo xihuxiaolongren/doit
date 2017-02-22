@@ -17,7 +17,7 @@
     <dimen name="signature_size">18sp</dimen>
     <dimen name="signature_min_size">14sp</dimen>
     <dimen name="flexible_space_image_height">220dp</dimen>
-    <dimen name="flexible_recyclerview_header_height">150dp</dimen>
+    <dimen name="flexible_recyclerview_header_height">170dp</dimen>
     <dimen name="target_list_header_height">180dp</dimen>
     <dimen name="flexible_space_calendar_bottom_offset">50dp</dimen>
     <dimen name="flexible_space_arcprogress_bottom_offset">40dp</dimen>
@@ -27,6 +27,7 @@
     <dimen name="flexible_space_calendar_left_offset_other">150dp</dimen>
     <dimen name="flexible_space_signature_bottom_offset">44dp</dimen>
     <dimen name="flexible_space_show_fab_offset">80dp</dimen>
+    <dimen name="tablayout_height">20dp</dimen>
     <dimen name="sun_top">86dp</dimen>
     <!-- 因为有阴影等问题，程序无法精确获取menu的高度，根据源代码计算. -->
     <dimen name="fab_menu_size_normal">66dp</dimen>

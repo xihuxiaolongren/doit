@@ -19,12 +19,12 @@ public class OtherDayActivity extends BaseActivity {
 //        if(dayTime != -1L)
 //            dayNightBackgroundView.setAnimationDuration(0);
 
-        PlanListFragment planListFragment =
-                (PlanListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if(planListFragment == null) {
-            planListFragment = PlanListFragment.newInstance();
+        OtherDayPlanListFragment otherDayPlanListFragment =
+                (OtherDayPlanListFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if(otherDayPlanListFragment == null) {
+            otherDayPlanListFragment = OtherDayPlanListFragment.newInstance(getIntent().getLongExtra("dayTime", -1L));
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    planListFragment, R.id.contentFrame);
+                    otherDayPlanListFragment, R.id.contentFrame);
         }
     }
 

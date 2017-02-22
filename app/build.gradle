@@ -142,7 +142,7 @@ dependencies {
 
     //Optional for built-in cards
 //    compile 'com.github.gabrielemariotti.cards:cardslib-cards:2.1.0'
-    compile 'com.roughike:bottom-bar:2.0.2'
+    compile 'com.roughike:bottom-bar:2.1.1'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.6.5'
     compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.github.siyamed:android-shape-imageview:0.9.3@aar'

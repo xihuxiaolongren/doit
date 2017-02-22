@@ -9,6 +9,7 @@ public class DbUtil {
     private static PlanHistoryRepo planHistoryRepo;
     private static TargetRepo targetRepo;
     private static TagRepo tagRepo;
+    private static BacklogRepo backlogRepo;
 
     public static CacheRepo getCacheRepo() {
         if (cacheRepo == null) {
@@ -50,6 +51,13 @@ public class DbUtil {
             tagRepo = new TagRepo(DbCore.getDaoSession().getTagDODao());
         }
         return tagRepo;
+    }
+
+    public static BacklogRepo getBacklogRepo() {
+        if (backlogRepo == null) {
+            backlogRepo = new BacklogRepo(DbCore.getDaoSession().getBacklogDODao());
+        }
+        return backlogRepo;
     }
 
 }

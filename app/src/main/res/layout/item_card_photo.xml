@@ -13,14 +13,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp"
-        android:paddingBottom="4dp"
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
         android:paddingTop="4dp"
-        fancy:fb_defaultColor="@color/semi_black_transparent"
+        fancy:fb_defaultColor="@android:color/transparent"
         fancy:fb_radius="9dp"
         fancy:fb_text="2017年 7 月 1 日"
-        fancy:fb_textColor="@android:color/white" />
+        fancy:fb_textSize="10sp"
+        fancy:fb_textColor="@color/lightTitleTextColor"/>
 
 
     <android.support.v7.widget.CardView

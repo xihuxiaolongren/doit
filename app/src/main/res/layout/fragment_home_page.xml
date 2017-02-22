@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:autofit="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/headerIV"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/flexible_space_image_height"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/recycler_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/shadowFrameHomePage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <com.ogaclejapan.smarttablayout.SmartTabLayout
+        android:id="@+id/viewPagerTab"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/tablayout_height"
+        android:clipToPadding="false"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_centerHorizontal="true"
+        app:stl_defaultTabTextColor="@color/titleTextColor"
+        app:stl_defaultTabTextHorizontalPadding="18dp"
+        app:stl_dividerColor="@android:color/transparent"
+        app:stl_dividerThickness="0dp"
+        app:stl_indicatorColor="@color/backlog_black_transparent"
+        app:stl_indicatorCornerRadius="18dp"
+        app:stl_indicatorInterpolation="smart"
+        app:stl_indicatorThickness="@dimen/tablayout_height"
+        app:stl_defaultTabTextSize="10sp"
+        app:stl_underlineColor="@android:color/transparent"
+        app:stl_underlineThickness="0dp" />
+
+    <me.grantland.widget.AutofitTextView
+        android:id="@+id/signatureTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/text_margin"
+        android:gravity="right"
+        android:maxLines="2"
+        android:maxWidth="150dp"
+        android:shadowColor="@color/shadowColor"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1"
+        android:text="一日之计在于晨"
+        android:textColor="@color/titleTextColor"
+        android:textSize="@dimen/signature_size"
+        autofit:minTextSize="@dimen/signature_min_size" />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/fab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/fab_margin"
+        fab:menu_colorNormal="@color/colorAccent"
+        fab:menu_colorPressed="@color/colorDarkAccent"
+        fab:menu_fab_size="normal"
+        fab:menu_labels_ellipsize="end"
+        fab:menu_labels_singleLine="true"
+        fab:menu_openDirection="down">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/photoFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_photo"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/photo"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/punchFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_punch_little_black"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/punch"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/alertFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_clock"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/alert"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/planFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_plan"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/plan"
+            fab:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/backlogFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/menu_backlog_1"
+            fab:fab_colorNormal="@android:color/white"
+            fab:fab_colorPressed="@color/lightWhite"
+            fab:fab_label="@string/backlog"
+            fab:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/app_name"
+        app:titleTextAppearance="@style/Toolbar.TitleText" />
+
+    <LinearLayout
+        android:id="@+id/calendar_rl"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="18dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/avatarIV"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/avatar"
+            android:visibility="gone"
+            app:civ_border_color="@color/titleTextColor"
+            app:civ_border_width="2dp" />
+
+        <TextView
+            android:id="@+id/calendar_day_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginRight="10dp"
+            android:shadowColor="@color/shadowColor"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:text="8"
+            android:textColor="@color/titleTextColor"
+            android:textSize="@dimen/calendar_day_size" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/calendar_week_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="星期三"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_week_size" />
+
+            <TextView
+                android:id="@+id/calendar_month_year_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calendar_week_tv"
+                android:layout_toRightOf="@id/calendar_day_tv"
+                android:shadowColor="@color/shadowColor"
+                android:shadowDy="1"
+                android:shadowRadius="1"
+                android:text="5月 2016"
+                android:textColor="@color/titleTextColor"
+                android:textSize="@dimen/calendar_month_year_size" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
