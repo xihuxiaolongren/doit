@@ -11,6 +11,7 @@ import android.support.percent.PercentLayoutHelper;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -132,8 +133,9 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     private void convertAlert(BaseViewHolder holder, PlanDO planDO) {
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
-        holder.setBackgroundColor(R.id.rootView, vibrant)
-                .setTextColor(R.id.timeTV, textColor)
+        CardView cardView = holder.getView(R.id.rootView);
+        cardView.setCardBackgroundColor(vibrant);
+        holder.setTextColor(R.id.timeTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
@@ -156,8 +158,9 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     private void convertPhoto(BaseViewHolder holder, PlanDO planDO) {
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
-        holder.setBackgroundColor(R.id.rootView, vibrant)
-                .setTextColor(R.id.timeTV, textColor)
+        CardView cardView = holder.getView(R.id.rootView);
+        cardView.setCardBackgroundColor(vibrant);
+        holder.setTextColor(R.id.timeTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
@@ -180,8 +183,9 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
     private void convertPunch(BaseViewHolder holder, PlanDO planDO) {
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
-        holder.setBackgroundColor(R.id.rootView, vibrant)
-                .setTextColor(R.id.timeTV, textColor)
+        CardView cardView = holder.getView(R.id.rootView);
+        cardView.setCardBackgroundColor(vibrant);
+        holder.setTextColor(R.id.timeTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())
@@ -230,8 +234,9 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
         DateTime startTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTime endTime = new DateTime(planDO.getDayTime()).withTime(planDO.getEndHour(), planDO.getEndMinute(), 0, 0);
-        holder.setBackgroundColor(R.id.rootView, vibrant)
-                .setTextColor(R.id.timeTV, textColor)
+        CardView cardView = holder.getView(R.id.rootView);
+        cardView.setCardBackgroundColor(vibrant);
+        holder.setTextColor(R.id.timeTV, textColor)
                 .setTextColor(R.id.contentTV, textColor)
                 .setText(R.id.timeTV, startTime.toString(builder) + " - " + endTime.toString(builder))
                 .setText(R.id.contentTV, planDO.getContent())

@@ -2,7 +2,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
@@ -11,7 +10,7 @@
     android:layout_marginLeft="14dp"
     android:layout_marginRight="14dp"
     card_view:cardBackgroundColor="@color/sky"
-    card_view:cardCornerRadius="5dp"
+    card_view:cardCornerRadius="0dp"
     card_view:cardElevation="2dp"
     card_view:cardPreventCornerOverlap="false"
     card_view:cardUseCompatPadding="true">
@@ -19,6 +18,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <jp.shts.android.library.TriangleLabelView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            app:backgroundColor="@color/semiTitleTextColor"
+            app:corner="leftTop"
+            app:labelBottomPadding="7dp"
+            app:labelCenterPadding="5dp"
+            app:labelTopPadding="6dp"
+            app:primaryText="打卡"
+            app:primaryTextColor="@color/primary"
+            app:primaryTextSize="10sp"/>
 
         <ImageView
             android:id="@+id/targetIconIV"

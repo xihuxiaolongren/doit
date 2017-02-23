@@ -326,14 +326,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         public class TargetViewHolder extends BaseViewHolder {
 
-            public List<BaseViewHolder> redoPlanItems = new ArrayList<>();
-
             public TargetViewHolder(View view) {
                 super(view);
-            }
-
-            public void addRedoPlanItem(BaseViewHolder redoPlanViewHolder) {
-                redoPlanItems.add(redoPlanViewHolder);
             }
 
         }
