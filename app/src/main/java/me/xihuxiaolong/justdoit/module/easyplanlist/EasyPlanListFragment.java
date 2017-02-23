@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -36,7 +34,6 @@ import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.DialogUtils;
 
 
@@ -58,7 +55,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
 
     long dayTime;
 
-    ScrollListener scrollListener;
     private int mFlexibleSpaceImageHeight;
 
     public static EasyPlanListFragment newInstance(Long dayTime) {
@@ -83,12 +79,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
                 .build();
     }
 
-    public void onAttachToParentFragment(Fragment fragment) {
-        if (fragment instanceof ScrollListener) {
-            scrollListener = ((ScrollListener) fragment);
-        }
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -98,7 +88,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onAttachToParentFragment(getParentFragment());
     }
 
     @Nullable
@@ -202,8 +191,6 @@ public class EasyPlanListFragment extends BaseMvpFragment<EasyPlanListContract.I
         mScollY = scrollY;
         if(isVisible()) {
             Logger.e("planlist " + scrollY);
-            if (scrollListener != null)
-                scrollListener.onScrollChanged(scrollY, 0);
             EventBus.getDefault().post(new Event.PlanListScroll(scrollY));
         }
 

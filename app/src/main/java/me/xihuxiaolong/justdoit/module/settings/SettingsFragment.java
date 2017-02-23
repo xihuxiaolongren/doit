@@ -45,14 +45,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.xihuxiaolong.justdoit.R;
-import me.xihuxiaolong.justdoit.common.base.BaseActivity;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.cache.entity.UserSettings;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
-import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
+import me.xihuxiaolong.justdoit.module.main.MainActivityFragmentListener;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 
@@ -62,7 +60,7 @@ import me.xihuxiaolongren.photoga.MediaChoseActivity;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, SettingsContract.IPresenter> implements SettingsContract.IView, ObservableScrollViewCallbacks, RadialTimePickerDialogFragment.OnTimeSetListener, MainActivityListener {
+public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, SettingsContract.IPresenter> implements SettingsContract.IView, ObservableScrollViewCallbacks, RadialTimePickerDialogFragment.OnTimeSetListener, MainActivityFragmentListener {
 
     public static final String FRAG_TAG_TIME_PICKER_DAY = "frag_tag_time_picker_day";
     public static final String FRAG_TAG_TIME_PICKER_NIGHT = "frag_tag_time_picker_night";

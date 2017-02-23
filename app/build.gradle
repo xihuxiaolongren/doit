@@ -150,6 +150,8 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
     compile 'com.github.iwgang:countdownview:2.1.2'
     compile 'com.akexorcist:RoundCornerProgressBar:2.0.3'
+    compile 'com.github.shts:TriangleLabelView:1.1.2'
+
 
     compile project(path: ':library')
     compile project(path: ':photoga')

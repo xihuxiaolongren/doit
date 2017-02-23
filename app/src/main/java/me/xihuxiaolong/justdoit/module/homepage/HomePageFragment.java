@@ -12,18 +12,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,9 +35,6 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.codetroopers.betterpickers.calendardatepicker.MonthAdapter;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
-import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
-import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
-import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
 import com.google.android.flexbox.FlexboxLayout;
 import com.nineoldandroids.view.ViewHelper;
@@ -70,32 +60,24 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import me.grantland.widget.AutofitTextView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
-import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
-import me.xihuxiaolong.justdoit.module.adddayplan.PlanTemplateFragment;
 import me.xihuxiaolong.justdoit.module.easybackloglist.EasyBacklogListFragment;
 import me.xihuxiaolong.justdoit.module.easyplanlist.EasyPlanListFragment;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.main.MainActivityFragmentListener;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
-import me.xihuxiaolong.justdoit.module.planlist.DaggerPlanListComponent;
 import me.xihuxiaolong.justdoit.module.planlist.OtherDayActivity;
 import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
-import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
-import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.CollectionUtils;
-import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
 import mehdi.sakout.fancybuttons.FancyButton;
 
@@ -105,7 +87,7 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, HomePageContract.IPresenter> implements HomePageContract.IView, ScrollListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener{
+public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, HomePageContract.IPresenter> implements HomePageContract.IView, MainActivityFragmentListener, CalendarDatePickerDialogFragment.OnDateSetListener{
 
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
 
@@ -168,7 +150,7 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
 
     long dayTime;
 
-    ScrollListener scrollListener;
+    MainActivityListener mainActivityListener;
 
     public static HomePageFragment newInstance(Long dayTime) {
         HomePageFragment fragment = new HomePageFragment();
@@ -195,8 +177,8 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof ScrollListener){
-            scrollListener = ((ScrollListener)activity);
+        if(activity instanceof MainActivityListener){
+            mainActivityListener = ((MainActivityListener)activity);
         }
     }
 
@@ -451,13 +433,12 @@ public class HomePageFragment extends BaseMvpFragment<HomePageContract.IView, Ho
 
     }
 
-    @Override
     public void onScrollChanged(int scrollY, int flag) {
         int i = viewPager.getCurrentItem();
         if(flag != i)
             return;
-        if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, flag);
+        if(mainActivityListener != null)
+            mainActivityListener.onScrollChanged(scrollY, flag);
         mScollY = scrollY;
 
         // Translate FAB

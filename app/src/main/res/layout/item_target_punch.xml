@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -49,19 +50,9 @@
             android:minHeight="100dp"
             android:padding="20dp">
 
-            <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
-                fab:fab_colorNormal="@color/colorPrimary"
-                fab:fab_colorPressed="@color/colorPrimaryDark"
-                fab:fab_size="mini" />
-
             <TextView
                 android:id="@+id/title"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="4dp"
@@ -70,15 +61,52 @@
                 android:textSize="18sp"
                 android:transitionName="targetTitle" />
 
-            <TextView
-                android:id="@+id/countTV"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
                 android:layout_toRightOf="@id/fab"
-                android:text="今日打卡 0 次   共计打卡 123 次"
-                android:textAppearance="@style/MyTextAppearance.BodyNormal"
-                android:transitionName="targetTitle" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="已持续"
+                    android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/persistTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    fancy:fb_defaultColor="@color/titleTextColor"
+                    fancy:fb_radius="4dp"
+                    fancy:fb_text="0"
+                    fancy:fb_textColor="@color/colorPrimary"
+                    fancy:fb_textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="天"
+                    android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+            </LinearLayout>
+            <!--<TextView-->
+            <!--android:id="@+id/countTV"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/title"-->
+            <!--android:layout_toRightOf="@id/fab"-->
+            <!--android:text="今日打卡 0 次   共计打卡 123 次"-->
+            <!--android:textAppearance="@style/MyTextAppearance.BodyNormal"-->
+            <!--android:transitionName="targetTitle" />-->
 
         </RelativeLayout>
     </RelativeLayout>

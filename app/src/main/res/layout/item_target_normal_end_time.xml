@@ -18,16 +18,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/targetIconIV"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="10dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/bg_target"
-            android:tint="@color/titleTextColor" />
-
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/bgIV"
             android:layout_width="wrap_content"
@@ -58,14 +48,14 @@
                 android:textAppearance="@style/MyTextAppearance.BodyLarge"
                 android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/countTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="5dp"
-                android:text="共计 32 项"
-                android:textAppearance="@style/MyTextAppearance.BodySmall" />
+            <!--<TextView-->
+                <!--android:id="@+id/countTV"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:text="共计 32 项"-->
+                <!--android:textAppearance="@style/MyTextAppearance.BodySmall" />-->
 
             <TextView
                 android:id="@+id/tipTV"
@@ -115,6 +105,20 @@
                 app:rcProgressColor="@color/semiTitleTextColor"
                 app:rcSecondaryProgressColor="@color/semiTitleTextColor"
                 app:rcBackgroundColor="@color/unselectedTitleTextColor" />
+
+            <ImageView
+                android:id="@+id/targetIconIV"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:paddingBottom="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/bg_target"
+                android:tint="@color/titleTextColor"
+                android:layout_above="@+id/roundCornerProgressBar"
+                android:layout_toRightOf="@+id/countdownView"
+                android:layout_toEndOf="@+id/countdownView"
+                android:layout_marginLeft="61dp"
+                android:layout_marginStart="61dp" />
 
         </RelativeLayout>
     </RelativeLayout>

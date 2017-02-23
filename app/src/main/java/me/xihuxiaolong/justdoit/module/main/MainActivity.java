@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -28,12 +27,11 @@ import me.xihuxiaolong.justdoit.common.service.PlanService;
 import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.easybackloglist.EasyBacklogListFragment;
-import me.xihuxiaolong.justdoit.module.homepage.HomePageFragment;
 import me.xihuxiaolong.justdoit.module.planlist.PlanListFragment;
 import me.xihuxiaolong.justdoit.module.settings.SettingsFragment;
 import me.xihuxiaolong.justdoit.module.targetlist.TargetListFragment;
 
-public class MainActivity extends BaseActivity implements ScrollListener {
+public class MainActivity extends BaseActivity implements MainActivityListener {
 
     @BindView(R.id.viewPager)
     ViewPager viewPager;
@@ -73,7 +71,6 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         mainFragmentPageAdapter = new MainFragmentPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainFragmentPageAdapter);
         viewPager.setOffscreenPageLimit(3);
-        bottomBar.getTabAtPosition(1).setBadgeCount(5);
         bottomBar.setOnTabSelectListener(
                 new OnTabSelectListener() {
                     @Override
@@ -101,7 +98,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         );
         if (getIntent().getBooleanExtra("restart", false)) {
             viewPager.setCurrentItem(2);
-            bottomBar.setDefaultTabPosition(2);
+            bottomBar.setDefaultTabPosition(3);
             dayNightBackgroundView.setAnimationDuration(0);
             bottomBar.post(new Runnable() {
                 @Override
@@ -134,7 +131,7 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         for (int i = 0; i < mainFragmentPageAdapter.getCount(); i++) {
             if (mainFragmentPageAdapter.getRegisteredFragment(i) != null) {
                 if (i == position)
-                    ((MainActivityListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
+                    ((MainActivityFragmentListener) mainFragmentPageAdapter.getRegisteredFragment(i)).reloadToolbar();
             }
         }
     }
@@ -230,6 +227,10 @@ public class MainActivity extends BaseActivity implements ScrollListener {
         }else {
             moveTaskToBack(true);
         }
+    }
+
+    public void setBottomBarBadge(int position, int badgeCount){
+        bottomBar.getTabAtPosition(position).setBadgeCount(badgeCount);
     }
 
 }

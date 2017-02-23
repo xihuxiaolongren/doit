@@ -1,23 +1,16 @@
 package me.xihuxiaolong.justdoit.module.redoplanlist;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,13 +19,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.listener.OnItemClickListener;
@@ -50,35 +40,20 @@ import org.joda.time.Days;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
-import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
-import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.redoplandetail.RedoPlanDetailActivity;
-import me.xihuxiaolong.justdoit.module.targetdetail.DaggerTargetDetailComponent;
-import me.xihuxiaolong.library.utils.CollectionUtils;
-import me.xihuxiaolong.library.utils.DialogUtils;
-import me.xihuxiaolongren.photoga.MediaChoseActivity;
-
-import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.ARG_TARGET;
 
 
 /**
@@ -137,8 +112,6 @@ public class RedoPlanListFragment extends BaseMvpFragment<RedoPlanListContract.I
     int vibrant, textColor;
 
     RedoPlanAdapter redoPlanAdapter;
-
-    ScrollListener scrollListener;
 
     int mSCrollY;
 
@@ -313,8 +286,6 @@ public class RedoPlanListFragment extends BaseMvpFragment<RedoPlanListContract.I
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         mSCrollY = scrollY;
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
 
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerFL, -scrollY);

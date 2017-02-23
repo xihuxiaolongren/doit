@@ -70,8 +70,8 @@ import me.xihuxiaolong.justdoit.module.adapter.PlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
+import me.xihuxiaolong.justdoit.module.main.MainActivityFragmentListener;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.planhistory.PlanHistoryActivity;
 import me.xihuxiaolong.justdoit.module.redoplanlist.RedoPlanListActivity;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
@@ -87,7 +87,7 @@ import mehdi.sakout.fancybuttons.FancyButton;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener, BacklogListAdapter.BacklogListOnClickListener {
+public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, PlanListContract.IPresenter> implements PlanListContract.IView, ObservableScrollViewCallbacks, PlanListAdapter.PlanListOnClickListener, MainActivityFragmentListener, CalendarDatePickerDialogFragment.OnDateSetListener, BacklogListAdapter.BacklogListOnClickListener {
 
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
 
@@ -148,7 +148,7 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     long dayTime;
 
-    ScrollListener scrollListener;
+    MainActivityListener mainActivityListener;
 
     public static PlanListFragment newInstance(Long dayTime) {
         PlanListFragment fragment = new PlanListFragment();
@@ -175,8 +175,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof ScrollListener){
-            scrollListener = ((ScrollListener)activity);
+        if(activity instanceof MainActivityListener){
+            mainActivityListener = ((MainActivityListener)activity);
         }
     }
 
@@ -493,8 +493,8 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        if(scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
+        if(mainActivityListener != null)
+            mainActivityListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
 
         // Translate FAB

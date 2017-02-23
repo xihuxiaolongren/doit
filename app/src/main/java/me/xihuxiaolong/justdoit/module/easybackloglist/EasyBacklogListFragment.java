@@ -1,12 +1,12 @@
 package me.xihuxiaolong.justdoit.module.easybackloglist;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -48,8 +48,8 @@ import me.xihuxiaolong.justdoit.common.event.Event;
 import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.module.adapter.BacklogListAdapter;
+import me.xihuxiaolong.justdoit.module.main.MainActivityFragmentListener;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.ActivityUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 
@@ -59,7 +59,7 @@ import me.xihuxiaolong.library.utils.DialogUtils;
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListContract.IView, EasyBacklogListContract.IPresenter> implements EasyBacklogListContract.IView, MainActivityListener, ObservableScrollViewCallbacks, BacklogListAdapter.BacklogListOnClickListener {
+public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListContract.IView, EasyBacklogListContract.IPresenter> implements EasyBacklogListContract.IView, MainActivityFragmentListener, ObservableScrollViewCallbacks, BacklogListAdapter.BacklogListOnClickListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
 
@@ -78,7 +78,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
 
     long dayTime;
 
-    ScrollListener scrollListener;
+    MainActivityListener mainActivityListener;
     @BindView(R.id.headerIV)
     ImageView headerIV;
     @BindView(R.id.recycler_background)
@@ -91,10 +91,10 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     Toolbar toolbar;
     @BindView(R.id.calendar_day_tv)
     TextView calendarDayTv;
-    @BindView(R.id.calendar_week_tv)
-    TextView calendarWeekTv;
-    @BindView(R.id.calendar_month_year_tv)
-    TextView calendarMonthYearTv;
+//    @BindView(R.id.calendar_week_tv)
+//    TextView calendarWeekTv;
+//    @BindView(R.id.calendar_month_year_tv)
+//    TextView calendarMonthYearTv;
     @BindView(R.id.calendar_rl)
     LinearLayout calendarRl;
 
@@ -124,9 +124,11 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
                 .build();
     }
 
-    public void onAttachToParentFragment(Fragment fragment) {
-        if (fragment instanceof ScrollListener) {
-            scrollListener = ((ScrollListener) fragment);
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if(activity instanceof MainActivityListener){
+            mainActivityListener = ((MainActivityListener)activity);
         }
     }
 
@@ -139,7 +141,6 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        onAttachToParentFragment(getParentFragment());
     }
 
     @Nullable
@@ -268,7 +269,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
             @Override
             public void run() {
                 int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize + mFlexibleSpaceImageHeight;
+                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize * 2 + mFlexibleSpaceImageHeight;
                 int bottom = minHeight - recyclerView.computeVerticalScrollRange();
                 if (bottom > 0)
                     recyclerView.setPadding(0, 0, 0, bottom);
@@ -277,6 +278,9 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
             }
         }, 100);
 
+        calendarDayTv.setText(String.valueOf(backlogDOs.size()));
+        if (mainActivityListener != null)
+            mainActivityListener.setBottomBarBadge(1, backlogDOs.size());
     }
 
     @Override
@@ -310,8 +314,8 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         Logger.e("backlog" + scrollY + "  " + firstScroll + "  " + dragging);
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
+        if (mainActivityListener != null)
+            mainActivityListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
 
         // Translate FAB

@@ -2,10 +2,8 @@ package me.xihuxiaolong.justdoit.common.database.service;
 
 import java.util.List;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.CacheDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDODao;
-import me.xihuxiaolong.justdoit.common.database.repo.CacheRepo;
 import me.xihuxiaolong.justdoit.common.database.repo.DbUtil;
 import me.xihuxiaolong.justdoit.common.database.repo.TargetRepo;
 
@@ -40,7 +38,8 @@ public class TargetDataServiceImpl implements TargetDataService {
 
     @Override
     public List<TargetDO> listAllTargets() {
-        return targetRepo.queryAll();
+        return targetRepo.queryBuilder().orderDesc(TargetDODao.Properties.CreatedTime).list();
+//        return targetRepo.queryAll();
     }
 
     @Override

@@ -65,7 +65,6 @@ import me.xihuxiaolong.justdoit.module.adapter.CardPlanListAdapter;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editphoto.EditPhotoActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
@@ -131,8 +130,6 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
     int vibrant, textColor;
 
     CardPlanListAdapter cardPlanListAdapter;
-
-    ScrollListener scrollListener;
 
     int mSCrollY;
 
@@ -397,8 +394,6 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         mSCrollY = scrollY;
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
 
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerFL, -scrollY);

@@ -94,7 +94,7 @@
             android:shadowColor="@color/shadowColor"
             android:shadowDy="1"
             android:shadowRadius="1"
-            android:text="12"
+            android:text="0"
             android:textColor="@color/titleTextColor"
             android:textSize="@dimen/calendar_day_size" />
 
@@ -107,7 +107,6 @@
                 android:id="@+id/calendar_week_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
                 android:shadowColor="@color/shadowColor"
                 android:shadowDy="1"
                 android:shadowRadius="1"
@@ -115,18 +114,18 @@
                 android:textColor="@color/titleTextColor"
                 android:textSize="@dimen/calendar_week_size" />
 
-            <TextView
-                android:id="@+id/calendar_month_year_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/calendar_week_tv"
-                android:layout_toRightOf="@id/calendar_day_tv"
-                android:shadowColor="@color/shadowColor"
-                android:shadowDy="1"
-                android:shadowRadius="1"
-                android:text="36 任务"
-                android:textColor="@color/titleTextColor"
-                android:textSize="@dimen/calendar_month_year_size" />
+            <!--<TextView-->
+                <!--android:id="@+id/calendar_month_year_tv"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@id/calendar_week_tv"-->
+                <!--android:layout_toRightOf="@id/calendar_day_tv"-->
+                <!--android:shadowColor="@color/shadowColor"-->
+                <!--android:shadowDy="1"-->
+                <!--android:shadowRadius="1"-->
+                <!--android:text="36 任务"-->
+                <!--android:textColor="@color/titleTextColor"-->
+                <!--android:textSize="@dimen/calendar_month_year_size" />-->
         </LinearLayout>
     </LinearLayout>
 

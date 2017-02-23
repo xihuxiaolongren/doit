@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -43,7 +44,6 @@ import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.github.ksoichiro.android.observablescrollview.ScrollUtils;
-import com.github.lzyzsd.circleprogress.ArcProgress;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.nineoldandroids.view.ViewHelper;
@@ -56,7 +56,6 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -65,15 +64,14 @@ import cn.iwgang.countdownview.CountdownView;
 import me.xihuxiaolong.justdoit.R;
 import me.xihuxiaolong.justdoit.common.base.BaseMvpFragment;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.RedoPlanDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.TargetDO;
-import me.xihuxiaolong.justdoit.common.util.BusinessUtils;
 import me.xihuxiaolong.justdoit.common.util.DayNightModeUtils;
+import me.xihuxiaolong.justdoit.common.util.DeviceUtil;
 import me.xihuxiaolong.justdoit.common.util.ImageUtils;
 import me.xihuxiaolong.justdoit.common.util.ProjectActivityUtils;
 import me.xihuxiaolong.justdoit.common.widget.LineChartManager;
+import me.xihuxiaolong.justdoit.module.main.MainActivityFragmentListener;
 import me.xihuxiaolong.justdoit.module.main.MainActivityListener;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.justdoit.module.settings.SettingsActivity;
 import me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
@@ -89,7 +87,7 @@ import static me.xihuxiaolong.justdoit.module.targetdetail.TargetPunchDetailFrag
  * User: xiaolong
  * Date: 16/7/5.
  */
-public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityListener, CalendarDatePickerDialogFragment.OnDateSetListener {
+public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView, TargetListContract.IPresenter> implements TargetListContract.IView, ObservableScrollViewCallbacks, MainActivityFragmentListener, CalendarDatePickerDialogFragment.OnDateSetListener {
 
     private static final float MAX_TEXT_SCALE_DELTA = 0.5f;
     private static final String FRAG_TAG_DATE_PICKER = "FRAG_TAG_DATE_PICKER";
@@ -113,6 +111,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     ImageView headerIV;
     @BindView(R.id.shadowFrame)
     FrameLayout shadowFrame;
+    @BindView(R.id.calendar_day_tv)
+    TextView calendarDayTv;
 //    @BindView(R.id.arc_progress)
 //    ArcProgress arcProgress;
 
@@ -132,7 +132,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     TargetAdapter targetAdapter;
 
-    ScrollListener scrollListener;
+    MainActivityListener mainActivityListener;
 
     int textColor;
 
@@ -158,8 +158,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         //对传递进来的Activity进行接口转换
-        if (activity instanceof ScrollListener) {
-            scrollListener = ((ScrollListener) activity);
+        if (activity instanceof MainActivityFragmentListener) {
+            mainActivityListener = ((MainActivityListener) activity);
         }
     }
 
@@ -268,15 +268,21 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             holder.setText(R.id.title, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
             targetIconIV.setAlpha(0.55f);
-            FloatingActionButton fab = holder.getView(R.id.fab);
-            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_little_black);
-            drawable = drawable.mutate();
-            drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
-            fab.setImageDrawable(drawable);
+//            FloatingActionButton fab = holder.getView(R.id.fab);
+//            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_little_black);
+//            drawable = drawable.mutate();
+//            drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+//            fab.setImageDrawable(drawable);
             ImageView bgIV = holder.getView(R.id.bgIV);
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
-            holder.addOnClickListener(R.id.fab);
+//            holder.addOnClickListener(R.id.fab);
+//            TextView countTV = holder.getView(R.id.countTV);
+//            countTV.setText(String.format("今日打卡 %d 次   共计打卡 %d 次", targetDO.getCount(), targetDO.getCount()));
+            FancyButton fancyButton = holder.getView(R.id.persistTV);
+            int days = Days.daysBetween(new DateTime(targetDO.getCreatedTime()), DateTime.now()).getDays() + 1;
+            fancyButton.setText(String.valueOf(days));
+            fancyButton.getTextViewObject().setTypeface(null, Typeface.BOLD);
         }
 
         private void convertNormal(BaseViewHolder baseViewHolder, TargetDO targetDO) {
@@ -288,7 +294,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
             FancyButton fancyButton = holder.getView(R.id.persistTV);
-            fancyButton.setText("12");
+            int days = Days.daysBetween(new DateTime(targetDO.getCreatedTime()), DateTime.now()).getDays() + 1;
+            fancyButton.setText(String.valueOf(days));
             fancyButton.getTextViewObject().setTypeface(null, Typeface.BOLD);
         }
 
@@ -301,7 +308,15 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
             CountdownView countdownView = holder.getView(R.id.countdownView);
-            countdownView.start(995550000);
+            long interval = targetDO.getEndTime() - DateTime.now().getMillis();
+            long max = targetDO.getEndTime() - targetDO.getCreatedTime();
+            long progress = DateTime.now().getMillis() - targetDO.getCreatedTime();
+            if(interval > 0)
+                countdownView.start(interval);
+            RoundCornerProgressBar roundCornerProgressBar = holder.getView(R.id.roundCornerProgressBar);
+            roundCornerProgressBar.setMax(max);
+            roundCornerProgressBar.setProgress(progress);
+            roundCornerProgressBar.setSecondaryProgress(progress);
         }
 
         @Override
@@ -356,8 +371,8 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
+        if (mainActivityListener != null)
+            mainActivityListener.onScrollChanged(scrollY, 0);
         mScollY = scrollY;
 
         // Translate FAB
@@ -496,6 +511,19 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void showTargets(List<TargetDO> targets) {
         targetAdapter.setNewData(targets);
+        recyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
+                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize * 2 + mFlexibleSpaceImageHeight;
+                int bottom = minHeight - recyclerView.computeVerticalScrollRange();
+                if (bottom > 0)
+                    recyclerView.setPadding(0, 0, 0, bottom);
+                else
+                    recyclerView.setPadding(0, 0, 0, 50);
+            }
+        }, 100);
+        calendarDayTv.setText(String.valueOf(targets.size()));
     }
 
     @Override

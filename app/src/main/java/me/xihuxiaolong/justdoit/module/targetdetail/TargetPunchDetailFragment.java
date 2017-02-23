@@ -68,7 +68,6 @@ import me.xihuxiaolong.justdoit.common.widget.DayNightBackgroundView;
 import me.xihuxiaolong.justdoit.module.editalert.EditAlertActivity;
 import me.xihuxiaolong.justdoit.module.editplan.EditPlanActivity;
 import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
-import me.xihuxiaolong.justdoit.module.main.ScrollListener;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
@@ -128,7 +127,6 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
 
     PunchAdapter punchAdapter;
 
-    ScrollListener scrollListener;
 
     int mSCrollY;
 
@@ -417,8 +415,6 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
         mSCrollY = scrollY;
-        if (scrollListener != null)
-            scrollListener.onScrollChanged(scrollY, 0);
 
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerFL, -scrollY);
