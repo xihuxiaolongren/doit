@@ -29,6 +29,14 @@ public class DeviceUtil extends Activity {
 		return d;
 	}
 
+	public static int dpToPx(int dp) {
+		return (int) (dp * getDensity());
+	}
+
+	public static int pxToDp(int px) {
+		return (int) (px / getDensity());
+	}
+
 	public static int getScreenHeight() {
 		if (screenHeight <= 0)
 			screenHeight = context.getResources().getDisplayMetrics().heightPixels;

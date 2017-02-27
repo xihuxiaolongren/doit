@@ -505,6 +505,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     @Override
     public void showTargets(List<TargetDO> targets) {
         targetAdapter.setNewData(targets);
+        recyclerView.setPadding(0, 0, 0, 0);
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -514,7 +515,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
                 if (bottom > 0)
                     recyclerView.setPadding(0, 0, 0, bottom);
                 else
-                    recyclerView.setPadding(0, 0, 0, 50);
+                    recyclerView.setPadding(0, 0, 0, DeviceUtil.dpToPx(50));
             }
         }, 100);
         calendarDayTv.setText(String.valueOf(targets.size()));

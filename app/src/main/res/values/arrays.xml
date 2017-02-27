@@ -15,6 +15,9 @@
         <item>@string/saturday</item>
         <item>@string/sunday</item>
     </string-array>
+    <string-array name="backlog_long_click_opt">
+        <item>删除</item>
+    </string-array>
 
     <string name="repeat_everyday">每天</string>
     <string name="repeat_one_to_five">周一到周五</string>

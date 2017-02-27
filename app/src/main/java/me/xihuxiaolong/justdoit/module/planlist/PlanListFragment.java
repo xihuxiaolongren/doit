@@ -389,16 +389,17 @@ public class PlanListFragment extends BaseMvpFragment<PlanListContract.IView, Pl
             createPlanList();
         recyclerView.setAdapter(planListAdapter);
         planListAdapter.setNewData(plans);
+        recyclerView.setPadding(0, 0, 0, 0);
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
-                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize + mFlexibleSpaceImageHeight;
+                int minHeight = DeviceUtil.getScreenHeight() - mActionBarSize * 2 + mFlexibleSpaceImageHeight;
                 int bottom = minHeight - recyclerView.computeVerticalScrollRange();
                 if (bottom > 0)
                     recyclerView.setPadding(0, 0, 0, bottom);
                 else
-                    recyclerView.setPadding(0, 0, 0, 50);
+                    recyclerView.setPadding(0, 0, 0, DeviceUtil.dpToPx(50));
             }
         }, 100);
     }

@@ -36,5 +36,7 @@ public class EasyBacklogListContract {
 
         void saveBacklog(String content);
 
+        void modifyBacklog(Long id, String content);
+
     }
 }

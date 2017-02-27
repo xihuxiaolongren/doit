@@ -13,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -23,6 +26,8 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.ksoichiro.android.observablescrollview.ObservableRecyclerView;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCallbacks;
@@ -76,6 +81,8 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
 
     BacklogListAdapter backlogListAdapter;
 
+    MenuItem addMenuItem;
+
     long dayTime;
 
     MainActivityListener mainActivityListener;
@@ -91,7 +98,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     Toolbar toolbar;
     @BindView(R.id.calendar_day_tv)
     TextView calendarDayTv;
-//    @BindView(R.id.calendar_week_tv)
+    //    @BindView(R.id.calendar_week_tv)
 //    TextView calendarWeekTv;
 //    @BindView(R.id.calendar_month_year_tv)
 //    TextView calendarMonthYearTv;
@@ -127,8 +134,8 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof MainActivityListener){
-            mainActivityListener = ((MainActivityListener)activity);
+        if (activity instanceof MainActivityListener) {
+            mainActivityListener = ((MainActivityListener) activity);
         }
     }
 
@@ -177,6 +184,27 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_frament_backloglist, menu);
+        addMenuItem = menu.findItem(R.id.action_add);
+        addMenuItem.setVisible(!mFabIsShown);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                getActivity().finish();
+                return true;
+            case R.id.action_add:
+                fabListener.onClick(null);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     void createBacklogList() {
         backlogListAdapter = new BacklogListAdapter(getActivity(), R.layout.item_card_backlog, new ArrayList<BacklogDO>(), this);
         backlogListAdapter.setEmptyView(LayoutInflater.from(getActivity()).inflate(R.layout.empty_view_backloglist, (ViewGroup) recyclerView.getParent(), false));
@@ -184,12 +212,31 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         final View headerView = LayoutInflater.from(getActivity()).inflate(R.layout.item_backlog_header, recyclerView, false);
         backlogListAdapter.addHeaderView(headerView);
         recyclerView.setAdapter(backlogListAdapter);
+        recyclerView.addOnItemTouchListener(new OnItemClickListener() {
+            @Override
+            public void onSimpleItemClick(BaseQuickAdapter adapter, View view, int position) {
+                BacklogDO backlog = ((BacklogDO) adapter.getItem(position));
+                showBacklogDialog(backlog);
+            }
+
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            }
+
+            @Override
+            public void onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                BacklogDO backlog = ((BacklogDO) adapter.getItem(position));
+                showLongClickDialog(backlog);
+            }
+
+
+        });
     }
 
     private View.OnClickListener fabListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            showBacklogDialog();
+            showBacklogDialog(null);
         }
     };
 
@@ -197,7 +244,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     MaterialEditText backlogET;
     View backlogPositive;
 
-    public void showBacklogDialog(){
+    public void showBacklogDialog(final BacklogDO backlog) {
         addBacklogDialog = new MaterialDialog.Builder(getActivity())
                 .title(R.string.add_backlog_title)
                 .customView(R.layout.dialog_add_backlog, true)
@@ -205,7 +252,10 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        presenter.saveBacklog(backlogET.getText().toString());
+                        if (backlog == null)
+                            presenter.saveBacklog(backlogET.getText().toString());
+                        else
+                            presenter.modifyBacklog(backlog.getId(), backlogET.getText().toString());
                     }
                 })
                 .negativeText(getResources().getString(R.string.action_cancel))
@@ -220,6 +270,8 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         backlogPositive = addBacklogDialog.getActionButton(DialogAction.POSITIVE);
         backlogPositive.setEnabled(false);
         backlogET = (MaterialEditText) addBacklogDialog.findViewById(R.id.backlogET);
+        if (backlog != null)
+            backlogET.setText(backlog.getContent());
         backlogET.requestFocus();
         backlogET.addTextChangedListener(new TextWatcher() {
             @Override
@@ -238,6 +290,23 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
             }
         });
         addBacklogDialog.show();
+    }
+
+
+    public void showLongClickDialog(final BacklogDO backlog) {
+        new MaterialDialog.Builder(getActivity())
+//                .title(R.string.title)
+                .items(R.array.backlog_long_click_opt)
+                .itemsCallback(new MaterialDialog.ListCallback() {
+                    @Override
+                    public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                        switch (which){
+                            case 0:
+                                presenter.deleteBacklog(backlog);
+                                break;
+                        }
+                    }
+                }).show();
     }
 
     @Override
@@ -265,6 +334,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
         if (backlogListAdapter == null)
             createBacklogList();
         backlogListAdapter.setNewData(backlogDOs);
+        recyclerView.setPadding(0, 0, 0, 0);
         recyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -274,7 +344,7 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
                 if (bottom > 0)
                     recyclerView.setPadding(0, 0, 0, bottom);
                 else
-                    recyclerView.setPadding(0, 0, 0, 50);
+                    recyclerView.setPadding(0, 0, 0, DeviceUtil.dpToPx(50));
             }
         }, 100);
 
@@ -288,27 +358,6 @@ public class EasyBacklogListFragment extends BaseMvpFragment<EasyBacklogListCont
     }
 
     public void setScrollY(int scrollY, int threshold) {
-//        if (scrollY == mScollY)
-//            return;
-//        if (recyclerView == null) {
-//            return;
-//        }
-//        mScollY = scrollY;
-//        Logger.e("backlog" + mScollY);
-//        View firstVisibleChild = recyclerView.getChildAt(0);
-//        if (firstVisibleChild != null) {
-//            int offset = scrollY;
-//            int position = 0;
-//            if (threshold < scrollY) {
-//                int baseHeight = firstVisibleChild.getHeight();
-//                position = scrollY / baseHeight;
-//                offset = scrollY % baseHeight;
-//            }
-//            RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
-//            if (lm != null && lm instanceof LinearLayoutManager) {
-//                ((LinearLayoutManager) lm).scrollToPositionWithOffset(position, -offset);
-//            }
-//        }
     }
 
     @Override

@@ -9,11 +9,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import me.xihuxiaolong.justdoit.common.cache.ICacheService;
 import me.xihuxiaolong.justdoit.common.database.localentity.BacklogDO;
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
 import me.xihuxiaolong.justdoit.common.database.service.BacklogDataService;
-import me.xihuxiaolong.justdoit.common.database.service.PlanDataService;
 import me.xihuxiaolong.justdoit.common.event.Event;
 
 /**
@@ -43,6 +40,7 @@ public class EasyBacklogListPresenter extends MvpBasePresenter<EasyBacklogListCo
     @Override
     public void deleteBacklog(BacklogDO backlogDO) {
         backlogDataService.deleteBacklogById(backlogDO.getId());
+        loadBacklogs();
     }
 
     @Override
@@ -57,6 +55,16 @@ public class EasyBacklogListPresenter extends MvpBasePresenter<EasyBacklogListCo
         long punchId = backlogDataService.insertOrReplaceBacklogDO(punch);
         punch.setId(punchId);
         EventBus.getDefault().post(new Event.AddBacklog(punch));
+    }
+
+    @Override
+    public void modifyBacklog(Long id, String content) {
+        BacklogDO backlogDO = new BacklogDO();
+        backlogDO.setId(id);
+        backlogDO.setContent(content);
+        long backlogId = backlogDataService.insertOrReplaceBacklogDO(backlogDO);
+        backlogDO.setId(backlogId);
+        EventBus.getDefault().post(new Event.UpdateBacklog(backlogDO));
     }
 
     @Subscribe

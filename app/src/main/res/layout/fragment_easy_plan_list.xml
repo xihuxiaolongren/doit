@@ -30,8 +30,7 @@
             android:layout_height="match_parent"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingBottom="50dp" />
+            android:overScrollMode="never" />
     </FrameLayout>
 
     <com.github.clans.fab.FloatingActionButton
@@ -40,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/fab_margin"
-        android:src="@drawable/menu_target_1"
+        android:src="@drawable/backlog"
         fab:fab_colorNormal="@color/colorAccent"
         fab:fab_colorPressed="@color/colorDarkAccent"
         fab:fab_size="normal" />

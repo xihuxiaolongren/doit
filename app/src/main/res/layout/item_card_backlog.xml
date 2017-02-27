@@ -44,8 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="早起第一天"
-                android:textColor="@color/titleTextColor"
-                android:textSize="@dimen/contentTextSize" />
+                android:textAppearance="@style/MyTextAppearance.BodyLarge" />
 
         </LinearLayout>
 
