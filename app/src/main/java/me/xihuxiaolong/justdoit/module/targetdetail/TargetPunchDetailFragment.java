@@ -235,8 +235,9 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
         protected void convert(BaseViewHolder holder, PlanDO punch) {
             DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
             DateTime startTime = new DateTime(punch.getDayTime()).withTime(punch.getStartHour(), punch.getStartMinute(), 0, 0);
-            holder.setBackgroundColor(R.id.rootView, vibrant)
-                    .setTextColor(R.id.timeTV, textColor)
+            CardView cardView = holder.getView(R.id.rootView);
+            cardView.setCardBackgroundColor(vibrant);
+            holder.setTextColor(R.id.timeTV, textColor)
                     .setTextColor(R.id.contentTV, textColor)
                     .setText(R.id.timeTV, startTime.toString(builder))
                     .setText(R.id.contentTV, punch.getContent())
@@ -427,7 +428,7 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
 
         float fabTranslationY = ScrollUtils.getFloat(
                 -scrollY + mFlexibleSpaceImageHeight - mFabSizeNormal / 2,
-                mActionBarSize,
+                mActionBarSize / 2,
                 maxFabTranslationY);
         ViewHelper.setTranslationY(fab, fabTranslationY);
         // Show/hide FAB

@@ -158,7 +158,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         //对传递进来的Activity进行接口转换
-        if (activity instanceof MainActivityFragmentListener) {
+        if (activity instanceof MainActivityListener) {
             mainActivityListener = ((MainActivityListener) activity);
         }
     }
@@ -374,7 +374,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
 
         float fabTranslationY = ScrollUtils.getFloat(
                 -scrollY + mFlexibleSpaceImageHeight - mFabSizeNormal / 2,
-                mActionBarSize,
+                mActionBarSize / 2,
                 maxFabTranslationY);
         ViewHelper.setTranslationY(fab, fabTranslationY);
         // Show/hide FAB

@@ -117,7 +117,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         holder.setText(R.id.startTimeTV, dateTime.toString(builder));
         holder.setText(R.id.contentTV, planDO.getContent());
         if (dateTime.isBeforeNow()) {
-            holder.setText(R.id.doTV, "已完成");
+            holder.setText(R.id.doTV, "已结束");
             holder.setVisible(R.id.doTV, true);
         } else {
             holder.setText(R.id.doTV, "未开始");
@@ -196,7 +196,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         ImageView timelineIV = holder.getView(R.id.timelineIV);
         if (endTime.isBeforeNow()) {
             contentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f);
-            holder.setText(R.id.doTV, "已完成");
+            holder.setText(R.id.doTV, "已结束");
             holder.setVisible(R.id.doTV, true);
             timelineIV.setColorFilter(ContextCompat.getColor(mContext, R.color.titleTextColor));
         } else if (startTime.isAfterNow()) {

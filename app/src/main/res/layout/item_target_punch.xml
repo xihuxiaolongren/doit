@@ -19,20 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <jp.shts.android.library.TriangleLabelView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            app:backgroundColor="@color/semiTitleTextColor"
-            app:corner="leftTop"
-            app:labelBottomPadding="7dp"
-            app:labelCenterPadding="5dp"
-            app:labelTopPadding="6dp"
-            app:primaryText="打卡"
-            app:primaryTextColor="@color/primary"
-            app:primaryTextSize="10sp"/>
-
         <ImageView
             android:id="@+id/targetIconIV"
             android:layout_width="100dp"
@@ -55,6 +41,20 @@
             android:scaleType="centerCrop"
             android:transitionName="targetIV"
             app:riv_corner_radius="2dp" />
+
+        <jp.shts.android.library.TriangleLabelView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            app:backgroundColor="@color/semiTitleTextColor"
+            app:corner="leftTop"
+            app:labelBottomPadding="7dp"
+            app:labelCenterPadding="5dp"
+            app:labelTopPadding="6dp"
+            app:primaryText="打卡"
+            app:primaryTextColor="@color/primary"
+            app:primaryTextSize="10sp"/>
 
         <RelativeLayout
             android:id="@+id/contentRL"

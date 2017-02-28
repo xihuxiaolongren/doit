@@ -298,7 +298,7 @@ public class RedoPlanListFragment extends BaseMvpFragment<RedoPlanListContract.I
 
         float fabTranslationY = ScrollUtils.getFloat(
                 -scrollY + mFlexibleSpaceImageHeight - mFabSizeNormal / 2,
-                mActionBarSize,
+                mActionBarSize / 2,
                 maxFabTranslationY);
         ViewHelper.setTranslationY(fab, fabTranslationY);
         // Show/hide FAB

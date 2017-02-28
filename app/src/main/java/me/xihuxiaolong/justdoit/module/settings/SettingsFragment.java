@@ -282,7 +282,7 @@ public class SettingsFragment extends BaseMvpFragment<SettingsContract.IView, Se
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_frament_plan_history, menu);
+        inflater.inflate(R.menu.menu_frament_settings, menu);
     }
 
     @Override

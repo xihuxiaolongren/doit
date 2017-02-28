@@ -131,7 +131,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
 
     CardPlanListAdapter cardPlanListAdapter;
 
-    int mSCrollY;
+    int mScrollY;
 
     String headerPicUri;
 
@@ -393,7 +393,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
 
     @Override
     public void onScrollChanged(int scrollY, boolean firstScroll, boolean dragging) {
-        mSCrollY = scrollY;
+        mScrollY = scrollY;
 
         // Translate imageView parallax
         ViewHelper.setTranslationY(headerFL, -scrollY);
@@ -406,7 +406,7 @@ public class TargetNormalDetailFragment extends BaseMvpFragment<TargetDetailCont
 
         float fabTranslationY = ScrollUtils.getFloat(
                 -scrollY + mFlexibleSpaceImageHeight - mFabSizeNormal / 2,
-                mActionBarSize,
+                mActionBarSize / 2,
                 maxFabTranslationY);
         ViewHelper.setTranslationY(fab, fabTranslationY);
         // Show/hide FAB

@@ -9,9 +9,9 @@
         android:title="@string/action_add"
         app:showAsAction="ifRoom">
     </item>
-    <item
-        android:id="@+id/action_redo_plan"
-        android:orderInCategory="5"
-        android:title="@string/action_redo_plan"
-        app:showAsAction="never" />
+    <!--<item-->
+        <!--android:id="@+id/action_redo_plan"-->
+        <!--android:orderInCategory="5"-->
+        <!--android:title="@string/action_redo_plan"-->
+        <!--app:showAsAction="never" />-->
 </menu>

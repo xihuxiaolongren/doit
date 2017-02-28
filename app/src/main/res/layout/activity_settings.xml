@@ -10,7 +10,7 @@
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:fitsSystemWindows="true"
-        app:title="@string/app_name"
+        app:title="@string/action_settings"
         app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
     <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
