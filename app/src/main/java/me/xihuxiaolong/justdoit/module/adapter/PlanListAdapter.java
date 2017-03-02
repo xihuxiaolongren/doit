@@ -114,8 +114,9 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
         DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
+        holder.setText(R.id.startTimeTV, dateTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.contentTV, TextUtils.isEmpty(planDO.getContent()));
         if (dateTime.isBeforeNow()) {
             holder.setText(R.id.doTV, "已结束");
             holder.setVisible(R.id.doTV, true);
@@ -125,6 +126,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         }
         holder.setTag(R.id.rootView, planDO);
         holder.setOnClickListener(R.id.rootView, alertListener);
+        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags(), planDO.getTargetName());
     }
 
     private void convertPhoto(BaseViewHolder holder, PlanDO planDO) {
@@ -132,15 +134,17 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
         DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
+        holder.setText(R.id.startTimeTV, dateTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()))
+                .setVisible(R.id.picPRL, !TextUtils.isEmpty(planDO.getPicUrls()));
         setSingleImage(planDO.getPicUrls(), picIV);
         ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
         holder.setTag(R.id.picIV, planDO);
         holder.setOnClickListener(R.id.picIV, photoListener);
         holder.setTag(R.id.moreIV, planDO);
         holder.setOnClickListener(R.id.moreIV, moreClickListener);
+        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags(), planDO.getTargetName());
 //        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags());
     }
 
@@ -149,15 +153,17 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         holder.getView(R.id.rootView).setMinimumHeight(minHeight / getItemCount());
         DateTime dateTime = new DateTime(planDO.getDayTime()).withTime(planDO.getStartHour(), planDO.getStartMinute(), 0, 0);
         DateTimeFormatter builder = DateTimeFormat.forPattern("HH : mm");
-        holder.setText(R.id.startTimeTV, dateTime.toString(builder));
-        holder.setText(R.id.contentTV, planDO.getContent());
-        holder.setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()));
+        holder.setText(R.id.startTimeTV, dateTime.toString(builder))
+                .setText(R.id.contentTV, planDO.getContent())
+                .setVisible(R.id.contentTV, !TextUtils.isEmpty(planDO.getContent()))
+                .setVisible(R.id.picPRL, !TextUtils.isEmpty(planDO.getPicUrls()));
         setSingleImage(planDO.getPicUrls(), picIV);
         ImageUtils.loadImageFromFile(mContext, picIV, planDO.getPicUrls(), ImageView.ScaleType.FIT_CENTER);
         holder.setTag(R.id.picIV, planDO);
         holder.setOnClickListener(R.id.picIV, photoListener);
         holder.setTag(R.id.moreIV, planDO);
         holder.setOnClickListener(R.id.moreIV, moreClickListener);
+        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags(), planDO.getTargetName());
     }
 
     private void setSingleImage(String filepath, ImageView imageView) {
@@ -222,24 +228,32 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         } else {
             linkAppFB.setVisibility(View.GONE);
         }
-        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags());
+        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags(), planDO.getTargetName());
 
         holder.setTag(R.id.rootView, planDO);
         holder.setOnClickListener(R.id.rootView, planListener);
     }
 
-    void setTag(FlexboxLayout flexboxLayout, String tags){
-        if (!TextUtils.isEmpty(tags)) {
+    void setTag(FlexboxLayout flexboxLayout, String tags, String targetName){
+        if (!TextUtils.isEmpty(targetName) || !TextUtils.isEmpty(tags)) {
             flexboxLayout.removeAllViews();
             flexboxLayout.setVisibility(View.VISIBLE);
-            for (String tag : tags.split(",")) {
+            if (!TextUtils.isEmpty(targetName)) {
                 TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
-                textView.setText("# " + tag);
+                textView.setText("# " + targetName);
                 flexboxLayout.addView(textView);
+            }
+            if (!TextUtils.isEmpty(tags)) {
+                for (String tag : tags.split(",")) {
+                    TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
+                    textView.setText("# " + tag);
+                    flexboxLayout.addView(textView);
+                }
             }
         } else {
             flexboxLayout.setVisibility(View.GONE);
         }
+
     }
 
     private View.OnClickListener linkAppClickListener = new View.OnClickListener() {

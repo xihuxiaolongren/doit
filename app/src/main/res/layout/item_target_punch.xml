@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:fancy="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
@@ -50,7 +51,6 @@
             app:backgroundColor="@color/semiTitleTextColor"
             app:corner="leftTop"
             app:labelBottomPadding="7dp"
-            app:labelCenterPadding="5dp"
             app:labelTopPadding="6dp"
             app:primaryText="打卡"
             app:primaryTextColor="@color/primary"
@@ -75,6 +75,7 @@
                 android:transitionName="targetTitle" />
 
             <LinearLayout
+                android:id="@+id/persist_ll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/title"
@@ -107,10 +108,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:text="天"
+                    android:layout_marginRight="10dp"
+                    android:text="天，打卡"
+                    android:textAppearance="@style/MyTextAppearance.BodySmall" />
+
+                <mehdi.sakout.fancybuttons.FancyButton
+                    android:id="@+id/countTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    fancy:fb_defaultColor="@color/titleTextColor"
+                    fancy:fb_radius="4dp"
+                    fancy:fb_text="0"
+                    fancy:fb_textColor="@color/colorPrimary"
+                    fancy:fb_textSize="22sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="次"
                     android:textAppearance="@style/MyTextAppearance.BodySmall" />
 
             </LinearLayout>
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/punchFab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_toRightOf="@id/persist_ll"
+                android:src="@drawable/menu_punch_little_black"
+                fab:fab_colorNormal="@android:color/white"
+                fab:fab_colorPressed="@color/lightWhite"
+                fab:fab_label="@string/punch"
+                fab:fab_size="mini" />
             <!--<TextView-->
             <!--android:id="@+id/countTV"-->
             <!--android:layout_width="match_parent"-->

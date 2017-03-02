@@ -26,6 +26,8 @@ public class PlanDataServiceImpl implements PlanDataService {
 
     RedoPlanDataService redoPlanDataService;
 
+    TargetDataService targetDataService;
+
     Gson gson = new Gson();
 
     private PlanRepo planRepo;
@@ -36,6 +38,7 @@ public class PlanDataServiceImpl implements PlanDataService {
         tagRepo = DbUtil.getTagRepo();
         planHistoryDataService = new PlanHistoryDataServiceImpl();
         redoPlanDataService = new RedoPlanDataServiceImpl();
+        targetDataService = new TargetDataServiceImpl();
     }
 
     @Override
@@ -78,7 +81,10 @@ public class PlanDataServiceImpl implements PlanDataService {
     }
 
     private void deletePlanDOById(Long id) {
+        PlanDO planDO = getPlanDOById(id);
         planRepo.deleteByKey(id);
+        if(planDO != null && !TextUtils.isEmpty(planDO.getTargetName()))
+            targetDataService.incrTargetCount(planDO.getTargetName(), -1);
     }
 
     @Override
@@ -103,6 +109,9 @@ public class PlanDataServiceImpl implements PlanDataService {
                     addTag(tag);
             }
             planHistoryDataService.addPlanDO(planDO.getDayTime(), planDO.getType());
+            if(!TextUtils.isEmpty(planDO.getTargetName())){
+                targetDataService.incrTargetCount(planDO.getTargetName(), 1);
+            }
         }
         planDO.setModifiedTime(System.currentTimeMillis());
 

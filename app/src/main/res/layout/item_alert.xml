@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -53,15 +54,31 @@
         android:src="@drawable/timeline_todo"
         android:tint="@color/titleTextColor" />
 
-    <TextView
-        android:id="@+id/contentTV"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-3dp"
         android:layout_weight="1"
-        android:paddingBottom="50dp"
+        android:orientation="vertical"
+        android:paddingBottom="30dp"
         android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:textColor="@color/titleTextColor"
-        android:textSize="16sp" />
+        android:paddingRight="15dp">
+
+        <TextView
+            android:id="@+id/contentTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="-3dp"
+            android:textColor="@color/titleTextColor"
+            android:textSize="16sp" />
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/tags_fl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:flexWrap="wrap">
+
+        </com.google.android.flexbox.FlexboxLayout>
+    </LinearLayout>
 </LinearLayout>

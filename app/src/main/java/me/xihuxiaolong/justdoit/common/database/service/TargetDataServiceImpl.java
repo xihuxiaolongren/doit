@@ -31,6 +31,15 @@ public class TargetDataServiceImpl implements TargetDataService {
     }
 
     @Override
+    public void incrTargetCount(String key, int count) {
+        TargetDO targetDO = getTargetByKey(key);
+        if(targetDO != null){
+            targetDO.setCount(targetDO.getCount() + count);
+            insertOrReplaceTarget(targetDO);
+        }
+    }
+
+    @Override
     public List<TargetDO> listAllPunchTargets() {
         return targetRepo.queryBuilder().where(TargetDODao.Properties.Type.eq(TargetDO.TYPE_PUNCH))
                 .orderDesc(TargetDODao.Properties.CreatedTime).list();

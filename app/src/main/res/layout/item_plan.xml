@@ -81,7 +81,8 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:paddingBottom="30dp"
-        android:paddingLeft="15dp">
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
 
         <TextView
             android:id="@+id/contentTV"
@@ -91,16 +92,15 @@
             android:layout_marginBottom="20dp"
             android:layout_marginTop="-3dp"
             android:gravity="center_vertical"
-            android:paddingRight="15dp"
             android:textAppearance="@style/MyTextAppearance.BodyNormal.Shadow" />
 
         <mehdi.sakout.fancybuttons.FancyButton
             android:id="@+id/linkAppFB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="15dp"
             android:paddingLeft="8dp"
             android:paddingRight="12dp"
+            android:layout_marginBottom="10dp"
             fancy:fb_defaultColor="#12000000"
             fancy:fb_iconPaddingRight="12dp"
             fancy:fb_iconPosition="left"
@@ -114,7 +114,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
             app:flexWrap="wrap">
 
         </com.google.android.flexbox.FlexboxLayout>

@@ -12,6 +12,8 @@ public interface TargetDataService {
 
 	long insertOrReplaceTarget(TargetDO targetDO);
 
+	void incrTargetCount(String key, int count);
+
 	List<TargetDO> listAllPunchTargets();
 
 	List<TargetDO> listAllTargets();

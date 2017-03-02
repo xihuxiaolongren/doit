@@ -38,7 +38,7 @@ public class TargetDO implements Serializable, MultiItemEntity {
     private int themeColor;
     private int textColor;
 
-    private int count;
+    private int count;  //打卡次数 or 所有任务次数
 
     @Transient
     private List<RedoPlanDO> redoPlanDOList;

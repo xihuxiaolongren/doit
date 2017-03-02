@@ -226,7 +226,7 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 TargetDO targetDO = ((TargetDO) adapter.getItem(position));
                 switch (view.getId()) {
-                    case R.id.fab:
+                    case R.id.punchFab:
                         openPunch(targetDO.getName());
                         break;
                 }
@@ -268,20 +268,24 @@ public class TargetListFragment extends BaseMvpFragment<TargetListContract.IView
             holder.setText(R.id.title, targetDO.getName());
             ImageView targetIconIV = holder.getView(R.id.targetIconIV);
             targetIconIV.setAlpha(0.55f);
-//            FloatingActionButton fab = holder.getView(R.id.fab);
-//            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_little_black);
-//            drawable = drawable.mutate();
-//            drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
-//            fab.setImageDrawable(drawable);
+            FloatingActionButton fab = holder.getView(R.id.punchFab);
+            Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.menu_punch_little_black);
+            drawable = drawable.mutate();
+            drawable.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+            fab.setImageDrawable(drawable);
             ImageView bgIV = holder.getView(R.id.bgIV);
             bgIV.setColorFilter(ContextCompat.getColor(getContext(), R.color.bgImageColor), PorterDuff.Mode.SRC_ATOP);
             ImageUtils.loadImageFromFile(getContext(), bgIV, targetDO.getHeaderImageUri(), ImageView.ScaleType.CENTER_CROP);
-//            holder.addOnClickListener(R.id.fab);
+            holder.addOnClickListener(R.id.punchFab);
 //            TextView countTV = holder.getView(R.id.countTV);
 //            countTV.setText(String.format("今日打卡 %d 次   共计打卡 %d 次", targetDO.getCount(), targetDO.getCount()));
             FancyButton fancyButton = holder.getView(R.id.persistTV);
             int days = Days.daysBetween(new DateTime(targetDO.getCreatedTime()), DateTime.now()).getDays() + 1;
             fancyButton.setText(String.valueOf(days));
+            fancyButton.getTextViewObject().setTypeface(null, Typeface.BOLD);
+
+            FancyButton countTV = holder.getView(R.id.countTV);
+            countTV.setText(String.valueOf(targetDO.getCount()));
             fancyButton.getTextViewObject().setTypeface(null, Typeface.BOLD);
         }
 
