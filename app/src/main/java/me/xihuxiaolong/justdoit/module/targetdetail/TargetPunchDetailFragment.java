@@ -71,6 +71,7 @@ import me.xihuxiaolong.justdoit.module.images.BigImageActivity;
 import me.xihuxiaolong.library.utils.CollectionUtils;
 import me.xihuxiaolong.library.utils.DialogUtils;
 import me.xihuxiaolongren.photoga.MediaChoseActivity;
+import mehdi.sakout.fancybuttons.FancyButton;
 
 import static me.xihuxiaolong.justdoit.module.targetdetail.TargetDetailActivity.ARG_TARGET;
 
@@ -243,11 +244,23 @@ public class TargetPunchDetailFragment extends BaseMvpFragment<TargetDetailContr
                     .setText(R.id.contentTV, punch.getContent())
                     .setVisible(R.id.picIV, !TextUtils.isEmpty(punch.getPicUrls()))
                     .addOnClickListener(R.id.picIV);
+            setSectionTime(punch, holder);
             ImageView typeIV = holder.getView(R.id.typeIV);
             typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
             typeIV.setAlpha(0.55f);
             ImageUtils.loadImageFromFile(getContext(), (ImageView) holder.getView(R.id.picIV), punch.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
 
+        }
+    }
+
+    void setSectionTime(PlanDO planDO, BaseViewHolder holder){
+        if(planDO.getTempDayTime() == null){
+            holder.setVisible(R.id.timeSectionFB, false);
+        }else {
+            DateTime dateTime = new DateTime(planDO.getDayTime());
+            holder.setVisible(R.id.timeSectionFB, true);
+            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
+            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
         }
     }
 

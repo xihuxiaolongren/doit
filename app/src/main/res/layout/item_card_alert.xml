@@ -47,6 +47,20 @@
                 android:src="@drawable/card_type_alert"
                 android:tint="@color/titleTextColor" />
 
+            <jp.shts.android.library.TriangleLabelView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                app:backgroundColor="@color/semiTitleTextColor"
+                app:corner="leftTop"
+                app:labelBottomPadding="7dp"
+                app:labelCenterPadding="5dp"
+                app:labelTopPadding="6dp"
+                app:primaryText="提醒"
+                app:primaryTextColor="@color/primary"
+                app:primaryTextSize="10sp"/>
+
             <LinearLayout
                 android:id="@+id/headerLL"
                 android:layout_width="match_parent"

@@ -79,6 +79,8 @@ public class EditAlertActivity extends BaseMvpActivity<EditAlertContract.IView, 
         setToolbar(toolbar, true);
         contentET.requestFocus();
         singleTimeView.setTimeListener(this);
+        if(alertId != -1L)
+            repeatRL.setVisibility(View.GONE);
         repeatRL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -67,18 +67,18 @@
                 app:met_textColor="@color/titleTextColor"
                 app:met_textColorHint="@color/titleTextColor" />
 
-            <LinearLayout
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/all_target_fl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
+                app:flexWrap="wrap">
                 <RelativeLayout
                     android:id="@+id/tagRL"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    app:layout_flexBasisPercent="50%"
+                    android:layout_marginBottom="20dp">
 
                     <ImageView
                         android:id="@+id/tagIV"
@@ -115,7 +115,8 @@
                     android:id="@+id/repeatRL"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    app:layout_flexBasisPercent="50%"
+                    android:layout_marginBottom="20dp">
 
                     <ImageView
                         android:id="@+id/repeatIV"
@@ -141,27 +142,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/repeatTV"
-                        android:layout_marginRight="10dp"
                         android:layout_toRightOf="@id/repeatIV"
                         android:text="从不"
                         android:textColor="@color/titleTextColor"
                         android:textSize="12sp" />
 
                 </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="horizontal"
-                android:weightSum="2">
 
                 <RelativeLayout
                     android:id="@+id/linkAppRL"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    app:layout_flexBasisPercent="50%"
+                    android:layout_marginBottom="20dp">
 
                     <ImageView
                         android:id="@+id/linkAppIV"
@@ -191,8 +184,133 @@
                         android:textColor="@color/titleTextColor"
                         android:textSize="12sp" />
                 </RelativeLayout>
+            </com.google.android.flexbox.FlexboxLayout>
 
-            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="20dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:weightSum="2">-->
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/tagRL"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1">-->
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/tagIV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:src="@drawable/add_tag"-->
+                        <!--android:tint="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/tagTV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_toRightOf="@id/tagIV"-->
+                        <!--android:text="@string/add_tag"-->
+                        <!--android:textColor="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/tagDetailTV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/tagTV"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_toRightOf="@id/tagIV"-->
+                        <!--android:text="无"-->
+                        <!--android:textColor="@color/titleTextColor"-->
+                        <!--android:textSize="12sp" />-->
+                <!--</RelativeLayout>-->
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/repeatRL"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1">-->
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/repeatIV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:src="@drawable/repeat_plan"-->
+                        <!--android:tint="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/repeatTV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_toRightOf="@id/repeatIV"-->
+                        <!--android:text="设为每日任务"-->
+                        <!--android:textColor="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/repeatDetailTV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/repeatTV"-->
+                        <!--android:layout_toRightOf="@id/repeatIV"-->
+                        <!--android:text="从不"-->
+                        <!--android:textColor="@color/titleTextColor"-->
+                        <!--android:textSize="12sp" />-->
+
+                <!--</RelativeLayout>-->
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="20dp"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:weightSum="2">-->
+
+                <!--<RelativeLayout-->
+                    <!--android:id="@+id/linkAppRL"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1">-->
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/linkAppIV"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginRight="10dp"-->
+                        <!--android:layout_marginTop="5dp"-->
+                        <!--android:src="@drawable/linkapp"-->
+                        <!--android:tint="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/linkAppTV"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginBottom="5dp"-->
+                        <!--android:layout_toRightOf="@id/linkAppIV"-->
+                        <!--android:text="@string/add_link"-->
+                        <!--android:textColor="@color/titleTextColor" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/linkAppDetailTV"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_below="@id/linkAppTV"-->
+                        <!--android:layout_toRightOf="@id/linkAppIV"-->
+                        <!--android:text="无"-->
+                        <!--android:textColor="@color/titleTextColor"-->
+                        <!--android:textSize="12sp" />-->
+                <!--</RelativeLayout>-->
+
+            <!--</LinearLayout>-->
 
         </LinearLayout>
 

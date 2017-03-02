@@ -141,14 +141,7 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
-        if(planDO.getTempDayTime() == null){
-            holder.setVisible(R.id.timeSectionFB, false);
-        }else {
-            DateTime dateTime = new DateTime(planDO.getDayTime());
-            holder.setVisible(R.id.timeSectionFB, true);
-            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
-            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
-        }
+        setSectionTime(planDO, holder);
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);
@@ -166,14 +159,7 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
-        if(planDO.getTempDayTime() == null){
-            holder.setVisible(R.id.timeSectionFB, false);
-        }else {
-            DateTime dateTime = new DateTime(planDO.getDayTime());
-            holder.setVisible(R.id.timeSectionFB, true);
-            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
-            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
-        }
+        setSectionTime(planDO, holder);
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);
@@ -191,6 +177,14 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
+        setSectionTime(planDO, holder);
+        ImageView typeIV = holder.getView(R.id.typeIV);
+        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
+        typeIV.setAlpha(0.55f);
+        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
+    }
+
+    void setSectionTime(PlanDO planDO, BaseViewHolder holder){
         if(planDO.getTempDayTime() == null){
             holder.setVisible(R.id.timeSectionFB, false);
         }else {
@@ -199,10 +193,6 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
             FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
             fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
         }
-        ImageView typeIV = holder.getView(R.id.typeIV);
-        typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
-        typeIV.setAlpha(0.55f);
-        ImageUtils.loadImageFromFile(mContext, (ImageView) holder.getView(R.id.picIV), planDO.getPicUrls(), ImageView.ScaleType.CENTER_CROP);
     }
 
     private void setSingleImage(String filepath, ImageView imageView) {
@@ -242,14 +232,7 @@ public class CardPlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseV
                 .setText(R.id.contentTV, planDO.getContent())
                 .setVisible(R.id.picIV, !TextUtils.isEmpty(planDO.getPicUrls()))
                 .addOnClickListener(R.id.picIV);
-        if(planDO.getTempDayTime() == null){
-            holder.setVisible(R.id.timeSectionFB, false);
-        }else {
-            DateTime dateTime = new DateTime(planDO.getDayTime());
-            holder.setVisible(R.id.timeSectionFB, true);
-            FancyButton fancyButton = holder.getView(R.id.timeSectionFB);
-            fancyButton.setText(dateTime.toString(DateTimeFormat.forPattern("yyyy MM月 dd日")));
-        }
+        setSectionTime(planDO, holder);
         ImageView typeIV = holder.getView(R.id.typeIV);
         typeIV.setColorFilter(textColor, PorterDuff.Mode.SRC_IN);
         typeIV.setAlpha(0.55f);

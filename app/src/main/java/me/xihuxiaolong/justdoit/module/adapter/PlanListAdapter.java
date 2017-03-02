@@ -141,6 +141,7 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         holder.setOnClickListener(R.id.picIV, photoListener);
         holder.setTag(R.id.moreIV, planDO);
         holder.setOnClickListener(R.id.moreIV, moreClickListener);
+//        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags());
     }
 
     private void convertPunch(BaseViewHolder holder, PlanDO planDO) {
@@ -221,11 +222,17 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         } else {
             linkAppFB.setVisibility(View.GONE);
         }
-        FlexboxLayout flexboxLayout = holder.getView(R.id.tags_fl);
-        if (!TextUtils.isEmpty(planDO.getTags())) {
+        setTag((FlexboxLayout) holder.getView(R.id.tags_fl), planDO.getTags());
+
+        holder.setTag(R.id.rootView, planDO);
+        holder.setOnClickListener(R.id.rootView, planListener);
+    }
+
+    void setTag(FlexboxLayout flexboxLayout, String tags){
+        if (!TextUtils.isEmpty(tags)) {
             flexboxLayout.removeAllViews();
             flexboxLayout.setVisibility(View.VISIBLE);
-            for (String tag : planDO.getTags().split(",")) {
+            for (String tag : tags.split(",")) {
                 TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.item_plan_tags, flexboxLayout, false);
                 textView.setText("# " + tag);
                 flexboxLayout.addView(textView);
@@ -233,9 +240,6 @@ public class PlanListAdapter extends BaseMultiItemQuickAdapter<PlanDO, BaseViewH
         } else {
             flexboxLayout.setVisibility(View.GONE);
         }
-
-        holder.setTag(R.id.rootView, planDO);
-        holder.setOnClickListener(R.id.rootView, planListener);
     }
 
     private View.OnClickListener linkAppClickListener = new View.OnClickListener() {

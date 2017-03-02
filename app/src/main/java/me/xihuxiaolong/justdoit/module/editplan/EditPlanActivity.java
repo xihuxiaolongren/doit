@@ -116,6 +116,8 @@ public class EditPlanActivity extends BaseMvpActivity<EditPlanContract.IView, Ed
             }
         });
         startAndEndTV.setStartAndEndListener(this);
+        if(planId != -1L)
+            repeatRL.setVisibility(View.GONE);
         repeatRL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
