@@ -43,4 +43,6 @@ public interface PlanDataService {
 
     List<Integer> listPlanCount(int type, List<Long> time);
 
+    Long getFirstPlanTime();
+
 }

@@ -67,8 +67,14 @@ public class PlanService extends Service {
         Logger.e("TAG onStartCommand~~~~~~~~~~~~");
 //        data=(String) intent.getSerializableExtra();
         setAlarmForPlan();
-        if (intent != null && intent.getBooleanExtra("alarm", false) && intent.getSerializableExtra("planDO") != null)
-            processAlarmOpen((PlanDO) intent.getSerializableExtra("planDO"));
+        if (intent != null){
+            if (intent.getBooleanExtra("alarm", false) && intent.getSerializableExtra("planDO") != null)
+                processAlarmOpen((PlanDO) intent.getSerializableExtra("planDO"));
+            else if(intent.getIntExtra("close", -1) == CLOSE_NOTIFY){
+                cancelNotification();
+            }
+
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -141,11 +147,13 @@ public class PlanService extends Service {
 //        int requestCode = (int) SystemClock.uptimeMillis();
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViewBig.setOnClickPendingIntent(R.id.contentTV, pendingIntent);
+        remoteViewNormal.setOnClickPendingIntent(R.id.contentTV, pendingIntent);
 
         Intent closeIntent = new Intent(getApplicationContext(), PlanService.class);
-        closeIntent.putExtra("1", CLOSE_NOTIFY);
+        closeIntent.putExtra("close", CLOSE_NOTIFY);
         PendingIntent pendingCloseIntent = PendingIntent.getService(this, 1, closeIntent, 0);
         remoteViewBig.setOnClickPendingIntent(R.id.deleteIV, pendingCloseIntent);
+        remoteViewNormal.setOnClickPendingIntent(R.id.deleteIV, pendingCloseIntent);
         Notification notification = new NotificationCompat.Builder(this)
                 .setCustomBigContentView(remoteViewBig)
                 .setContent(remoteViewNormal)
@@ -162,6 +170,13 @@ public class PlanService extends Service {
         //        int notificationId = new Random().nextInt();
 //        notifyMgr.notify(notificationId, notification);
         startForeground(110, notification);// 开始前台服务
+    }
+
+    // 取消通知栏
+    private void cancelNotification() {
+        stopSelf(); // the notification of a foregraound service cannot be cleared. The only way is stopping the service.
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        notificationManager.cancel(110);
     }
 
     @Subscribe

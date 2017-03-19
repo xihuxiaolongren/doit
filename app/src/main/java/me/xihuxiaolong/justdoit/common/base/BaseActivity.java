@@ -1,9 +1,7 @@
 package me.xihuxiaolong.justdoit.common.base;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -14,11 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-
-import com.hannesdorfmann.mosby.mvp.MvpActivity;
-import com.hannesdorfmann.mosby.mvp.MvpPresenter;
-import com.hannesdorfmann.mosby.mvp.MvpView;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import icepick.Icepick;
 import me.xihuxiaolong.justdoit.R;

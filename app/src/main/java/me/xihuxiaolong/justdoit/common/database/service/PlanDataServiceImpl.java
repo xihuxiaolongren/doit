@@ -198,7 +198,7 @@ public class PlanDataServiceImpl implements PlanDataService {
     @Override
     public PlanDO getPlanByLastEndTime() {
         return planRepo.queryBuilder()
-                .orderDesc(PlanDODao.Properties.EndTime).unique();
+                .orderDesc(PlanDODao.Properties.EndTime).limit(1).unique();
     }
 
     @Override
@@ -213,6 +213,14 @@ public class PlanDataServiceImpl implements PlanDataService {
 
     @Override
     public List<Integer> listPlanCount(int type, List<Long> time) {
+        return null;
+    }
+
+    @Override
+    public Long getFirstPlanTime() {
+        PlanDO planDO = planRepo.queryBuilder().orderAsc(PlanDODao.Properties.CreatedTime).limit(1).unique();
+        if(planDO != null)
+            return planDO.getCreatedTime();
         return null;
     }
 

@@ -43,10 +43,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:layout_marginTop="13dp"
+            android:layout_marginRight="-10dp"
             android:paddingBottom="22dp"
             android:paddingLeft="22dp"
-            android:paddingRight="2dp"
+            android:paddingRight="12dp"
+            android:paddingTop="13dp"
             android:src="@drawable/more"
             android:tint="@color/titleTextColor" />
     </LinearLayout>

@@ -7,8 +7,6 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDO;
-
 /**
  * Created by IntelliJ IDEA.
  * User: xiaolong
@@ -18,10 +16,13 @@ public class PlanHistoryActivityContract {
 
     interface IView extends MvpView {
 
-        void showHistorys(List<DateTime> dayTimes);
+        void showHistorys(List<Long> dayTimes);
 
-        void showDayInfo(DateTime dateTime);
+        void showDayInfo(Long dateTime);
 
+        void showDay(int position);
+
+        void showCalendar(Long start, Long end);
     }
 
     interface IPresenter extends MvpPresenter<IView> {
@@ -30,5 +31,8 @@ public class PlanHistoryActivityContract {
 
         void loadCurrentDayTime(int position);
 
+        void loadDay(DateTime dateTime);
+
+        void loadStartAndEnd();
     }
 }

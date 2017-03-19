@@ -1,6 +1,5 @@
 package me.xihuxiaolong.justdoit.common.database.repo;
 
-import me.xihuxiaolong.justdoit.common.database.localentity.PlanDODao;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDO;
 import me.xihuxiaolong.justdoit.common.database.localentity.PlanHistoryDODao;
 
@@ -18,7 +17,7 @@ public class PlanHistoryRepo extends BaseRepo<PlanHistoryDO, Long> {
     }
 
     public PlanHistoryDO queryByDayTime(long dayTime){
-        return queryBuilder().where(PlanHistoryDODao.Properties.DayTime.eq(dayTime)).unique();
+        return queryBuilder().where(PlanHistoryDODao.Properties.DayTime.eq(dayTime)).limit(1).unique();
     }
 
 }
