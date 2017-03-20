@@ -13,7 +13,7 @@
 
 ### 应用截图：
 
-* <img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" width = "270" height = "480">
+<img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" width = "270" height = "480">
 
 
-* <img src="/screenshot/Screenshot_2017-03-20-10-24-54.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-25-35.png" width = "270" height = "480">
+<img src="/screenshot/Screenshot_2017-03-20-10-24-54.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-25-35.png" width = "270" height = "480">
