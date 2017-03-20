@@ -12,4 +12,4 @@
 - 添加目标并设置背景图：
 ![image](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_40_37.gif)
 夜间模式切换：
-![image](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_55_33.gif)
+![image](https://github.com/xihuxiaolongren/doit/blob/master/screenshot/2017-03-20%2009_55_33.gif)
