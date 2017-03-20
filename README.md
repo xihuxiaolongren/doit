@@ -6,10 +6,17 @@
 
 [应用下载地址](http://fir.im/dvsc)
 
-- 首页动画效果：
-![image](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-19%2023_46_58.gif)
+- 首页动画效果（github无法查看较大gif）：
+[点击显示](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-19%2023_46_58.gif)
 
 - 添加目标并设置背景图：
-![image](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_40_37.gif)
-夜间模式切换：
-![image](https://github.com/xihuxiaolongren/doit/blob/master/screenshot/2017-03-20%2009_55_33.gif)
+[点击显示](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_40_37.gif)
+- 夜间模式切换效果：
+[点击显示](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_55_33.gif)
+
+####应用截图：
+<figure class="third">
+	<img src="/screenshot/Screenshot_2017-03-20-10-23-29.png">
+	<img src="/images/image-filename-2.jpg">
+	<img src="/images/image-filename-3.jpg">
+</figure>
