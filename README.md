@@ -16,12 +16,12 @@
 
 ####应用截图：
 <figure class="third">
-	<img src="/screenshot/Screenshot_2017-03-20-10-23-29.png">
-	<img src="/screenshot/Screenshot_2017-03-20-10-24-15.png">
-	<img src="/screenshot/Screenshot_2017-03-20-10-24-18.png">
+	<img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" style="zoom:50%">
+	<img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" style="zoom:50%">
+	<img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" style="zoom:50%">
 </figure>
 
 <figure class="two">
-	<img src="/screenshot/Screenshot_2017-03-20-10-24-54.png">
-	<img src="/screenshot/Screenshot_2017-03-20-10-25-35.png">
+	<img src="/screenshot/Screenshot_2017-03-20-10-24-54.png" style="zoom:50%">
+	<img src="/screenshot/Screenshot_2017-03-20-10-25-35.png" style="zoom:50%">
 </figure>
