@@ -11,9 +11,9 @@
 - 夜间模式切换效果：
 [点击显示](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_55_33.gif)
 
-####应用截图：
+###应用截图：
 
-<img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" width = "270" height = "480">
+* <img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" width = "270" height = "480">
 
 
-<img src="/screenshot/Screenshot_2017-03-20-10-24-54.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-25-35.png" width = "270" height = "480">
+* <img src="/screenshot/Screenshot_2017-03-20-10-24-54.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-25-35.png" width = "270" height = "480">
