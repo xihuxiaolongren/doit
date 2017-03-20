@@ -1,4 +1,4 @@
-###项目简介：
+### 项目简介：
 一款遵循material design规范开发的个人日程管理工具,可以添加计划、待办，也可以通过设定目标，管理一段时间的安排
 
 [应用下载地址](http://fir.im/dvsc)
@@ -11,7 +11,7 @@
 - 夜间模式切换效果：
 [点击显示](http://generalcomponent.oss-cn-shanghai.aliyuncs.com/2017-03-20%2009_55_33.gif)
 
-###应用截图：
+### 应用截图：
 
 * <img src="/screenshot/Screenshot_2017-03-20-10-23-29.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-15.png" width = "270" height = "480"> <img src="/screenshot/Screenshot_2017-03-20-10-24-18.png" width = "270" height = "480">
 
